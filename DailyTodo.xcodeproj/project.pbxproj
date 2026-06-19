@@ -1,0 +1,520 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		06B8378414F3389FFBAA5190 /* TodoLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7435A558E61FFD6D0D94E67F /* TodoLiveActivity.swift */; };
+		1D9E3F19592C898F7F7AFAEF /* ToggleTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */; };
+		228BD8877265A2449CB0387B /* TodoActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43DCE149EB1710817756B54 /* TodoActivityAttributes.swift */; };
+		243BBEA9F7196417BA55B3B7 /* TaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1A562A947F60569DE08C6 /* TaskItem.swift */; };
+		24CA9DDD823774F3F75E5D8E /* LiveActivityBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */; };
+		3F2C0B71B718CD2746F64774 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D93E764550B345709DDAFC5 /* Theme.swift */; };
+		42D513E29488BF2538E6E366 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97382722425927981E0E4F4 /* ListView.swift */; };
+		692E092BA7C59901FAA1784D /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9009156203DE059C471C455 /* TaskStore.swift */; };
+		6C8A1CD2EEC3D226B18F4263 /* DailyTodoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456E5A4D9C42AA4855B05A4E /* DailyTodoApp.swift */; };
+		83A2E06198761EC7215AF827 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D93E764550B345709DDAFC5 /* Theme.swift */; };
+		A10109AD0ED51CF88D00644F /* TaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1A562A947F60569DE08C6 /* TaskItem.swift */; };
+		AA7F130A5D4A119D4D7A9187 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89172F89B880F640C73953BB /* AppGroup.swift */; };
+		AF067AF85273961953A8998E /* DailyTodoWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29071CED0BA1D606CD45764 /* DailyTodoWidgetsBundle.swift */; };
+		BD5C0AD348C07424832B8D7C /* LiveActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AA3136636BB9A8D6ED4576 /* LiveActivityController.swift */; };
+		C3A5EFAD2CB5C54F0CB92147 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89172F89B880F640C73953BB /* AppGroup.swift */; };
+		DBABCC86613BCBC570E923E5 /* TodoListWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2C8A719522F64ED4F37164 /* TodoListWidget.swift */; };
+		E26217B1B3AC5F9A3C6781DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B0BDA66530D103FDAD52AD4 /* Assets.xcassets */; };
+		E67AF235745597377DA7B6BD /* DailyTodoWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC75BDB09E09BDCC4EE6847B /* DailyTodoWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E76DE0262846BF97231DBBD6 /* ToggleTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */; };
+		ED584530F9278FE0B51D7E69 /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9009156203DE059C471C455 /* TaskStore.swift */; };
+		F49D77A16FB12001BDB1584D /* LiveActivityBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */; };
+		F7D32C00D19C3667BE5F250A /* TaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B449DAE99E7995EB9F9530E /* TaskRow.swift */; };
+		FDEEAB6B930A0CFEC3531589 /* TodoActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43DCE149EB1710817756B54 /* TodoActivityAttributes.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7BFF17B7C54279B0D6163ACB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE2511A606BF3C09E6694324 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AC3A587A76AD6AC01B48CC06;
+			remoteInfo = DailyTodoWidgets;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		00401874B0B8D650F34E2848 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				E67AF235745597377DA7B6BD /* DailyTodoWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		02AA3136636BB9A8D6ED4576 /* LiveActivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityController.swift; sourceTree = "<group>"; };
+		0E2C8A719522F64ED4F37164 /* TodoListWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListWidget.swift; sourceTree = "<group>"; };
+		1028E2BAA40DEE2897D09876 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		1D93E764550B345709DDAFC5 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityBridge.swift; sourceTree = "<group>"; };
+		456E5A4D9C42AA4855B05A4E /* DailyTodoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTodoApp.swift; sourceTree = "<group>"; };
+		45E1A562A947F60569DE08C6 /* TaskItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskItem.swift; sourceTree = "<group>"; };
+		4B449DAE99E7995EB9F9530E /* TaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRow.swift; sourceTree = "<group>"; };
+		6EC66BA5042F27294F869567 /* DailyTodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyTodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7435A558E61FFD6D0D94E67F /* TodoLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoLiveActivity.swift; sourceTree = "<group>"; };
+		7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleTaskIntent.swift; sourceTree = "<group>"; };
+		89172F89B880F640C73953BB /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
+		8B0BDA66530D103FDAD52AD4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		C29071CED0BA1D606CD45764 /* DailyTodoWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTodoWidgetsBundle.swift; sourceTree = "<group>"; };
+		C9009156203DE059C471C455 /* TaskStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStore.swift; sourceTree = "<group>"; };
+		D02F0E7114BA954A5E3CA2B0 /* DailyTodo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DailyTodo.entitlements; sourceTree = "<group>"; };
+		D97382722425927981E0E4F4 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		E15DD08C4939DAB6CAF52E99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E217AFC141B32F095DA09E51 /* DailyTodoWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DailyTodoWidgets.entitlements; sourceTree = "<group>"; };
+		F43DCE149EB1710817756B54 /* TodoActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoActivityAttributes.swift; sourceTree = "<group>"; };
+		FC75BDB09E09BDCC4EE6847B /* DailyTodoWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DailyTodoWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		00AEE2DFBFA28D5AD8C9B6F5 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6EC66BA5042F27294F869567 /* DailyTodo.app */,
+				FC75BDB09E09BDCC4EE6847B /* DailyTodoWidgets.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4BE7655AA93DD6DF1CF0B554 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				89172F89B880F640C73953BB /* AppGroup.swift */,
+				30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */,
+				45E1A562A947F60569DE08C6 /* TaskItem.swift */,
+				C9009156203DE059C471C455 /* TaskStore.swift */,
+				1D93E764550B345709DDAFC5 /* Theme.swift */,
+				F43DCE149EB1710817756B54 /* TodoActivityAttributes.swift */,
+				7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		5FEE3C41B09A3813DD402BA4 /* DailyTodo */ = {
+			isa = PBXGroup;
+			children = (
+				8B0BDA66530D103FDAD52AD4 /* Assets.xcassets */,
+				D02F0E7114BA954A5E3CA2B0 /* DailyTodo.entitlements */,
+				456E5A4D9C42AA4855B05A4E /* DailyTodoApp.swift */,
+				E15DD08C4939DAB6CAF52E99 /* Info.plist */,
+				02AA3136636BB9A8D6ED4576 /* LiveActivityController.swift */,
+				B776823B4880EFD547991BF7 /* Views */,
+			);
+			path = DailyTodo;
+			sourceTree = "<group>";
+		};
+		AB7574D1081BA3C67170F26B /* DailyTodoWidgets */ = {
+			isa = PBXGroup;
+			children = (
+				E217AFC141B32F095DA09E51 /* DailyTodoWidgets.entitlements */,
+				C29071CED0BA1D606CD45764 /* DailyTodoWidgetsBundle.swift */,
+				1028E2BAA40DEE2897D09876 /* Info.plist */,
+				0E2C8A719522F64ED4F37164 /* TodoListWidget.swift */,
+				7435A558E61FFD6D0D94E67F /* TodoLiveActivity.swift */,
+			);
+			path = DailyTodoWidgets;
+			sourceTree = "<group>";
+		};
+		B776823B4880EFD547991BF7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D97382722425927981E0E4F4 /* ListView.swift */,
+				4B449DAE99E7995EB9F9530E /* TaskRow.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		EA69BE22DA15A04BFECEF823 = {
+			isa = PBXGroup;
+			children = (
+				5FEE3C41B09A3813DD402BA4 /* DailyTodo */,
+				AB7574D1081BA3C67170F26B /* DailyTodoWidgets */,
+				4BE7655AA93DD6DF1CF0B554 /* Shared */,
+				00AEE2DFBFA28D5AD8C9B6F5 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AC3A587A76AD6AC01B48CC06 /* DailyTodoWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DA4DF05E254A36761FE5CC71 /* Build configuration list for PBXNativeTarget "DailyTodoWidgets" */;
+			buildPhases = (
+				DA927D2FB91F7BC636BF7F9F /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DailyTodoWidgets;
+			packageProductDependencies = (
+			);
+			productName = DailyTodoWidgets;
+			productReference = FC75BDB09E09BDCC4EE6847B /* DailyTodoWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+		D8C314A63B213C1412BC9709 /* DailyTodo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DF1D825BBFD0CF4A5AE3E702 /* Build configuration list for PBXNativeTarget "DailyTodo" */;
+			buildPhases = (
+				6531E4E67C0916FC3447399F /* Sources */,
+				32CECDEDE04BDB068D98C82E /* Resources */,
+				00401874B0B8D650F34E2848 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				67D78B07A463FBBEC1BB9789 /* PBXTargetDependency */,
+			);
+			name = DailyTodo;
+			packageProductDependencies = (
+			);
+			productName = DailyTodo;
+			productReference = 6EC66BA5042F27294F869567 /* DailyTodo.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EE2511A606BF3C09E6694324 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					AC3A587A76AD6AC01B48CC06 = {
+						DevelopmentTeam = 62TKJF387W;
+						ProvisioningStyle = Automatic;
+					};
+					D8C314A63B213C1412BC9709 = {
+						DevelopmentTeam = 62TKJF387W;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 71030115A7847D8C73EE298A /* Build configuration list for PBXProject "DailyTodo" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = EA69BE22DA15A04BFECEF823;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 00AEE2DFBFA28D5AD8C9B6F5 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D8C314A63B213C1412BC9709 /* DailyTodo */,
+				AC3A587A76AD6AC01B48CC06 /* DailyTodoWidgets */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		32CECDEDE04BDB068D98C82E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E26217B1B3AC5F9A3C6781DC /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6531E4E67C0916FC3447399F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C3A5EFAD2CB5C54F0CB92147 /* AppGroup.swift in Sources */,
+				6C8A1CD2EEC3D226B18F4263 /* DailyTodoApp.swift in Sources */,
+				42D513E29488BF2538E6E366 /* ListView.swift in Sources */,
+				24CA9DDD823774F3F75E5D8E /* LiveActivityBridge.swift in Sources */,
+				BD5C0AD348C07424832B8D7C /* LiveActivityController.swift in Sources */,
+				A10109AD0ED51CF88D00644F /* TaskItem.swift in Sources */,
+				F7D32C00D19C3667BE5F250A /* TaskRow.swift in Sources */,
+				ED584530F9278FE0B51D7E69 /* TaskStore.swift in Sources */,
+				3F2C0B71B718CD2746F64774 /* Theme.swift in Sources */,
+				228BD8877265A2449CB0387B /* TodoActivityAttributes.swift in Sources */,
+				1D9E3F19592C898F7F7AFAEF /* ToggleTaskIntent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DA927D2FB91F7BC636BF7F9F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA7F130A5D4A119D4D7A9187 /* AppGroup.swift in Sources */,
+				AF067AF85273961953A8998E /* DailyTodoWidgetsBundle.swift in Sources */,
+				F49D77A16FB12001BDB1584D /* LiveActivityBridge.swift in Sources */,
+				243BBEA9F7196417BA55B3B7 /* TaskItem.swift in Sources */,
+				692E092BA7C59901FAA1784D /* TaskStore.swift in Sources */,
+				83A2E06198761EC7215AF827 /* Theme.swift in Sources */,
+				FDEEAB6B930A0CFEC3531589 /* TodoActivityAttributes.swift in Sources */,
+				DBABCC86613BCBC570E923E5 /* TodoListWidget.swift in Sources */,
+				06B8378414F3389FFBAA5190 /* TodoLiveActivity.swift in Sources */,
+				E76DE0262846BF97231DBBD6 /* ToggleTaskIntent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		67D78B07A463FBBEC1BB9789 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AC3A587A76AD6AC01B48CC06 /* DailyTodoWidgets */;
+			targetProxy = 7BFF17B7C54279B0D6163ACB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		34937FC44BA52C0DE3D1F4AC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = DailyTodoWidgets/DailyTodoWidgets.entitlements;
+				INFOPLIST_FILE = DailyTodoWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dylanlandman.dailytodo.DailyTodoWidgets;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6AC80C028B7E3337F8831350 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DailyTodo/DailyTodo.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = DailyTodo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dylanlandman.dailytodo;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7EB7C8F9F0B90033ED90C7D5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = DailyTodoWidgets/DailyTodoWidgets.entitlements;
+				INFOPLIST_FILE = DailyTodoWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dylanlandman.dailytodo.DailyTodoWidgets;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8973941A60263379E635389C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 62TKJF387W;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		A959E614EE1304ADCC052CE4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 62TKJF387W;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		FBEC283DE42188BC819982F0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = DailyTodo/DailyTodo.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				INFOPLIST_FILE = DailyTodo/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dylanlandman.dailytodo;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		71030115A7847D8C73EE298A /* Build configuration list for PBXProject "DailyTodo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A959E614EE1304ADCC052CE4 /* Debug */,
+				8973941A60263379E635389C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DA4DF05E254A36761FE5CC71 /* Build configuration list for PBXNativeTarget "DailyTodoWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				34937FC44BA52C0DE3D1F4AC /* Debug */,
+				7EB7C8F9F0B90033ED90C7D5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DF1D825BBFD0CF4A5AE3E702 /* Build configuration list for PBXNativeTarget "DailyTodo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FBEC283DE42188BC819982F0 /* Debug */,
+				6AC80C028B7E3337F8831350 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EE2511A606BF3C09E6694324 /* Project object */;
+}

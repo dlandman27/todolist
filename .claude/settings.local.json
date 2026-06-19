@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcodegen generate *)",
+      "Bash(xcodebuild -project DailyTodo.xcodeproj -scheme DailyTodo -destination 'platform=iOS Simulator,name=iPhone 16 Plus' -derivedDataPath build/dd build)",
+      "Bash(osascript)",
+      "Bash(xcrun simctl *)",
+      "Bash(cliclick dd:4614,900 m:4614,750 m:4614,550 m:4614,400 du:4614,400)",
+      "Bash(xcodebuild -version)",
+      "Bash(xcrun xctrace *)",
+      "Bash(xcodebuild -project DailyTodo.xcodeproj -scheme DailyTodo -configuration Debug -destination 'generic/platform=iOS' -allowProvisioningUpdates build)",
+      "Bash(awk '{print $4\" free\"}')",
+      "Bash(rm -rf ~/Library/Developer/Xcode/DerivedData/*)",
+      "Bash(rm -rf /Users/dylanlandman/Documents/projects/todolist/build)",
+      "Bash(/usr/libexec/PlistBuddy -c \"Print :CFBundleShortVersionString\" build/DailyTodo.xcarchive/Products/Applications/DailyTodo.app/Info.plist)",
+      "Bash(/usr/libexec/PlistBuddy -c \"Print :CFBundleVersion\" build/DailyTodo.xcarchive/Products/Applications/DailyTodo.app/Info.plist)",
+      "Bash(security find-identity *)",
+      "Read(//Users/dylanlandman/Downloads/**)"
+    ]
+  }
+}

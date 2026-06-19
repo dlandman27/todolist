@@ -1,0 +1,4 @@
+Target dependency graph (2 targets)
+Target 'DailyTodo' in project 'DailyTodo'
+➜ Explicit dependency on target 'DailyTodoWidgets' in project 'DailyTodo'
+Target 'DailyTodoWidgets' in project 'DailyTodo' (no dependencies)
