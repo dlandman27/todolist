@@ -8,33 +8,69 @@ struct ListView: View {
     @Environment(LiveActivityController.self) private var live
     @Environment(\.modelContext) private var context
     @FocusState private var focusedTask: UUID?
+    @AppStorage(ListSettings.nameKey, store: AppGroup.defaults) private var listName = ListSettings.defaultName
+    @State private var editingTitle = false
+    @FocusState private var titleFocused: Bool
+    @State private var showClearAllConfirm = false
+    @State private var showClearCompletedConfirm = false
 
     @Query(sort: \TaskItem.createdAt, order: .forward) private var tasks: [TaskItem]
 
-    /// Open tasks first (creation order), completed ones sunk to the bottom
-    /// in the order they were checked off.
-    private var orderedTasks: [TaskItem] {
-        let open = tasks.filter { !$0.done }
-        let done = tasks.filter { $0.done }
-            .sorted { ($0.completedAt ?? .distantPast) < ($1.completedAt ?? .distantPast) }
-        return open + done
-    }
+    /// Open tasks first, completed ones sunk to the bottom in check-off order.
+    private var orderedTasks: [TaskItem] { TaskOrdering.ordered(tasks) }
+
+    /// True while either a task row or the title is being edited — a tap off should
+    /// then just unfocus, never add a new task.
+    private var isEditing: Bool { focusedTask != nil || titleFocused }
+
+    /// Number of checked-off tasks — gates the "Clear Completed" item and labels its dialog.
+    private var completedCount: Int { tasks.filter(\.done).count }
 
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.appBackground.ignoresSafeArea()
+                Color.appBackground
+                    .ignoresSafeArea()
+                    .contentShape(Rectangle())
+                    // Tapping empty chrome (header, sides) only dismisses an active edit —
+                    // it must NOT add a task. Adding is handled by the explicit areas below.
+                    .onTapGesture { dismissEditing() }
                 VStack(spacing: 0) {
                     titleHeader
                     if tasks.isEmpty {
                         emptyState
+                            .transition(.opacity)
                     } else {
                         list
+                            .transition(.opacity)
                     }
                 }
+                // Cross-fade between the list and the empty state on any path to/from
+                // empty (clear, last row deleted, discarded draft).
+                .animation(.appMotion, value: tasks.isEmpty)
             }
             .safeAreaInset(edge: .bottom) { liveActivityButton }
             .toolbar(.hidden, for: .navigationBar)
+            .confirmationDialog(
+                "Delete all \(tasks.count) tasks?",
+                isPresented: $showClearAllConfirm,
+                titleVisibility: .visible
+            ) {
+                Button("Delete All", role: .destructive) { clearAll() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This can't be undone.")
+            }
+            .confirmationDialog(
+                "Delete \(completedCount) completed task\(completedCount == 1 ? "" : "s")?",
+                isPresented: $showClearCompletedConfirm,
+                titleVisibility: .visible
+            ) {
+                Button("Clear Completed", role: .destructive) { clearCompleted() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("This can't be undone.")
+            }
         }
         .onChange(of: router.addRequested) { _, requested in
             if requested {
@@ -44,15 +80,105 @@ struct ListView: View {
         }
     }
 
-    /// The app's only title.
+    /// The app's title — double-tap to rename the list — with the settings gear trailing.
     private var titleHeader: some View {
-        Text("To-Do")
-            .font(.largeTitle.bold())
-            .foregroundStyle(Color.textPrimary)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal)
-            .padding(.top, 8)
-            .padding(.bottom, 12)
+        HStack(alignment: .center) {
+            if editingTitle {
+                TextField(ListSettings.defaultName, text: $listName)
+                    .font(.largeTitle.bold())
+                    .foregroundStyle(Color.textPrimary)
+                    .focused($titleFocused)
+                    .submitLabel(.done)
+                    .onSubmit(finishEditingTitle)
+                    .onChange(of: titleFocused) { _, focused in
+                        if !focused { finishEditingTitle() }
+                    }
+                    .onChange(of: listName) { _, new in
+                        if new.count > ListSettings.maxNameLength {
+                            listName = String(new.prefix(ListSettings.maxNameLength))
+                        }
+                    }
+                    .accessibilityIdentifier("title")
+            } else {
+                Text(listName)
+                    .font(.largeTitle.bold())
+                    .foregroundStyle(Color.textPrimary)
+                    .accessibilityIdentifier("title")
+                    .onTapGesture(count: 2, perform: beginEditingTitle)
+            }
+            Spacer()
+            HStack(spacing: 8) {
+                listOptionsButton
+                settingsButton
+            }
+        }
+        .padding(.horizontal)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+    }
+
+    /// Enter rename mode and drop the cursor into the title field.
+    private func beginEditingTitle() {
+        editingTitle = true
+        // Defer focus until the field is in the hierarchy.
+        DispatchQueue.main.async { titleFocused = true }
+    }
+
+    /// Commit the rename: trim, fall back to the default if blank, and push the new
+    /// name out to the Lock Screen and widgets.
+    private func finishEditingTitle() {
+        let trimmed = listName.trimmingCharacters(in: .whitespacesAndNewlines)
+        listName = trimmed.isEmpty ? ListSettings.defaultName : trimmed
+        editingTitle = false
+        titleFocused = false
+        Haptics.selection()
+        live.refresh()
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    /// The ⋯ list-options menu: bulk actions on this list. Sections keep room for a
+    /// future "Sort By" section without adding another header button.
+    private var listOptionsButton: some View {
+        Menu {
+            Section {
+                Button {
+                    showClearCompletedConfirm = true
+                } label: {
+                    Label("Clear Completed", systemImage: "checkmark.circle.badge.xmark")
+                }
+                .disabled(completedCount == 0)
+
+                Button(role: .destructive) {
+                    showClearAllConfirm = true
+                } label: {
+                    Label("Clear All", systemImage: "trash")
+                }
+                .disabled(tasks.isEmpty)
+            }
+        } label: {
+            Image(systemName: "ellipsis.circle")
+                .font(.title2)
+                .foregroundStyle(Color.brand)
+                .frame(width: 30, height: 44)
+                .contentShape(Rectangle())
+        }
+        .accessibilityIdentifier("listOptions")
+        .accessibilityLabel("List options")
+    }
+
+    /// Gear that pushes the settings page onto the navigation stack.
+    private var settingsButton: some View {
+        NavigationLink {
+            SettingsView()
+        } label: {
+            Image(systemName: "gearshape")
+                .font(.title2)
+                .foregroundStyle(Color.brand)
+                .frame(width: 30, height: 44)
+                .contentShape(Rectangle())
+        }
+        .accessibilityIdentifier("settings")
+        .accessibilityLabel("Settings")
     }
 
     /// Bottom control to pin the list to the Lock Screen as a Live Activity.
@@ -65,24 +191,25 @@ struct ListView: View {
                 .padding(.bottom, 8)
         } else {
             Button {
+                Haptics.impact(.medium)
                 withAnimation(.snappy) { live.toggle() }
             } label: {
-                if live.isRunning {
-                    Label("Live on Lock Screen", systemImage: "checkmark.seal.fill")
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(Color.brand)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 18)
-                        .background(Capsule().fill(Color.brandTint))
-                } else {
-                    Label("Pin to Lock Screen", systemImage: "pin.fill")
+                HStack(spacing: 8) {
+                    if live.isRunning {
+                        LiveDot()
+                    } else {
+                        Circle()
+                            .stroke(Color.textSecondary, lineWidth: 1.5)
+                            .frame(width: 9, height: 9)
+                    }
+                    Text(live.isRunning ? "Live" : "Go Live")
                         .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.white)
-                        .padding(.vertical, 14)
-                        .padding(.horizontal, 24)
-                        .background(Capsule().fill(Color.brand))
-                        .shadow(color: Color.brand.opacity(0.3), radius: 8, y: 4)
                 }
+                .foregroundStyle(Color.brand)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 20)
+                .glassCapsule(tinted: live.isRunning)
+                .contentShape(Capsule())
             }
             .buttonStyle(.plain)
             .padding(.bottom, 8)
@@ -90,24 +217,45 @@ struct ListView: View {
     }
 
     private var list: some View {
-        List {
-            ForEach(orderedTasks) { task in
-                TaskRow(task: task, focus: $focusedTask, onReturn: addTask)
-                    .listRowSeparator(.hidden)
-            }
-            .onDelete(perform: delete)
+        // GeometryReader so the tap-to-add area can fill the full viewport height —
+        // a fixed height leaves dead, non-tappable List background below it on tall screens.
+        GeometryReader { geo in
+            List {
+                ForEach(orderedTasks) { task in
+                    TaskRow(task: task, focus: $focusedTask, onReturn: addTask)
+                        .listRowSeparator(.hidden)
+                        // Completed rows are locked below the open group; the blank
+                        // draft can't be dragged mid-edit.
+                        .moveDisabled(task.done || task.isBlank)
+                }
+                .onDelete(perform: delete)
+                .onMove(perform: move)
 
-            // The empty space below the list is a tap target for adding a task.
-            Color.clear
-                .frame(minHeight: 400)
+                // The empty space below the list is a reliable tap target (a Button, not a
+                // row gesture): dismiss an open draft, otherwise add a task.
+                Button {
+                    if isEditing { dismissEditing() } else { addTask() }
+                } label: {
+                    Color.clear
+                        .frame(minHeight: addAreaHeight(viewport: geo.size.height))
+                        .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
                 .listRowBackground(Color.appBackground)
                 .listRowSeparator(.hidden)
-                .contentShape(Rectangle())
-                .onTapGesture(perform: addTask)
+            }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(Color.appBackground)
         }
-        .listStyle(.plain)
-        .scrollContentBackground(.hidden)
-        .background(Color.appBackground)
+    }
+
+    /// Height for the tap-to-add area below the rows: fills the space left under the
+    /// rows (so it's all tappable) without adding scroll overflow. Rows are ~56pt; the
+    /// floor keeps a usable tap target once the list nearly fills the screen.
+    private func addAreaHeight(viewport: CGFloat) -> CGFloat {
+        let estimatedRows = CGFloat(orderedTasks.count) * 56
+        return max(120, viewport - estimatedRows)
     }
 
     private var emptyState: some View {
@@ -123,7 +271,9 @@ struct ListView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .contentShape(Rectangle())
-        .onTapGesture(perform: addTask)
+        .onTapGesture {
+            if isEditing { dismissEditing() } else { addTask() }
+        }
     }
 
     /// Insert a fresh, empty task and drop the cursor straight into it.
@@ -135,22 +285,83 @@ struct ListView: View {
             focusedTask = draft.id
             return
         }
-        let item = TaskItem(title: "")
-        context.insert(item)
+        // New tasks land at the bottom of the open group.
+        let nextOrder = (tasks.map(\.sortOrder).max() ?? -1) + 1
+        let item = TaskItem(title: "", sortOrder: nextOrder)
+        withAnimation(.appMotion) { context.insert(item) }
         try? context.save()
+        Haptics.impact(.light)
         // Defer focus until the new row has been laid out.
         DispatchQueue.main.async {
             focusedTask = item.id
         }
     }
 
-    private func delete(_ offsets: IndexSet) {
-        let items = orderedTasks
-        for index in offsets {
-            context.delete(items[index])
+    /// Tapping off the field hides the keyboard; the row's commit-on-blur then
+    /// discards the draft if it was left empty.
+    private func dismissEditing() {
+        if titleFocused { finishEditingTitle() }
+        focusedTask = nil
+    }
+
+    /// Remove all completed tasks immediately (low-risk; only done items).
+    private func clearCompleted() {
+        withAnimation(.appMotion) { TaskActions.clearCompleted(in: context) }
+        Haptics.notify(.warning)
+        live.refresh()
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    /// Remove every task (confirmed via dialog before this runs).
+    private func clearAll() {
+        withAnimation(.appMotion) { TaskActions.clearAll(in: context) }
+        Haptics.notify(.warning)
+        live.refresh()
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    /// Drag-to-reorder within the open group: renumber the open tasks to their new
+    /// order and persist. Completed tasks are locked (clamped out by the helper).
+    private func move(from source: IndexSet, to destination: Int) {
+        let reordered = TaskOrdering.openOrderAfterMove(orderedTasks, from: source, to: destination)
+        withAnimation(.appMotion) {
+            for (index, task) in reordered.enumerated() {
+                task.sortOrder = index
+            }
         }
         try? context.save()
+        Haptics.impact(.light)
+        live.refresh()
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+
+    private func delete(_ offsets: IndexSet) {
+        let items = orderedTasks
+        withAnimation(.appMotion) {
+            for index in offsets {
+                context.delete(items[index])
+            }
+        }
+        try? context.save()
+        Haptics.notify(.warning)
         LiveActivityController.shared.refresh()
         WidgetCenter.shared.reloadAllTimelines()
+    }
+}
+
+/// The classic "we're live" indicator: a red dot that gently pulses while active.
+private struct LiveDot: View {
+    @State private var pulse = false
+
+    var body: some View {
+        Circle()
+            .fill(Color.red)
+            .frame(width: 9, height: 9)
+            .opacity(pulse ? 1.0 : 0.55)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) {
+                    pulse = true
+                }
+            }
     }
 }

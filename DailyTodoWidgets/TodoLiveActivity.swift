@@ -14,7 +14,7 @@ struct TodoLiveActivity: Widget {
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
-                    Label("To-Do", systemImage: "checklist")
+                    Label(ListSettings.name, systemImage: "checklist")
                         .font(.caption).bold()
                         .foregroundStyle(Color.brand)
                         .padding(.leading, 4)
@@ -33,7 +33,7 @@ struct TodoLiveActivity: Widget {
                                 .foregroundStyle(.secondary)
                         } else {
                             // Dynamic Island is always dark — use light text here.
-                            ForEach(context.state.tasks.prefix(4)) {
+                            ForEach(context.state.tasks.prefix(3)) {
                                 LiveTaskRow(task: $0, primaryText: .white, mutedText: .white.opacity(0.6))
                             }
                         }
@@ -59,7 +59,7 @@ private struct LockScreenLiveView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack(alignment: .center, spacing: 10) {
-                Text("To-Do")
+                Text(ListSettings.name)
                     .font(.title3.weight(.bold))
                     .foregroundStyle(Color.textPrimary)
                 Spacer(minLength: 8)
@@ -79,7 +79,7 @@ private struct LockScreenLiveView: View {
                     .foregroundStyle(Color.textSecondary)
             } else {
                 VStack(alignment: .leading, spacing: 11) {
-                    ForEach(state.tasks.prefix(4)) { LiveTaskRow(task: $0, font: .body) }
+                    ForEach(state.tasks.prefix(3)) { LiveTaskRow(task: $0, font: .body) }
                 }
             }
         }
@@ -97,11 +97,9 @@ private struct LiveTaskRow: View {
     var body: some View {
         Button(intent: ToggleTaskIntent(taskID: task.id)) {
             HStack(spacing: 10) {
-                Image(systemName: task.done ? "checkmark.circle.fill" : "circle")
+                Image(systemName: TaskStyle.checkboxSymbol(done: task.done))
                     .foregroundStyle(task.done ? Color.brand : mutedText)
-                Text(task.title)
-                    .strikethrough(task.done, color: mutedText)
-                    .foregroundStyle(task.done ? mutedText : primaryText)
+                TaskStyle.title(task.title, done: task.done, primary: primaryText, muted: mutedText)
                     .lineLimit(1)
                 Spacer(minLength: 0)
             }
