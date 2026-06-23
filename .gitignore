@@ -33,6 +33,11 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 
+# App Store marketing assets (local working files)
+marketing_tmp/
+
+settings.local.json
+
 # Misc
 *.hmap
 *.ipa

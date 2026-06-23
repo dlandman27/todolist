@@ -40,6 +40,7 @@ final class LiveActivityController {
 
         if let activity = Activity<TodoActivityAttributes>.activities.first {
             Task { await activity.update(ActivityContent(state: state, staleDate: nil)) }
+            isRunning = true
         } else {
             do {
                 _ = try Activity.request(
@@ -47,11 +48,12 @@ final class LiveActivityController {
                     content: ActivityContent(state: state, staleDate: nil),
                     pushType: nil
                 )
+                isRunning = true
             } catch {
                 print("Live Activity start failed: \(error)")
+                isRunning = false
             }
         }
-        isRunning = true
     }
 
     /// Pin the list to the lock screen.

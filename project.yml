@@ -31,7 +31,9 @@ targets:
     info:
       path: DailyTodo/Info.plist
       properties:
-        CFBundleDisplayName: Daily
+        CFBundleDisplayName: 1List
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
         ITSAppUsesNonExemptEncryption: false
         UIRequiresFullScreen: true
         NSSupportsLiveActivities: true
@@ -65,7 +67,9 @@ targets:
     info:
       path: DailyTodoWidgets/Info.plist
       properties:
-        CFBundleDisplayName: Daily
+        CFBundleDisplayName: 1List
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
 

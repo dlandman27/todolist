@@ -302,11 +302,9 @@ struct ListView: View {
             focusedTask = draft.id
             return
         }
-        // New tasks land at the bottom of the open group.
-        let nextOrder = (tasks.map(\.sortOrder).max() ?? -1) + 1
-        let item = TaskItem(title: "", sortOrder: nextOrder)
-        withAnimation(.appMotion) { context.insert(item) }
-        try? context.save()
+        // New tasks land at the bottom of the open group. Insertion + ordering are
+        // shared with the Siri/Shortcuts add intent via TaskActions.
+        let item = withAnimation(.appMotion) { TaskActions.add(title: "", in: context) }
         Haptics.impact(.light)
         // Defer focus until the new row has been laid out.
         DispatchQueue.main.async {
