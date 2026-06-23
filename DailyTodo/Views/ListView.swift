@@ -19,6 +19,15 @@ struct ListView: View {
     /// Open tasks first, completed ones sunk to the bottom in check-off order.
     private var orderedTasks: [TaskItem] { TaskOrdering.ordered(tasks) }
 
+    /// A signature of the displayed order and each row's done-state. Driving the
+    /// list's animation off this value (rather than a per-tap `withAnimation`) means
+    /// a row move animates consistently no matter which path delivers the change —
+    /// the synchronous edit or SwiftData's later async `@Query` republish. Those two
+    /// paths used to race, so completing a task animated only intermittently.
+    private var layoutSignature: [String] {
+        orderedTasks.map { "\($0.id)|\($0.done)" }
+    }
+
     /// True while either a task row or the title is being edited — a tap off should
     /// then just unfocus, never add a new task.
     private var isEditing: Bool { focusedTask != nil || titleFocused }
@@ -224,6 +233,10 @@ struct ListView: View {
                 ForEach(orderedTasks) { task in
                     TaskRow(task: task, focus: $focusedTask, onReturn: addTask)
                         .listRowSeparator(.hidden)
+                        // Override List's chunky default row insets. Leading 4 + the row's
+                        // own 12pt content padding = 16, lining the checkbox up with the
+                        // "Todo" title; tight top/bottom keeps rows close together.
+                        .listRowInsets(EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4))
                         // Completed rows are locked below the open group; the blank
                         // draft can't be dragged mid-edit.
                         .moveDisabled(task.done || task.isBlank)
@@ -247,6 +260,10 @@ struct ListView: View {
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
             .background(Color.appBackground)
+            // Default min row height (44) leaves single-line rows looking spaced out;
+            // shrink it so rows hug their content.
+            .environment(\.defaultMinListRowHeight, 36)
+            .animation(.appMotion, value: layoutSignature)
         }
     }
 

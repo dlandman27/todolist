@@ -15,7 +15,26 @@
       "Bash(/usr/libexec/PlistBuddy -c \"Print :CFBundleShortVersionString\" build/DailyTodo.xcarchive/Products/Applications/DailyTodo.app/Info.plist)",
       "Bash(/usr/libexec/PlistBuddy -c \"Print :CFBundleVersion\" build/DailyTodo.xcarchive/Products/Applications/DailyTodo.app/Info.plist)",
       "Bash(security find-identity *)",
-      "Read(//Users/dylanlandman/Downloads/**)"
+      "Read(//Users/dylanlandman/Downloads/**)",
+      "Bash(defaults read *)",
+      "Bash(sw_vers)",
+      "Read(//Applications/**)",
+      "Bash(softwareupdate --list-full-installers)",
+      "Bash(cat)",
+      "Bash(swift /tmp/makeicon.swift DailyTodo/Assets.xcassets/AppIcon.appiconset/AppIcon.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight -g hasAlpha DailyTodo/Assets.xcassets/AppIcon.appiconset/AppIcon.png)",
+      "Bash(xcodebuild -project DailyTodo.xcodeproj -scheme DailyTodo -configuration Debug -destination 'platform=iOS Simulator,id=1E416363-ECFB-4973-AAC7-F1E697B8FF0F' -derivedDataPath ./build build)",
+      "Bash(xcodegen --version)",
+      "Bash(xcodebuild -project DailyTodo.xcodeproj -scheme DailyTodo -configuration Debug -destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' -derivedDataPath ./build build)",
+      "Bash(plutil -convert json -o - /System/Library/PrivateFrameworks/SFSymbols.framework/Versions/A/Resources/CoreGlyphs.bundle/Contents/Resources/name_availability.plist)",
+      "Bash(python3 -c ' *)",
+      "Bash(xcrun devicectl *)",
+      "Bash(grep -v \"^$\")",
+      "Skill(run)",
+      "Bash(git add *)",
+      "Bash(git commit -q -m 'Add manual priority sorting via drag-to-reorder *)",
+      "Bash(xcodebuild -scheme DailyTodo -destination 'id=1E416363-ECFB-4973-AAC7-F1E697B8FF0F' -derivedDataPath build build)",
+      "Bash(xcodebuild -project DailyTodo.xcodeproj -scheme DailyTodo -destination 'id=1E416363-ECFB-4973-AAC7-F1E697B8FF0F' -derivedDataPath /tmp/DailyTodoBuild build)"
     ]
   }
 }

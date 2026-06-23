@@ -5,17 +5,25 @@ import SwiftData
 struct DailyTodoApp: App {
     @State private var router = Router()
     @State private var live = LiveActivityController.shared
+    @State private var midnight = MidnightScheduler()
     @Environment(\.scenePhase) private var scenePhase
+    @AppStorage(AppTheme.defaultsKey) private var appTheme = AppTheme.system
 
     init() {
         // Opaque, seamless navigation bar: matches the app background with no hairline.
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(Color.appBackground)
+        appearance.backgroundColor = .appBackgroundColor
         appearance.shadowColor = .clear
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
+    }
+
+    /// Clear completed tasks if a new day has started (catch-up on foreground / midnight).
+    @MainActor
+    private func runDailyCleanup() {
+        DailyCleanup.runIfNeeded(in: TaskStore.shared.mainContext)
     }
 
     var body: some Scene {
@@ -29,9 +37,23 @@ struct DailyTodoApp: App {
                     }
                 }
                 .onChange(of: scenePhase) { _, phase in
-                    if phase == .active { live.refresh() }
+                    switch phase {
+                    case .active:
+                        runDailyCleanup()
+                        live.refresh()
+                        midnight.start { runDailyCleanup(); live.refresh() }
+                    case .background, .inactive:
+                        midnight.cancel()
+                    @unknown default:
+                        break
+                    }
                 }
-                .task { live.refresh() }
+                .task {
+                    runDailyCleanup()
+                    live.refresh()
+                    midnight.start { runDailyCleanup(); live.refresh() }
+                }
+                .preferredColorScheme(appTheme.colorScheme)
         }
         .modelContainer(TaskStore.shared)
     }

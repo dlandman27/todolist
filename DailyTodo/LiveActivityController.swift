@@ -32,6 +32,7 @@ final class LiveActivityController {
 
     /// Start the activity if needed, or update the running one to reflect the current list.
     func refresh() {
+        guard !TaskStore.isUITesting else { return }
         syncRunningState()
         guard ActivityAuthorizationInfo().areActivitiesEnabled, isEnabled else { return }
 

@@ -36,7 +36,7 @@ struct TodoProvider: TimelineProvider {
 
     private func load() -> TodoEntry {
         let context = ModelContext(TaskStore.shared)
-        let tasks = context.allTasks().map {
+        let tasks = context.orderedTasks().map {
             TaskSnapshot(id: $0.id, title: $0.title, done: $0.done)
         }
         return TodoEntry(date: Date(), tasks: tasks)
@@ -73,7 +73,7 @@ struct TodoWidgetView: View {
     private var systemView: some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .firstTextBaseline) {
-                Text("To-Do")
+                Text(ListSettings.name)
                     .font(.headline)
                     .foregroundStyle(Color.textPrimary)
                 Spacer()
@@ -106,11 +106,9 @@ struct TodoWidgetView: View {
     private func row(_ task: TaskSnapshot) -> some View {
         Button(intent: ToggleTaskIntent(taskID: task.id)) {
             HStack(spacing: 8) {
-                Image(systemName: task.done ? "checkmark.circle.fill" : "circle")
+                Image(systemName: TaskStyle.checkboxSymbol(done: task.done))
                     .foregroundStyle(task.done ? Color.brand : Color.textSecondary)
-                Text(task.title)
-                    .strikethrough(task.done, color: .textSecondary)
-                    .foregroundStyle(task.done ? Color.textSecondary : Color.textPrimary)
+                TaskStyle.title(task.title, done: task.done, primary: .textPrimary, muted: .textSecondary)
                     .lineLimit(1)
                 Spacer(minLength: 0)
             }
@@ -121,7 +119,7 @@ struct TodoWidgetView: View {
 
     private var accessoryRectangular: some View {
         VStack(alignment: .leading, spacing: 2) {
-            Text("To-Do").font(.caption2).bold()
+            Text(ListSettings.name).font(.caption2).bold()
             if entry.tasks.isEmpty {
                 Text("Nothing yet").font(.caption2).foregroundStyle(.secondary)
             } else {

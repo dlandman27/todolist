@@ -7,24 +7,40 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		011B9C15A648B7BE3C980BBC /* TaskLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB52BDD24FBF88FA3D25F05 /* TaskLogicTests.swift */; };
+		02A81E8E91F06342DB768595 /* MidnightScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9969D83F27435E034F5B9910 /* MidnightScheduler.swift */; };
 		06B8378414F3389FFBAA5190 /* TodoLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7435A558E61FFD6D0D94E67F /* TodoLiveActivity.swift */; };
+		1123159D9C5761E0F5A2E078 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA5B72AF1AD3AD4EE336AA /* SettingsView.swift */; };
 		1D9E3F19592C898F7F7AFAEF /* ToggleTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */; };
 		228BD8877265A2449CB0387B /* TodoActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43DCE149EB1710817756B54 /* TodoActivityAttributes.swift */; };
+		23646CD97C2078484E3385BD /* TaskActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73610AD06E4FABE20A24D03E /* TaskActions.swift */; };
 		243BBEA9F7196417BA55B3B7 /* TaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1A562A947F60569DE08C6 /* TaskItem.swift */; };
 		24CA9DDD823774F3F75E5D8E /* LiveActivityBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */; };
+		2E65F03DD31AB269B1F95107 /* DailyCleanup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3734206842CDD79EB3D09B75 /* DailyCleanup.swift */; };
 		3F2C0B71B718CD2746F64774 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D93E764550B345709DDAFC5 /* Theme.swift */; };
+		3FAC60A266B9BA9B0EAD064B /* TaskFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869BF8AEC58F9C8C1F2522F8 /* TaskFlowUITests.swift */; };
 		42D513E29488BF2538E6E366 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97382722425927981E0E4F4 /* ListView.swift */; };
+		5CC1C0C7D20EA64A1FED7111 /* DailyCleanupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */; };
 		692E092BA7C59901FAA1784D /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9009156203DE059C471C455 /* TaskStore.swift */; };
 		6C8A1CD2EEC3D226B18F4263 /* DailyTodoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456E5A4D9C42AA4855B05A4E /* DailyTodoApp.swift */; };
+		799A1A3760376FA054D4C6CB /* TaskStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13070A7F47697A07ED02B43 /* TaskStyle.swift */; };
+		7F89147E4BD67D8C9742C979 /* TaskActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73610AD06E4FABE20A24D03E /* TaskActions.swift */; };
+		8092AFD861B954C3B6C50A46 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBDBB65A2EE4F9852ECBD6B /* AppTheme.swift */; };
+		812EE205BB9E546578089AE5 /* DailyCleanup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3734206842CDD79EB3D09B75 /* DailyCleanup.swift */; };
 		83A2E06198761EC7215AF827 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D93E764550B345709DDAFC5 /* Theme.swift */; };
+		9376B3C47CAA1ABCB65EC971 /* TaskStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13070A7F47697A07ED02B43 /* TaskStyle.swift */; };
 		A10109AD0ED51CF88D00644F /* TaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1A562A947F60569DE08C6 /* TaskItem.swift */; };
 		AA7F130A5D4A119D4D7A9187 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89172F89B880F640C73953BB /* AppGroup.swift */; };
 		AF067AF85273961953A8998E /* DailyTodoWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29071CED0BA1D606CD45764 /* DailyTodoWidgetsBundle.swift */; };
 		BD5C0AD348C07424832B8D7C /* LiveActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AA3136636BB9A8D6ED4576 /* LiveActivityController.swift */; };
 		C3A5EFAD2CB5C54F0CB92147 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89172F89B880F640C73953BB /* AppGroup.swift */; };
 		DBABCC86613BCBC570E923E5 /* TodoListWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2C8A719522F64ED4F37164 /* TodoListWidget.swift */; };
+		DD63C98D2A5C2B5F760D6199 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F4338DD9DEC2A2D9C88DA3 /* Haptics.swift */; };
 		E26217B1B3AC5F9A3C6781DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B0BDA66530D103FDAD52AD4 /* Assets.xcassets */; };
+		E5AC5E534377B1D07B9768C2 /* TaskOrdering.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5766443269F0279010B10C /* TaskOrdering.swift */; };
 		E67AF235745597377DA7B6BD /* DailyTodoWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = FC75BDB09E09BDCC4EE6847B /* DailyTodoWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		E6F22E763D5B3B482F8B14B4 /* TaskOrdering.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5766443269F0279010B10C /* TaskOrdering.swift */; };
+		E726D9511A6997ECDFCB415D /* TaskActionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7D7222B5700EC8880F8776 /* TaskActionsTests.swift */; };
 		E76DE0262846BF97231DBBD6 /* ToggleTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */; };
 		ED584530F9278FE0B51D7E69 /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9009156203DE059C471C455 /* TaskStore.swift */; };
 		F49D77A16FB12001BDB1584D /* LiveActivityBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */; };
@@ -39,6 +55,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = AC3A587A76AD6AC01B48CC06;
 			remoteInfo = DailyTodoWidgets;
+		};
+		A29C8AEB33AEB05DF2B8BB94 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE2511A606BF3C09E6694324 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8C314A63B213C1412BC9709;
+			remoteInfo = DailyTodo;
+		};
+		E6C504262435D190DDCB6031 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EE2511A606BF3C09E6694324 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D8C314A63B213C1412BC9709;
+			remoteInfo = DailyTodo;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -58,25 +88,39 @@
 
 /* Begin PBXFileReference section */
 		02AA3136636BB9A8D6ED4576 /* LiveActivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityController.swift; sourceTree = "<group>"; };
+		07F4338DD9DEC2A2D9C88DA3 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
 		0E2C8A719522F64ED4F37164 /* TodoListWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListWidget.swift; sourceTree = "<group>"; };
 		1028E2BAA40DEE2897D09876 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		1D93E764550B345709DDAFC5 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		1FFA5B72AF1AD3AD4EE336AA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		2CB52BDD24FBF88FA3D25F05 /* TaskLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskLogicTests.swift; sourceTree = "<group>"; };
+		2F08F0AD673DE7396DBBC760 /* DailyTodoUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DailyTodoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityBridge.swift; sourceTree = "<group>"; };
+		3734206842CDD79EB3D09B75 /* DailyCleanup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyCleanup.swift; sourceTree = "<group>"; };
+		446CCE65312F93B00926BEDD /* DailyTodoTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DailyTodoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		456E5A4D9C42AA4855B05A4E /* DailyTodoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTodoApp.swift; sourceTree = "<group>"; };
 		45E1A562A947F60569DE08C6 /* TaskItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskItem.swift; sourceTree = "<group>"; };
 		4B449DAE99E7995EB9F9530E /* TaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRow.swift; sourceTree = "<group>"; };
 		6EC66BA5042F27294F869567 /* DailyTodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyTodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		73610AD06E4FABE20A24D03E /* TaskActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskActions.swift; sourceTree = "<group>"; };
 		7435A558E61FFD6D0D94E67F /* TodoLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoLiveActivity.swift; sourceTree = "<group>"; };
+		77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyCleanupTests.swift; sourceTree = "<group>"; };
 		7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleTaskIntent.swift; sourceTree = "<group>"; };
+		869BF8AEC58F9C8C1F2522F8 /* TaskFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskFlowUITests.swift; sourceTree = "<group>"; };
 		89172F89B880F640C73953BB /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		8B0BDA66530D103FDAD52AD4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9969D83F27435E034F5B9910 /* MidnightScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidnightScheduler.swift; sourceTree = "<group>"; };
+		AE7D7222B5700EC8880F8776 /* TaskActionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskActionsTests.swift; sourceTree = "<group>"; };
 		C29071CED0BA1D606CD45764 /* DailyTodoWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTodoWidgetsBundle.swift; sourceTree = "<group>"; };
 		C9009156203DE059C471C455 /* TaskStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStore.swift; sourceTree = "<group>"; };
 		D02F0E7114BA954A5E3CA2B0 /* DailyTodo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DailyTodo.entitlements; sourceTree = "<group>"; };
+		D13070A7F47697A07ED02B43 /* TaskStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskStyle.swift; sourceTree = "<group>"; };
 		D97382722425927981E0E4F4 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		E15DD08C4939DAB6CAF52E99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E217AFC141B32F095DA09E51 /* DailyTodoWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DailyTodoWidgets.entitlements; sourceTree = "<group>"; };
+		EA5766443269F0279010B10C /* TaskOrdering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskOrdering.swift; sourceTree = "<group>"; };
 		F43DCE149EB1710817756B54 /* TodoActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoActivityAttributes.swift; sourceTree = "<group>"; };
+		FBBDBB65A2EE4F9852ECBD6B /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		FC75BDB09E09BDCC4EE6847B /* DailyTodoWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DailyTodoWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -85,18 +129,34 @@
 			isa = PBXGroup;
 			children = (
 				6EC66BA5042F27294F869567 /* DailyTodo.app */,
+				446CCE65312F93B00926BEDD /* DailyTodoTests.xctest */,
+				2F08F0AD673DE7396DBBC760 /* DailyTodoUITests.xctest */,
 				FC75BDB09E09BDCC4EE6847B /* DailyTodoWidgets.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		3ABF84E0FC39F521882A67E3 /* DailyTodoTests */ = {
+			isa = PBXGroup;
+			children = (
+				77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */,
+				AE7D7222B5700EC8880F8776 /* TaskActionsTests.swift */,
+				2CB52BDD24FBF88FA3D25F05 /* TaskLogicTests.swift */,
+			);
+			path = DailyTodoTests;
 			sourceTree = "<group>";
 		};
 		4BE7655AA93DD6DF1CF0B554 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
 				89172F89B880F640C73953BB /* AppGroup.swift */,
+				3734206842CDD79EB3D09B75 /* DailyCleanup.swift */,
 				30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */,
+				73610AD06E4FABE20A24D03E /* TaskActions.swift */,
 				45E1A562A947F60569DE08C6 /* TaskItem.swift */,
+				EA5766443269F0279010B10C /* TaskOrdering.swift */,
 				C9009156203DE059C471C455 /* TaskStore.swift */,
+				D13070A7F47697A07ED02B43 /* TaskStyle.swift */,
 				1D93E764550B345709DDAFC5 /* Theme.swift */,
 				F43DCE149EB1710817756B54 /* TodoActivityAttributes.swift */,
 				7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */,
@@ -107,11 +167,14 @@
 		5FEE3C41B09A3813DD402BA4 /* DailyTodo */ = {
 			isa = PBXGroup;
 			children = (
+				FBBDBB65A2EE4F9852ECBD6B /* AppTheme.swift */,
 				8B0BDA66530D103FDAD52AD4 /* Assets.xcassets */,
 				D02F0E7114BA954A5E3CA2B0 /* DailyTodo.entitlements */,
 				456E5A4D9C42AA4855B05A4E /* DailyTodoApp.swift */,
+				07F4338DD9DEC2A2D9C88DA3 /* Haptics.swift */,
 				E15DD08C4939DAB6CAF52E99 /* Info.plist */,
 				02AA3136636BB9A8D6ED4576 /* LiveActivityController.swift */,
+				9969D83F27435E034F5B9910 /* MidnightScheduler.swift */,
 				B776823B4880EFD547991BF7 /* Views */,
 			);
 			path = DailyTodo;
@@ -129,10 +192,19 @@
 			path = DailyTodoWidgets;
 			sourceTree = "<group>";
 		};
+		AB984C73F5CDC3B01741A39F /* DailyTodoUITests */ = {
+			isa = PBXGroup;
+			children = (
+				869BF8AEC58F9C8C1F2522F8 /* TaskFlowUITests.swift */,
+			);
+			path = DailyTodoUITests;
+			sourceTree = "<group>";
+		};
 		B776823B4880EFD547991BF7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
 				D97382722425927981E0E4F4 /* ListView.swift */,
+				1FFA5B72AF1AD3AD4EE336AA /* SettingsView.swift */,
 				4B449DAE99E7995EB9F9530E /* TaskRow.swift */,
 			);
 			path = Views;
@@ -142,6 +214,8 @@
 			isa = PBXGroup;
 			children = (
 				5FEE3C41B09A3813DD402BA4 /* DailyTodo */,
+				3ABF84E0FC39F521882A67E3 /* DailyTodoTests */,
+				AB984C73F5CDC3B01741A39F /* DailyTodoUITests */,
 				AB7574D1081BA3C67170F26B /* DailyTodoWidgets */,
 				4BE7655AA93DD6DF1CF0B554 /* Shared */,
 				00AEE2DFBFA28D5AD8C9B6F5 /* Products */,
@@ -151,6 +225,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		178022B5FDDDBF918FF195BE /* DailyTodoUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 49E8C22C1527C4C40E8D022A /* Build configuration list for PBXNativeTarget "DailyTodoUITests" */;
+			buildPhases = (
+				0D5B13ED9E131999B0113282 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3076DA3EAA1C795A876582BA /* PBXTargetDependency */,
+			);
+			name = DailyTodoUITests;
+			packageProductDependencies = (
+			);
+			productName = DailyTodoUITests;
+			productReference = 2F08F0AD673DE7396DBBC760 /* DailyTodoUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		AC3A587A76AD6AC01B48CC06 /* DailyTodoWidgets */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA4DF05E254A36761FE5CC71 /* Build configuration list for PBXNativeTarget "DailyTodoWidgets" */;
@@ -188,6 +280,24 @@
 			productReference = 6EC66BA5042F27294F869567 /* DailyTodo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		FDE6E4396913CC8F20F20A52 /* DailyTodoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F1FD21492AF930279514936C /* Build configuration list for PBXNativeTarget "DailyTodoTests" */;
+			buildPhases = (
+				7FC747D27404B27F700B5C14 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AADA7C3156143FAB0A034009 /* PBXTargetDependency */,
+			);
+			name = DailyTodoTests;
+			packageProductDependencies = (
+			);
+			productName = DailyTodoTests;
+			productReference = 446CCE65312F93B00926BEDD /* DailyTodoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -197,11 +307,18 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
-					AC3A587A76AD6AC01B48CC06 = {
+					178022B5FDDDBF918FF195BE = {
 						DevelopmentTeam = 62TKJF387W;
+						ProvisioningStyle = Automatic;
+						TestTargetID = D8C314A63B213C1412BC9709;
+					};
+					AC3A587A76AD6AC01B48CC06 = {
 						ProvisioningStyle = Automatic;
 					};
 					D8C314A63B213C1412BC9709 = {
+						ProvisioningStyle = Automatic;
+					};
+					FDE6E4396913CC8F20F20A52 = {
 						DevelopmentTeam = 62TKJF387W;
 						ProvisioningStyle = Automatic;
 					};
@@ -222,6 +339,8 @@
 			projectRoot = "";
 			targets = (
 				D8C314A63B213C1412BC9709 /* DailyTodo */,
+				FDE6E4396913CC8F20F20A52 /* DailyTodoTests */,
+				178022B5FDDDBF918FF195BE /* DailyTodoUITests */,
 				AC3A587A76AD6AC01B48CC06 /* DailyTodoWidgets */,
 			);
 		};
@@ -239,21 +358,47 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0D5B13ED9E131999B0113282 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3FAC60A266B9BA9B0EAD064B /* TaskFlowUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		6531E4E67C0916FC3447399F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				C3A5EFAD2CB5C54F0CB92147 /* AppGroup.swift in Sources */,
+				8092AFD861B954C3B6C50A46 /* AppTheme.swift in Sources */,
+				2E65F03DD31AB269B1F95107 /* DailyCleanup.swift in Sources */,
 				6C8A1CD2EEC3D226B18F4263 /* DailyTodoApp.swift in Sources */,
+				DD63C98D2A5C2B5F760D6199 /* Haptics.swift in Sources */,
 				42D513E29488BF2538E6E366 /* ListView.swift in Sources */,
 				24CA9DDD823774F3F75E5D8E /* LiveActivityBridge.swift in Sources */,
 				BD5C0AD348C07424832B8D7C /* LiveActivityController.swift in Sources */,
+				02A81E8E91F06342DB768595 /* MidnightScheduler.swift in Sources */,
+				1123159D9C5761E0F5A2E078 /* SettingsView.swift in Sources */,
+				23646CD97C2078484E3385BD /* TaskActions.swift in Sources */,
 				A10109AD0ED51CF88D00644F /* TaskItem.swift in Sources */,
+				E5AC5E534377B1D07B9768C2 /* TaskOrdering.swift in Sources */,
 				F7D32C00D19C3667BE5F250A /* TaskRow.swift in Sources */,
 				ED584530F9278FE0B51D7E69 /* TaskStore.swift in Sources */,
+				9376B3C47CAA1ABCB65EC971 /* TaskStyle.swift in Sources */,
 				3F2C0B71B718CD2746F64774 /* Theme.swift in Sources */,
 				228BD8877265A2449CB0387B /* TodoActivityAttributes.swift in Sources */,
 				1D9E3F19592C898F7F7AFAEF /* ToggleTaskIntent.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7FC747D27404B27F700B5C14 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5CC1C0C7D20EA64A1FED7111 /* DailyCleanupTests.swift in Sources */,
+				E726D9511A6997ECDFCB415D /* TaskActionsTests.swift in Sources */,
+				011B9C15A648B7BE3C980BBC /* TaskLogicTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,10 +407,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA7F130A5D4A119D4D7A9187 /* AppGroup.swift in Sources */,
+				812EE205BB9E546578089AE5 /* DailyCleanup.swift in Sources */,
 				AF067AF85273961953A8998E /* DailyTodoWidgetsBundle.swift in Sources */,
 				F49D77A16FB12001BDB1584D /* LiveActivityBridge.swift in Sources */,
+				7F89147E4BD67D8C9742C979 /* TaskActions.swift in Sources */,
 				243BBEA9F7196417BA55B3B7 /* TaskItem.swift in Sources */,
+				E6F22E763D5B3B482F8B14B4 /* TaskOrdering.swift in Sources */,
 				692E092BA7C59901FAA1784D /* TaskStore.swift in Sources */,
+				799A1A3760376FA054D4C6CB /* TaskStyle.swift in Sources */,
 				83A2E06198761EC7215AF827 /* Theme.swift in Sources */,
 				FDEEAB6B930A0CFEC3531589 /* TodoActivityAttributes.swift in Sources */,
 				DBABCC86613BCBC570E923E5 /* TodoListWidget.swift in Sources */,
@@ -277,20 +426,47 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		3076DA3EAA1C795A876582BA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8C314A63B213C1412BC9709 /* DailyTodo */;
+			targetProxy = E6C504262435D190DDCB6031 /* PBXContainerItemProxy */;
+		};
 		67D78B07A463FBBEC1BB9789 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = AC3A587A76AD6AC01B48CC06 /* DailyTodoWidgets */;
 			targetProxy = 7BFF17B7C54279B0D6163ACB /* PBXContainerItemProxy */;
 		};
+		AADA7C3156143FAB0A034009 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D8C314A63B213C1412BC9709 /* DailyTodo */;
+			targetProxy = A29C8AEB33AEB05DF2B8BB94 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		046DFACC2A1D829B7EFC5382 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dylanlandman.dailytodo.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = DailyTodo;
+			};
+			name = Release;
+		};
 		34937FC44BA52C0DE3D1F4AC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = DailyTodoWidgets/DailyTodoWidgets.entitlements;
+				DEVELOPMENT_TEAM = Z78633LQDS;
 				INFOPLIST_FILE = DailyTodoWidgets/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -309,6 +485,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = DailyTodo/DailyTodo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = Z78633LQDS;
+				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = DailyTodo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -320,12 +498,29 @@
 			};
 			name = Release;
 		};
+		6B439B8BFD885BFF3BB3DDA4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dylanlandman.dailytodo.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = DailyTodo;
+			};
+			name = Debug;
+		};
 		7EB7C8F9F0B90033ED90C7D5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = DailyTodoWidgets/DailyTodoWidgets.entitlements;
+				DEVELOPMENT_TEAM = Z78633LQDS;
 				INFOPLIST_FILE = DailyTodoWidgets/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -372,7 +567,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 62TKJF387W;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -395,6 +590,23 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		94B829168B628B34B7A95841 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dylanlandman.dailytodo.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DailyTodo.app/DailyTodo";
 			};
 			name = Release;
 		};
@@ -433,7 +645,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 62TKJF387W;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -466,6 +678,23 @@
 			};
 			name = Debug;
 		};
+		B541B33F0FC325E85F7692BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dylanlandman.dailytodo.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DailyTodo.app/DailyTodo";
+			};
+			name = Debug;
+		};
 		FBEC283DE42188BC819982F0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -473,6 +702,8 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = DailyTodo/DailyTodo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = Z78633LQDS;
+				ENABLE_TESTABILITY = YES;
 				INFOPLIST_FILE = DailyTodo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -487,6 +718,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		49E8C22C1527C4C40E8D022A /* Build configuration list for PBXNativeTarget "DailyTodoUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6B439B8BFD885BFF3BB3DDA4 /* Debug */,
+				046DFACC2A1D829B7EFC5382 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		71030115A7847D8C73EE298A /* Build configuration list for PBXProject "DailyTodo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -510,6 +750,15 @@
 			buildConfigurations = (
 				FBEC283DE42188BC819982F0 /* Debug */,
 				6AC80C028B7E3337F8831350 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F1FD21492AF930279514936C /* Build configuration list for PBXNativeTarget "DailyTodoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B541B33F0FC325E85F7692BC /* Debug */,
+				94B829168B628B34B7A95841 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

@@ -8,7 +8,8 @@ import Foundation
 enum LiveActivityBridge {
     static func contentState() -> TodoActivityAttributes.ContentState {
         let context = ModelContext(TaskStore.shared)
-        let tasks = context.allTasks().map {
+        // orderedTasks() = display order with blank drafts excluded, matching the widget.
+        let tasks = context.orderedTasks().map {
             LiveTask(id: $0.id, title: $0.title, done: $0.done)
         }
         return TodoActivityAttributes.ContentState(tasks: tasks)

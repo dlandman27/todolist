@@ -8,7 +8,7 @@ options:
 settings:
   base:
     MARKETING_VERSION: "1.0"
-    CURRENT_PROJECT_VERSION: "1"
+    CURRENT_PROJECT_VERSION: "6"
     SWIFT_VERSION: "5.0"
     CODE_SIGN_STYLE: Automatic            # Xcode manages provisioning (incl. the App Group)
     DEVELOPMENT_TEAM: "62TKJF387W"        # Dylan Landman's team
@@ -27,11 +27,13 @@ targets:
         CODE_SIGN_ENTITLEMENTS: DailyTodo/DailyTodo.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        ENABLE_TESTABILITY: YES
     info:
       path: DailyTodo/Info.plist
       properties:
         CFBundleDisplayName: Daily
         ITSAppUsesNonExemptEncryption: false
+        UIRequiresFullScreen: true
         NSSupportsLiveActivities: true
         UILaunchScreen: {}
         UIApplicationSceneManifest:
@@ -44,6 +46,11 @@ targets:
               - dailytodo
     dependencies:
       - target: DailyTodoWidgets
+    scheme:
+      testTargets:
+        - DailyTodoTests
+        - DailyTodoUITests
+      gatherCoverageData: false
 
   DailyTodoWidgets:
     type: app-extension
@@ -61,3 +68,27 @@ targets:
         CFBundleDisplayName: Daily
         NSExtension:
           NSExtensionPointIdentifier: com.apple.widgetkit-extension
+
+  DailyTodoTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - DailyTodoTests
+    dependencies:
+      - target: DailyTodo
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dylanlandman.dailytodo.tests
+        GENERATE_INFOPLIST_FILE: YES
+
+  DailyTodoUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - DailyTodoUITests
+    dependencies:
+      - target: DailyTodo
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dylanlandman.dailytodo.uitests
+        GENERATE_INFOPLIST_FILE: YES
