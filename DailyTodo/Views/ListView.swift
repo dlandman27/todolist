@@ -13,14 +13,16 @@ struct ListView: View {
     @FocusState private var titleFocused: Bool
     @State private var showClearAllConfirm = false
     @State private var showClearCompletedConfirm = false
-    @State private var pendingClear: PendingClear?
+    @State private var pendingUndo: PendingUndo?
     @Environment(\.scenePhase) private var scenePhase
 
-    /// The most recently cleared batch, held in memory only while the undo toast is up.
-    private struct PendingClear {
+    /// Tasks removed within the current undo window, accumulated across deletes and
+    /// clears, held in memory only while the toast is up. `id` changes on every new
+    /// removal so the auto-dismiss timer restarts (a rolling 5s window).
+    private struct PendingUndo {
         let id = UUID()
         let snapshots: [TaskSnapshot]
-        let message: String
+        var message: String { "Removed \(snapshots.count) task\(snapshots.count == 1 ? "" : "s")" }
     }
 
     @Query(sort: \TaskItem.createdAt, order: .forward) private var tasks: [TaskItem]
@@ -69,13 +71,13 @@ struct ListView: View {
             }
             .safeAreaInset(edge: .bottom) {
                 VStack(spacing: 10) {
-                    if let pending = pendingClear {
-                        UndoToast(message: pending.message, onUndo: undoClear)
+                    if let pending = pendingUndo {
+                        UndoToast(message: pending.message, onUndo: undo, onDismiss: dismissUndo)
                             .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
                     liveActivityButton
                 }
-                .animation(.appMotion, value: pendingClear?.id)
+                .animation(.appMotion, value: pendingUndo?.id)
             }
             .toolbar(.hidden, for: .navigationBar)
             .confirmationDialog(
@@ -85,8 +87,6 @@ struct ListView: View {
             ) {
                 Button("Delete All", role: .destructive) { clearAll() }
                 Button("Cancel", role: .cancel) {}
-            } message: {
-                Text("You can undo this right after.")
             }
             .confirmationDialog(
                 "Delete \(completedCount) completed task\(completedCount == 1 ? "" : "s")?",
@@ -95,8 +95,6 @@ struct ListView: View {
             ) {
                 Button("Clear Completed", role: .destructive) { clearCompleted() }
                 Button("Cancel", role: .cancel) {}
-            } message: {
-                Text("You can undo this right after.")
             }
         }
         .onChange(of: router.addRequested) { _, requested in
@@ -105,14 +103,14 @@ struct ListView: View {
                 router.addRequested = false
             }
         }
-        .task(id: pendingClear?.id) {
-            guard pendingClear != nil else { return }
+        .task(id: pendingUndo?.id) {
+            guard pendingUndo != nil else { return }
             try? await Task.sleep(for: .seconds(5))
             guard !Task.isCancelled else { return }
-            withAnimation(.appMotion) { pendingClear = nil }
+            withAnimation(.appMotion) { pendingUndo = nil }
         }
         .onChange(of: scenePhase) { _, phase in
-            if phase == .background { pendingClear = nil }
+            if phase == .background { pendingUndo = nil }
         }
     }
 
@@ -353,7 +351,7 @@ struct ListView: View {
         Haptics.notify(.warning)
         live.refresh()
         WidgetCenter.shared.reloadAllTimelines()
-        presentUndo(for: removed)
+        registerUndo(removed)
     }
 
     /// Remove every task (confirmed via dialog before this runs), then offer undo.
@@ -363,27 +361,31 @@ struct ListView: View {
         Haptics.notify(.warning)
         live.refresh()
         WidgetCenter.shared.reloadAllTimelines()
-        presentUndo(for: removed)
+        registerUndo(removed)
     }
 
-    /// Surface the undo toast for a just-cleared batch. No-op if nothing was removed.
-    private func presentUndo(for snapshots: [TaskSnapshot]) {
+    /// Add a just-removed batch to the rolling undo window. Accumulates across deletes
+    /// and clears, and restarts the ~5s auto-dismiss timer (via a fresh `id`). No-op if
+    /// nothing was removed.
+    private func registerUndo(_ snapshots: [TaskSnapshot]) {
         guard !snapshots.isEmpty else { return }
-        let count = snapshots.count
-        pendingClear = PendingClear(
-            snapshots: snapshots,
-            message: "Cleared \(count) task\(count == 1 ? "" : "s")"
-        )
+        let combined = (pendingUndo?.snapshots ?? []) + snapshots
+        pendingUndo = PendingUndo(snapshots: combined)
     }
 
-    /// Restore the most recently cleared batch and dismiss the toast.
-    private func undoClear() {
-        guard let pending = pendingClear else { return }
+    /// Dismiss the undo window without restoring (swipe-to-dismiss).
+    private func dismissUndo() {
+        withAnimation(.appMotion) { pendingUndo = nil }
+    }
+
+    /// Restore everything in the current undo window and dismiss the toast.
+    private func undo() {
+        guard let pending = pendingUndo else { return }
         withAnimation(.appMotion) { TaskActions.restore(pending.snapshots, in: context) }
         Haptics.selection()
         live.refresh()
         WidgetCenter.shared.reloadAllTimelines()
-        pendingClear = nil
+        pendingUndo = nil
     }
 
     /// Drag-to-reorder within the open group: renumber the open tasks to their new
@@ -403,15 +405,13 @@ struct ListView: View {
 
     private func delete(_ offsets: IndexSet) {
         let items = orderedTasks
-        withAnimation(.appMotion) {
-            for index in offsets {
-                context.delete(items[index])
-            }
-        }
-        try? context.save()
+        let toDelete = offsets.map { items[$0] }
+        var removed: [TaskSnapshot] = []
+        withAnimation(.appMotion) { removed = TaskActions.delete(toDelete, in: context) }
         Haptics.notify(.warning)
-        LiveActivityController.shared.refresh()
+        live.refresh()
         WidgetCenter.shared.reloadAllTimelines()
+        registerUndo(removed)
     }
 }
 

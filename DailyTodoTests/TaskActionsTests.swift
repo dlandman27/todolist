@@ -57,6 +57,40 @@ final class TaskActionsTests: XCTestCase {
         XCTAssertEqual(removed.count, 0)
     }
 
+    func testDeleteRemovesOnlyGivenTasksAndReturnsSnapshots() throws {
+        let context = try makeContext()
+        let a = TaskItem(title: "A", sortOrder: 0)
+        let b = TaskItem(title: "B", sortOrder: 1)
+        let c = TaskItem(title: "C", sortOrder: 2)
+        [a, b, c].forEach(context.insert)
+        try context.save()
+
+        let snaps = TaskActions.delete([a, c], in: context)
+
+        XCTAssertEqual(snaps.map(\.title), ["A", "C"])
+        XCTAssertEqual(snaps.map(\.id), [a.id, c.id])
+        XCTAssertEqual(context.allTasks().map(\.title), ["B"])
+    }
+
+    func testDeleteThenRestoreRoundTripsIdentityAndOrder() throws {
+        let context = try makeContext()
+        let a = TaskItem(title: "A", done: true,
+                         completedAt: Date(timeIntervalSince1970: 42), sortOrder: 3)
+        context.insert(a)
+        try context.save()
+
+        let snaps = TaskActions.delete([a], in: context)
+        XCTAssertTrue(context.allTasks().isEmpty)
+
+        TaskActions.restore(snaps, in: context)
+
+        let restored = context.allTasks().first
+        XCTAssertEqual(restored?.id, a.id)
+        XCTAssertEqual(restored?.done, true)
+        XCTAssertEqual(restored?.completedAt, Date(timeIntervalSince1970: 42))
+        XCTAssertEqual(restored?.sortOrder, 3)
+    }
+
     func testClearCompletedReturnsSnapshotsOfRemovedTasks() throws {
         let context = try makeContext()
         let open = TaskItem(title: "Open")

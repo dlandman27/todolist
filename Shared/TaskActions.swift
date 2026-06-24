@@ -55,24 +55,26 @@ enum TaskActions {
         return task
     }
 
+    /// Delete the given tasks. Returns snapshots of what was removed (for undo).
+    /// The single delete primitive every removal path routes through.
+    @discardableResult
+    static func delete(_ tasks: [TaskItem], in context: ModelContext) -> [TaskSnapshot] {
+        let snapshots = tasks.map(TaskSnapshot.init)
+        for task in tasks { context.delete(task) }
+        try? context.save()
+        return snapshots
+    }
+
     /// Delete all completed tasks. Returns snapshots of what was removed (for undo).
     @discardableResult
     static func clearCompleted(in context: ModelContext) -> [TaskSnapshot] {
-        let completed = context.allTasks().filter { $0.done }
-        let snapshots = completed.map(TaskSnapshot.init)
-        for task in completed { context.delete(task) }
-        try? context.save()
-        return snapshots
+        delete(context.allTasks().filter { $0.done }, in: context)
     }
 
     /// Delete every task. Returns snapshots of what was removed (for undo).
     @discardableResult
     static func clearAll(in context: ModelContext) -> [TaskSnapshot] {
-        let all = context.allTasks()
-        let snapshots = all.map(TaskSnapshot.init)
-        for task in all { context.delete(task) }
-        try? context.save()
-        return snapshots
+        delete(context.allTasks(), in: context)
     }
 
     /// Re-insert tasks captured by `clearCompleted`/`clearAll`, preserving their original

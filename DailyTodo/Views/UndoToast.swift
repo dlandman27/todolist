@@ -1,10 +1,18 @@
 import SwiftUI
 
-/// Transient bottom toast shown after a bulk clear, offering a one-tap Undo.
-/// Purely presentational — the caller owns when it appears and auto-dismisses.
+/// Transient bottom toast shown after a removal, offering a one-tap Undo. Swipe it
+/// downward to dismiss. Purely presentational — the caller owns when it appears and
+/// auto-dismisses.
 struct UndoToast: View {
     let message: String
     let onUndo: () -> Void
+    var onDismiss: () -> Void = {}
+
+    /// Downward drag distance (clamped to ≥ 0) tracking the dismiss gesture.
+    @State private var dragOffset: CGFloat = 0
+
+    /// Drag past this many points down to dismiss; shorter drags spring back.
+    private let dismissThreshold: CGFloat = 40
 
     var body: some View {
         HStack(spacing: 16) {
@@ -27,9 +35,23 @@ struct UndoToast: View {
                 .shadow(color: .black.opacity(0.12), radius: 10, y: 4)
         )
         .padding(.horizontal)
+        .offset(y: dragOffset)
+        .gesture(
+            DragGesture(minimumDistance: 10)
+                .onChanged { value in
+                    dragOffset = max(0, value.translation.height)
+                }
+                .onEnded { value in
+                    if value.translation.height > dismissThreshold {
+                        onDismiss()
+                    } else {
+                        withAnimation(.appMotion) { dragOffset = 0 }
+                    }
+                }
+        )
     }
 }
 
 #Preview {
-    UndoToast(message: "Cleared 5 tasks", onUndo: {})
+    UndoToast(message: "Removed 5 tasks", onUndo: {})
 }
