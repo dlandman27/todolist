@@ -13,6 +13,15 @@ struct ListView: View {
     @FocusState private var titleFocused: Bool
     @State private var showClearAllConfirm = false
     @State private var showClearCompletedConfirm = false
+    @State private var pendingClear: PendingClear?
+    @Environment(\.scenePhase) private var scenePhase
+
+    /// The most recently cleared batch, held in memory only while the undo toast is up.
+    private struct PendingClear {
+        let id = UUID()
+        let snapshots: [TaskSnapshot]
+        let message: String
+    }
 
     @Query(sort: \TaskItem.createdAt, order: .forward) private var tasks: [TaskItem]
 
@@ -58,7 +67,16 @@ struct ListView: View {
                 // empty (clear, last row deleted, discarded draft).
                 .animation(.appMotion, value: tasks.isEmpty)
             }
-            .safeAreaInset(edge: .bottom) { liveActivityButton }
+            .safeAreaInset(edge: .bottom) {
+                VStack(spacing: 10) {
+                    if let pending = pendingClear {
+                        UndoToast(message: pending.message, onUndo: undoClear)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
+                    liveActivityButton
+                }
+                .animation(.appMotion, value: pendingClear?.id)
+            }
             .toolbar(.hidden, for: .navigationBar)
             .confirmationDialog(
                 "Delete all \(tasks.count) tasks?",
@@ -68,7 +86,7 @@ struct ListView: View {
                 Button("Delete All", role: .destructive) { clearAll() }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("This can't be undone.")
+                Text("You can undo this right after.")
             }
             .confirmationDialog(
                 "Delete \(completedCount) completed task\(completedCount == 1 ? "" : "s")?",
@@ -78,7 +96,7 @@ struct ListView: View {
                 Button("Clear Completed", role: .destructive) { clearCompleted() }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("This can't be undone.")
+                Text("You can undo this right after.")
             }
         }
         .onChange(of: router.addRequested) { _, requested in
@@ -86,6 +104,15 @@ struct ListView: View {
                 addTask()
                 router.addRequested = false
             }
+        }
+        .task(id: pendingClear?.id) {
+            guard pendingClear != nil else { return }
+            try? await Task.sleep(for: .seconds(5))
+            guard !Task.isCancelled else { return }
+            withAnimation(.appMotion) { pendingClear = nil }
+        }
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .background { pendingClear = nil }
         }
     }
 
@@ -319,20 +346,44 @@ struct ListView: View {
         focusedTask = nil
     }
 
-    /// Remove all completed tasks immediately (low-risk; only done items).
+    /// Remove all completed tasks immediately (low-risk; only done items), then offer undo.
     private func clearCompleted() {
-        withAnimation(.appMotion) { TaskActions.clearCompleted(in: context) }
+        var removed: [TaskSnapshot] = []
+        withAnimation(.appMotion) { removed = TaskActions.clearCompleted(in: context) }
         Haptics.notify(.warning)
         live.refresh()
         WidgetCenter.shared.reloadAllTimelines()
+        presentUndo(for: removed)
     }
 
-    /// Remove every task (confirmed via dialog before this runs).
+    /// Remove every task (confirmed via dialog before this runs), then offer undo.
     private func clearAll() {
-        withAnimation(.appMotion) { TaskActions.clearAll(in: context) }
+        var removed: [TaskSnapshot] = []
+        withAnimation(.appMotion) { removed = TaskActions.clearAll(in: context) }
         Haptics.notify(.warning)
         live.refresh()
         WidgetCenter.shared.reloadAllTimelines()
+        presentUndo(for: removed)
+    }
+
+    /// Surface the undo toast for a just-cleared batch. No-op if nothing was removed.
+    private func presentUndo(for snapshots: [TaskSnapshot]) {
+        guard !snapshots.isEmpty else { return }
+        let count = snapshots.count
+        pendingClear = PendingClear(
+            snapshots: snapshots,
+            message: "Cleared \(count) task\(count == 1 ? "" : "s")"
+        )
+    }
+
+    /// Restore the most recently cleared batch and dismiss the toast.
+    private func undoClear() {
+        guard let pending = pendingClear else { return }
+        withAnimation(.appMotion) { TaskActions.restore(pending.snapshots, in: context) }
+        Haptics.selection()
+        live.refresh()
+        WidgetCenter.shared.reloadAllTimelines()
+        pendingClear = nil
     }
 
     /// Drag-to-reorder within the open group: renumber the open tasks to their new
