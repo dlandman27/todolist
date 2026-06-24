@@ -93,7 +93,7 @@ struct ClearCompletedIntent: AppIntent {
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let context = ModelContext(TaskStore.shared)
-        let removed = TaskActions.clearCompleted(in: context)
+        let removed = TaskActions.clearCompleted(in: context).count
         await refreshSurfaces()
         let dialog: IntentDialog = removed == 0
             ? "No completed tasks to clear."

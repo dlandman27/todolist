@@ -22,7 +22,7 @@ final class TaskActionsTests: XCTestCase {
 
         let removed = TaskActions.clearCompleted(in: context)
 
-        XCTAssertEqual(removed, 1)
+        XCTAssertEqual(removed.count, 1)
         XCTAssertEqual(context.allTasks().map(\.title), ["Open"])
     }
 
@@ -33,7 +33,7 @@ final class TaskActionsTests: XCTestCase {
 
         let removed = TaskActions.clearCompleted(in: context)
 
-        XCTAssertEqual(removed, 0)
+        XCTAssertEqual(removed.count, 0)
         XCTAssertEqual(context.allTasks().count, 1)
     }
 
@@ -45,7 +45,7 @@ final class TaskActionsTests: XCTestCase {
 
         let removed = TaskActions.clearAll(in: context)
 
-        XCTAssertEqual(removed, 2)
+        XCTAssertEqual(removed.count, 2)
         XCTAssertTrue(context.allTasks().isEmpty)
     }
 
@@ -54,7 +54,47 @@ final class TaskActionsTests: XCTestCase {
 
         let removed = TaskActions.clearAll(in: context)
 
-        XCTAssertEqual(removed, 0)
+        XCTAssertEqual(removed.count, 0)
+    }
+
+    func testClearCompletedReturnsSnapshotsOfRemovedTasks() throws {
+        let context = try makeContext()
+        let open = TaskItem(title: "Open")
+        let done = TaskItem(title: "Done", done: true,
+                            completedAt: Date(timeIntervalSince1970: 50), sortOrder: 2)
+        context.insert(open)
+        context.insert(done)
+        try context.save()
+
+        let snaps = TaskActions.clearCompleted(in: context)
+
+        XCTAssertEqual(snaps.map(\.title), ["Done"])
+        XCTAssertEqual(snaps.first?.id, done.id)
+        XCTAssertEqual(snaps.first?.sortOrder, 2)
+        XCTAssertEqual(snaps.first?.completedAt, Date(timeIntervalSince1970: 50))
+    }
+
+    func testRestoreReinsertsTasksWithIdentityOrderAndDoneState() throws {
+        let context = try makeContext()
+        let a = TaskItem(title: "A", sortOrder: 0)
+        let b = TaskItem(title: "B", done: true,
+                         completedAt: Date(timeIntervalSince1970: 99), sortOrder: 1)
+        context.insert(a)
+        context.insert(b)
+        try context.save()
+        let originalOrder = TaskOrdering.ordered(context.allTasks()).map(\.id)
+
+        let snaps = TaskActions.clearAll(in: context)
+        XCTAssertTrue(context.allTasks().isEmpty)
+
+        TaskActions.restore(snaps, in: context)
+
+        XCTAssertEqual(context.allTasks().count, 2)
+        let byId = Dictionary(uniqueKeysWithValues: context.allTasks().map { ($0.id, $0) })
+        XCTAssertEqual(byId[b.id]?.done, true)
+        XCTAssertEqual(byId[b.id]?.completedAt, Date(timeIntervalSince1970: 99))
+        XCTAssertEqual(byId[b.id]?.sortOrder, 1)
+        XCTAssertEqual(TaskOrdering.ordered(context.allTasks()).map(\.id), originalOrder)
     }
 
     // MARK: - add

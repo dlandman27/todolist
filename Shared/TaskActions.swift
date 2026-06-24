@@ -1,6 +1,27 @@
 import Foundation
 import SwiftData
 
+/// A snapshot of a task's restorable state, captured before a bulk delete so the
+/// action can be undone. Holds plain values (no SwiftData identity) so it outlives
+/// the deleted object.
+struct TaskSnapshot {
+    let id: UUID
+    let title: String
+    let done: Bool
+    let createdAt: Date
+    let completedAt: Date?
+    let sortOrder: Int
+
+    init(_ task: TaskItem) {
+        id = task.id
+        title = task.title
+        done = task.done
+        createdAt = task.createdAt
+        completedAt = task.completedAt
+        sortOrder = task.sortOrder
+    }
+}
+
 /// Data mutations on the list, shared between the app UI, the widget/Live Activity
 /// intents, and the Siri App Intents. Pure data mutation — callers are responsible
 /// for any Live Activity / widget refresh afterward.
@@ -34,21 +55,41 @@ enum TaskActions {
         return task
     }
 
-    /// Delete all completed tasks. Returns the number removed.
+    /// Delete all completed tasks. Returns snapshots of what was removed (for undo).
     @discardableResult
-    static func clearCompleted(in context: ModelContext) -> Int {
+    static func clearCompleted(in context: ModelContext) -> [TaskSnapshot] {
         let completed = context.allTasks().filter { $0.done }
+        let snapshots = completed.map(TaskSnapshot.init)
         for task in completed { context.delete(task) }
         try? context.save()
-        return completed.count
+        return snapshots
     }
 
-    /// Delete every task. Returns the number removed.
+    /// Delete every task. Returns snapshots of what was removed (for undo).
     @discardableResult
-    static func clearAll(in context: ModelContext) -> Int {
+    static func clearAll(in context: ModelContext) -> [TaskSnapshot] {
         let all = context.allTasks()
+        let snapshots = all.map(TaskSnapshot.init)
         for task in all { context.delete(task) }
         try? context.save()
-        return all.count
+        return snapshots
+    }
+
+    /// Re-insert tasks captured by `clearCompleted`/`clearAll`, preserving their original
+    /// id, order, and completion state so the list returns exactly as it was.
+    static func restore(_ snapshots: [TaskSnapshot], in context: ModelContext) {
+        for snap in snapshots {
+            context.insert(
+                TaskItem(
+                    id: snap.id,
+                    title: snap.title,
+                    done: snap.done,
+                    createdAt: snap.createdAt,
+                    completedAt: snap.completedAt,
+                    sortOrder: snap.sortOrder
+                )
+            )
+        }
+        try? context.save()
     }
 }

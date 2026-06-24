@@ -5,7 +5,7 @@ import AppIntents
 
 // MARK: - Timeline
 
-struct TaskSnapshot: Identifiable {
+struct WidgetTaskEntry: Identifiable {
     let id: UUID
     let title: String
     let done: Bool
@@ -13,15 +13,15 @@ struct TaskSnapshot: Identifiable {
 
 struct TodoEntry: TimelineEntry {
     let date: Date
-    let tasks: [TaskSnapshot]
+    let tasks: [WidgetTaskEntry]
     var openCount: Int { tasks.filter { !$0.done }.count }
 }
 
 struct TodoProvider: TimelineProvider {
     func placeholder(in context: Context) -> TodoEntry {
         TodoEntry(date: Date(), tasks: [
-            TaskSnapshot(id: UUID(), title: "Plan the day", done: false),
-            TaskSnapshot(id: UUID(), title: "Morning coffee", done: true),
+            WidgetTaskEntry(id: UUID(), title: "Plan the day", done: false),
+            WidgetTaskEntry(id: UUID(), title: "Morning coffee", done: true),
         ])
     }
 
@@ -37,7 +37,7 @@ struct TodoProvider: TimelineProvider {
     private func load() -> TodoEntry {
         let context = ModelContext(TaskStore.shared)
         let tasks = context.orderedTasks().map {
-            TaskSnapshot(id: $0.id, title: $0.title, done: $0.done)
+            WidgetTaskEntry(id: $0.id, title: $0.title, done: $0.done)
         }
         return TodoEntry(date: Date(), tasks: tasks)
     }
@@ -103,7 +103,7 @@ struct TodoWidgetView: View {
         .containerBackground(for: .widget) { Color.appBackground }
     }
 
-    private func row(_ task: TaskSnapshot) -> some View {
+    private func row(_ task: WidgetTaskEntry) -> some View {
         Button(intent: ToggleTaskIntent(taskID: task.id)) {
             HStack(spacing: 8) {
                 Image(systemName: TaskStyle.checkboxSymbol(done: task.done))
