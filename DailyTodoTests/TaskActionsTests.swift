@@ -131,6 +131,26 @@ final class TaskActionsTests: XCTestCase {
         XCTAssertEqual(TaskOrdering.ordered(context.allTasks()).map(\.id), originalOrder)
     }
 
+    // MARK: - blank-draft exclusion (visible count)
+
+    func testIsBlankDetectsEmptyAndWhitespaceOnlyTitles() {
+        XCTAssertTrue(TaskItem(title: "").isBlank)
+        XCTAssertTrue(TaskItem(title: "   \n\t").isBlank)
+        XCTAssertFalse(TaskItem(title: "buy milk").isBlank)
+    }
+
+    func testOrderedTasksExcludesBlankDrafts() throws {
+        let context = try makeContext()
+        context.insert(TaskItem(title: "Real"))
+        context.insert(TaskItem(title: ""))      // empty draft
+        context.insert(TaskItem(title: "   "))   // whitespace-only draft
+        try context.save()
+
+        // The count source behind the "Delete all N tasks?" dialog and the Siri
+        // Clear-All confirmation: only the visible task should be counted.
+        XCTAssertEqual(context.orderedTasks().map(\.title), ["Real"])
+    }
+
     // MARK: - add
 
     func testAddInsertsTaskWithTrimmedTitle() throws {

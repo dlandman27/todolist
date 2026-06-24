@@ -72,6 +72,10 @@ final class LiveActivityController {
     }
 
     func toggle() {
+        // Re-derive from reality first: the OS may have ended the activity (time limit,
+        // user dismissal) without the app knowing, leaving `isRunning` stale. Without
+        // this, the first tap after a silent end takes the wrong branch and looks dead.
+        syncRunningState()
         isRunning ? stop() : start()
     }
 

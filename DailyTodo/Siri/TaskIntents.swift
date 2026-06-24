@@ -113,7 +113,8 @@ struct ClearAllIntent: AppIntent {
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         let context = ModelContext(TaskStore.shared)
-        let count = context.allTasks().count
+        // Exclude blank drafts so we don't confirm a count the user can't see.
+        let count = context.orderedTasks().count
         guard count > 0 else {
             return .result(dialog: "Your list is already empty.")
         }

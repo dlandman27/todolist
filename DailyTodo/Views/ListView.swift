@@ -46,6 +46,10 @@ struct ListView: View {
     /// Number of checked-off tasks — gates the "Clear Completed" item and labels its dialog.
     private var completedCount: Int { tasks.filter(\.done).count }
 
+    /// Tasks the user can actually see — excludes the in-progress blank draft row so
+    /// the "Delete all" dialog never claims a count the empty-looking list contradicts.
+    private var visibleTaskCount: Int { tasks.filter { !$0.isBlank }.count }
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -81,7 +85,7 @@ struct ListView: View {
             }
             .toolbar(.hidden, for: .navigationBar)
             .confirmationDialog(
-                "Delete all \(tasks.count) tasks?",
+                "Delete all \(visibleTaskCount) tasks?",
                 isPresented: $showClearAllConfirm,
                 titleVisibility: .visible
             ) {
@@ -417,14 +421,17 @@ struct ListView: View {
 
 /// The classic "we're live" indicator: a red dot that gently pulses while active.
 private struct LiveDot: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var pulse = false
 
     var body: some View {
         Circle()
             .fill(Color.red)
             .frame(width: 9, height: 9)
-            .opacity(pulse ? 1.0 : 0.55)
+            // Solid when Reduce Motion is on (no endless pulse); otherwise breathe.
+            .opacity(reduceMotion ? 1.0 : (pulse ? 1.0 : 0.55))
             .onAppear {
+                guard !reduceMotion else { return }
                 withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) {
                     pulse = true
                 }

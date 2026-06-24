@@ -25,6 +25,7 @@ struct TaskRow: View {
             }
             .buttonStyle(.plain)
             .accessibilityIdentifier("toggle")
+            .accessibilityLabel(task.done ? "Mark as not done" : "Mark as done")
             .accessibilityValue(task.done ? "done" : "open")
 
             TextField("New to-do", text: $task.title)
