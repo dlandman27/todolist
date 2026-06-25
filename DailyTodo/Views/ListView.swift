@@ -226,6 +226,7 @@ struct ListView: View {
                 .frame(width: 30, height: 44)
                 .contentShape(Rectangle())
         }
+        .simultaneousGesture(TapGesture().onEnded { Haptics.impact(.light) })
         .accessibilityIdentifier("listOptions")
         .accessibilityLabel("List options")
     }
@@ -233,6 +234,7 @@ struct ListView: View {
     /// Header bag that opens the stash drawer. Outline when empty, filled + count when not.
     private var stashButton: some View {
         Button {
+            Haptics.impact(.light)
             showStash = true
         } label: {
             Image(systemName: stashedCount > 0 ? "archivebox.fill" : "archivebox")
@@ -266,6 +268,7 @@ struct ListView: View {
                 .frame(width: 30, height: 44)
                 .contentShape(Rectangle())
         }
+        .simultaneousGesture(TapGesture().onEnded { Haptics.impact(.light) })
         .accessibilityIdentifier("settings")
         .accessibilityLabel("Settings")
     }
