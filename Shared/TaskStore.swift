@@ -36,11 +36,20 @@ extension ModelContext {
         return (try? fetch(descriptor)) ?? []
     }
 
-    /// The list in display order — open first, completed sunk to the bottom — for
-    /// surfaces that read from the store (widget, Live Activity). Blank drafts (the
-    /// app's in-progress empty rows) are excluded so they never show up there. The app
-    /// itself drives its `@Query` directly so it can still show the row being typed in.
+    /// The list in display order for surfaces that read from the store (widget, Live
+    /// Activity). Excludes blank drafts AND stashed tasks — neither belongs on a
+    /// "today" surface.
     func orderedTasks() -> [TaskItem] {
-        TaskOrdering.ordered(allTasks().filter { !$0.isBlank })
+        TaskOrdering.ordered(allTasks().filter { !$0.isBlank && !$0.isStashed })
+    }
+
+    /// Stashed tasks for the stash drawer: soonest auto-return first, "Never" (no
+    /// return date) sorted last.
+    func stashedTasks() -> [TaskItem] {
+        allTasks()
+            .filter { $0.isStashed }
+            .sorted {
+                ($0.stashReturnDate ?? .distantFuture) < ($1.stashReturnDate ?? .distantFuture)
+            }
     }
 }

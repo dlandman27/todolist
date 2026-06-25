@@ -99,3 +99,41 @@ final class StashTests: XCTestCase {
         XCTAssertEqual(restored?.stashReturnDate, due)
     }
 }
+
+extension StashTests {
+
+    func testOrderedTasksExcludesStashed() throws {
+        let context = try makeContext()
+        context.insert(TaskItem(title: "Today"))
+        context.insert(TaskItem(title: "Stashed", isStashed: true))
+        try context.save()
+
+        XCTAssertEqual(context.orderedTasks().map(\.title), ["Today"])
+    }
+
+    func testStashedTasksSortedSoonestFirstNeverLast() throws {
+        let context = try makeContext()
+        let never = TaskItem(title: "Never", isStashed: true, stashReturnDate: nil)
+        let soon  = TaskItem(title: "Soon", isStashed: true,
+                             stashReturnDate: Date(timeIntervalSince1970: 100))
+        let later = TaskItem(title: "Later", isStashed: true,
+                             stashReturnDate: Date(timeIntervalSince1970: 500))
+        let open  = TaskItem(title: "Open")
+        [never, soon, later, open].forEach(context.insert)
+        try context.save()
+
+        XCTAssertEqual(context.stashedTasks().map(\.title), ["Soon", "Later", "Never"])
+    }
+
+    func testReturnLabelFormatting() {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "America/New_York")!
+        let now = Date(timeIntervalSince1970: 1_700_000_000)
+        let tomorrow = cal.date(byAdding: .day, value: 1, to: cal.startOfDay(for: now))!
+        let inFive   = cal.date(byAdding: .day, value: 5, to: cal.startOfDay(for: now))!
+
+        XCTAssertEqual(StashFormatting.returnLabel(for: nil, now: now, calendar: cal), "Someday")
+        XCTAssertEqual(StashFormatting.returnLabel(for: tomorrow, now: now, calendar: cal), "Back tomorrow")
+        XCTAssertEqual(StashFormatting.returnLabel(for: inFive, now: now, calendar: cal), "Back in 5 days")
+    }
+}
