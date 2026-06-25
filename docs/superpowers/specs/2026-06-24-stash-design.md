@@ -27,8 +27,8 @@ from Today.
 | Model of "later" | Dateless stash (drawer), not a calendar |
 | Stash gesture | Swipe an open Today task the opposite way from delete (leading/right edge) |
 | Pick how long | Bottom sheet: **Tomorrow** / **Next week** / **Never** |
-| Tomorrow | Auto-returns next morning (rides the existing midnight catch-up) |
-| Next week | Auto-returns ~7 days later |
+| Tomorrow | Auto-returns at **local midnight** (start of the next day) |
+| Next week | Auto-returns at **local midnight**, 7 days out |
 | Never | Indefinite; returns only when manually brought back |
 | Doorway | A **bag** icon in the header next to ⋯: outline when empty, filled + count badge when not |
 | Open stash | Tap the bag → bottom-sheet modal, opens small, drag up to expand |
@@ -49,20 +49,27 @@ from Today.
 Swipe an **open** task on its **leading edge** (the inverse of the trailing-edge
 delete) → a **bottom sheet** offers three choices:
 
-- **Tomorrow** — sets the return to the start of the next day.
-- **Next week** — sets the return to ~7 days out.
+- **Tomorrow** — sets the return to **local midnight at the start of the next day**
+  (`calendar.startOfDay(for: now) + 1 day`).
+- **Next week** — sets the return to **local midnight 7 days out**
+  (`calendar.startOfDay(for: now) + 7 days`).
 - **Never** — no return date; the item waits in the stash until manually pulled.
+
+Returns are date-boundary based, not relative to the exact time of stashing: an item
+stashed "Tomorrow" at 3pm and one stashed at 9pm both return at the same local midnight.
 
 The task immediately leaves Today (and the widget / Live Activity) and appears in the
 stash.
 
 ### Return mechanics
 
-Timed items (Tomorrow / Next week) auto-return when their return date has passed. This
-reuses the app's existing daily catch-up pattern (`MidnightScheduler` + a
-`DailyCleanup`-style "run if needed" check on foreground and at midnight): on each
-check, any stashed item whose return date is in the past is un-stashed and placed at the
-**bottom of the open group** in Today. "Never" items are never auto-returned.
+Timed items (Tomorrow / Next week) carry a return date set to **local midnight** of their
+target day, and auto-return once that boundary has passed. This reuses the app's existing
+daily catch-up pattern (`MidnightScheduler` + a `DailyCleanup`-style "run if needed" check
+on foreground and at midnight): on each check, any stashed item whose `stashReturnDate` is
+`<= now` is un-stashed and placed at the **bottom of the open group** in Today. Because the
+returns share the midnight boundary with daily cleanup, a single catch-up handles both.
+"Never" items (no return date) are never auto-returned.
 
 ### Doorway — the bag
 
