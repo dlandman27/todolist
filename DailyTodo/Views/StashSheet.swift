@@ -40,7 +40,7 @@ struct StashSheet: View {
                                 Button { bringBack(task) } label: {
                                     Label("To Today", systemImage: "tray.and.arrow.up")
                                 }
-                                .tint(Color.brand)
+                                .tint(Color.stashAccent)
                             }
                             .swipeActions(edge: .trailing, allowsFullSwipe: true) {
                                 Button(role: .destructive) { deleteFromStash(task) } label: {

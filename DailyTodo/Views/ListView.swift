@@ -235,7 +235,7 @@ struct ListView: View {
         Button {
             showStash = true
         } label: {
-            Image(systemName: stashedCount > 0 ? "bag.fill" : "bag")
+            Image(systemName: stashedCount > 0 ? "archivebox.fill" : "archivebox")
                 .font(.title2)
                 .foregroundStyle(Color.brand)
                 .frame(width: 30, height: 44)
@@ -243,9 +243,9 @@ struct ListView: View {
                     if stashedCount > 0 {
                         Text("\(stashedCount)")
                             .font(.caption2.weight(.bold))
-                            .foregroundStyle(.white)
+                            .foregroundStyle(.black)
                             .padding(3)
-                            .background(Circle().fill(Color.brand))
+                            .background(Circle().fill(Color.stashAccent))
                             .offset(x: 4, y: -2)
                     }
                 }
@@ -329,7 +329,7 @@ struct ListView: View {
                                 } label: {
                                     Label("Stash", systemImage: "archivebox")
                                 }
-                                .tint(Color.brand)
+                                .tint(Color.stashAccent)
                             }
                         }
                 }
