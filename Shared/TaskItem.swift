@@ -16,6 +16,11 @@ final class TaskItem {
     /// 0 so existing tasks migrate in place and fall back to `createdAt` order until
     /// the user first reorders.
     var sortOrder: Int = 0
+    /// Whether the task is tucked into the stash (hidden from Today/widget/Live Activity).
+    var isStashed: Bool = false
+    /// When a stashed task auto-returns to Today (local midnight). `nil` while stashed
+    /// means "Never" — it returns only when manually pulled back. Ignored when not stashed.
+    var stashReturnDate: Date? = nil
 
     init(
         id: UUID = UUID(),
@@ -23,7 +28,9 @@ final class TaskItem {
         done: Bool = false,
         createdAt: Date = Date(),
         completedAt: Date? = nil,
-        sortOrder: Int = 0
+        sortOrder: Int = 0,
+        isStashed: Bool = false,
+        stashReturnDate: Date? = nil
     ) {
         self.id = id
         self.title = title
@@ -31,6 +38,8 @@ final class TaskItem {
         self.createdAt = createdAt
         self.completedAt = completedAt
         self.sortOrder = sortOrder
+        self.isStashed = isStashed
+        self.stashReturnDate = stashReturnDate
     }
 
     /// An in-progress, untitled draft (the app inserts an empty row to type into).

@@ -15,6 +15,8 @@
 		21C61733DB10410F8F196E01 /* TaskIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3C6DF79E6AD4BD3CE3C31 /* TaskIntents.swift */; };
 		228BD8877265A2449CB0387B /* TodoActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43DCE149EB1710817756B54 /* TodoActivityAttributes.swift */; };
 		23646CD97C2078484E3385BD /* TaskActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73610AD06E4FABE20A24D03E /* TaskActions.swift */; };
+		AA1234560000000000000001 /* StashDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000002 /* StashDuration.swift */; };
+		AA1234560000000000000003 /* StashDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000002 /* StashDuration.swift */; };
 		243BBEA9F7196417BA55B3B7 /* TaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1A562A947F60569DE08C6 /* TaskItem.swift */; };
 		24CA9DDD823774F3F75E5D8E /* LiveActivityBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */; };
 		2E65F03DD31AB269B1F95107 /* DailyCleanup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3734206842CDD79EB3D09B75 /* DailyCleanup.swift */; };
@@ -23,6 +25,7 @@
 		42D513E29488BF2538E6E366 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97382722425927981E0E4F4 /* ListView.swift */; };
 		46C9C3793FF6BFE21819328F /* DailyShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC219F6963F7C42E2DCE0A94 /* DailyShortcuts.swift */; };
 		5CC1C0C7D20EA64A1FED7111 /* DailyCleanupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */; };
+		BB9988770000000000000001 /* StashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB9988770000000000000002 /* StashTests.swift */; };
 		692E092BA7C59901FAA1784D /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9009156203DE059C471C455 /* TaskStore.swift */; };
 		6C8A1CD2EEC3D226B18F4263 /* DailyTodoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456E5A4D9C42AA4855B05A4E /* DailyTodoApp.swift */; };
 		70089E4CF25C7362D9E8212F /* TaskEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E894FFEFC4883CA731D35F /* TaskEntity.swift */; };
@@ -104,11 +107,13 @@
 		446CCE65312F93B00926BEDD /* DailyTodoTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = DailyTodoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		456E5A4D9C42AA4855B05A4E /* DailyTodoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTodoApp.swift; sourceTree = "<group>"; };
 		45E1A562A947F60569DE08C6 /* TaskItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskItem.swift; sourceTree = "<group>"; };
+		AA1234560000000000000002 /* StashDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashDuration.swift; sourceTree = "<group>"; };
 		4B449DAE99E7995EB9F9530E /* TaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRow.swift; sourceTree = "<group>"; };
 		6EC66BA5042F27294F869567 /* DailyTodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyTodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73610AD06E4FABE20A24D03E /* TaskActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskActions.swift; sourceTree = "<group>"; };
 		7435A558E61FFD6D0D94E67F /* TodoLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoLiveActivity.swift; sourceTree = "<group>"; };
 		77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyCleanupTests.swift; sourceTree = "<group>"; };
+		BB9988770000000000000002 /* StashTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashTests.swift; sourceTree = "<group>"; };
 		7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleTaskIntent.swift; sourceTree = "<group>"; };
 		869BF8AEC58F9C8C1F2522F8 /* TaskFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskFlowUITests.swift; sourceTree = "<group>"; };
 		89172F89B880F640C73953BB /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
@@ -148,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */,
+				BB9988770000000000000002 /* StashTests.swift */,
 				AE7D7222B5700EC8880F8776 /* TaskActionsTests.swift */,
 				2CB52BDD24FBF88FA3D25F05 /* TaskLogicTests.swift */,
 			);
@@ -160,6 +166,7 @@
 				89172F89B880F640C73953BB /* AppGroup.swift */,
 				3734206842CDD79EB3D09B75 /* DailyCleanup.swift */,
 				30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */,
+				AA1234560000000000000002 /* StashDuration.swift */,
 				73610AD06E4FABE20A24D03E /* TaskActions.swift */,
 				45E1A562A947F60569DE08C6 /* TaskItem.swift */,
 				EA5766443269F0279010B10C /* TaskOrdering.swift */,
@@ -402,6 +409,7 @@
 				02A81E8E91F06342DB768595 /* MidnightScheduler.swift in Sources */,
 				1123159D9C5761E0F5A2E078 /* SettingsView.swift in Sources */,
 				23646CD97C2078484E3385BD /* TaskActions.swift in Sources */,
+				AA1234560000000000000001 /* StashDuration.swift in Sources */,
 				70089E4CF25C7362D9E8212F /* TaskEntity.swift in Sources */,
 				21C61733DB10410F8F196E01 /* TaskIntents.swift in Sources */,
 				A10109AD0ED51CF88D00644F /* TaskItem.swift in Sources */,
@@ -421,6 +429,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5CC1C0C7D20EA64A1FED7111 /* DailyCleanupTests.swift in Sources */,
+				BB9988770000000000000001 /* StashTests.swift in Sources */,
 				E726D9511A6997ECDFCB415D /* TaskActionsTests.swift in Sources */,
 				011B9C15A648B7BE3C980BBC /* TaskLogicTests.swift in Sources */,
 			);
@@ -435,6 +444,7 @@
 				AF067AF85273961953A8998E /* DailyTodoWidgetsBundle.swift in Sources */,
 				F49D77A16FB12001BDB1584D /* LiveActivityBridge.swift in Sources */,
 				7F89147E4BD67D8C9742C979 /* TaskActions.swift in Sources */,
+				AA1234560000000000000003 /* StashDuration.swift in Sources */,
 				243BBEA9F7196417BA55B3B7 /* TaskItem.swift in Sources */,
 				E6F22E763D5B3B482F8B14B4 /* TaskOrdering.swift in Sources */,
 				692E092BA7C59901FAA1784D /* TaskStore.swift in Sources */,

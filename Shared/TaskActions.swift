@@ -11,6 +11,8 @@ struct TaskSnapshot {
     let createdAt: Date
     let completedAt: Date?
     let sortOrder: Int
+    let isStashed: Bool
+    let stashReturnDate: Date?
 
     init(_ task: TaskItem) {
         id = task.id
@@ -19,6 +21,8 @@ struct TaskSnapshot {
         createdAt = task.createdAt
         completedAt = task.completedAt
         sortOrder = task.sortOrder
+        isStashed = task.isStashed
+        stashReturnDate = task.stashReturnDate
     }
 }
 
@@ -80,7 +84,8 @@ enum TaskActions {
     /// Re-insert tasks captured by `clearCompleted`/`clearAll`, preserving their original
     /// id, order, and completion state so the list returns exactly as it was.
     static func restore(_ snapshots: [TaskSnapshot], in context: ModelContext) {
-        for snap in snapshots {
+        let existing = Set(context.allTasks().map(\.id))
+        for snap in snapshots where !existing.contains(snap.id) {
             context.insert(
                 TaskItem(
                     id: snap.id,
@@ -88,10 +93,37 @@ enum TaskActions {
                     done: snap.done,
                     createdAt: snap.createdAt,
                     completedAt: snap.completedAt,
-                    sortOrder: snap.sortOrder
+                    sortOrder: snap.sortOrder,
+                    isStashed: snap.isStashed,
+                    stashReturnDate: snap.stashReturnDate
                 )
             )
         }
         try? context.save()
+    }
+
+    /// Tuck an open task into the stash with an optional auto-return date (nil = Never).
+    static func stash(_ task: TaskItem, until returnDate: Date?, in context: ModelContext) {
+        task.isStashed = true
+        task.stashReturnDate = returnDate
+        try? context.save()
+    }
+
+    /// Pull a task out of the stash and drop it at the bottom of the open group.
+    static func unstash(_ task: TaskItem, in context: ModelContext) {
+        let maxOpenOrder = context.allTasks()
+            .filter { !$0.done && !$0.isStashed }
+            .map(\.sortOrder)
+            .max() ?? -1
+        task.isStashed = false
+        task.stashReturnDate = nil
+        task.sortOrder = maxOpenOrder + 1
+        try? context.save()
+    }
+
+    /// Delete every stashed task. Returns snapshots of what was removed (for undo).
+    @discardableResult
+    static func clearStash(in context: ModelContext) -> [TaskSnapshot] {
+        delete(context.allTasks().filter { $0.isStashed }, in: context)
     }
 }
