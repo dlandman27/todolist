@@ -75,10 +75,11 @@ enum TaskActions {
         delete(context.allTasks().filter { $0.done }, in: context)
     }
 
-    /// Delete every task. Returns snapshots of what was removed (for undo).
+    /// Delete every task in Today (open + completed). Stashed tasks are protected —
+    /// "Clear All" affects only what's visible, not the stash drawer.
     @discardableResult
     static func clearAll(in context: ModelContext) -> [TaskSnapshot] {
-        delete(context.allTasks(), in: context)
+        delete(context.allTasks().filter { !$0.isStashed }, in: context)
     }
 
     /// Re-insert tasks captured by `clearCompleted`/`clearAll`, preserving their original

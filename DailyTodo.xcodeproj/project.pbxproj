@@ -57,6 +57,8 @@
 		F7D32C00D19C3667BE5F250A /* TaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B449DAE99E7995EB9F9530E /* TaskRow.swift */; };
 		FDEEAB6B930A0CFEC3531589 /* TodoActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43DCE149EB1710817756B54 /* TodoActivityAttributes.swift */; };
 		AA11223344556677AABBCCDD /* UndoToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB11223344556677AABBCCDD /* UndoToast.swift */; };
+		AA22223344556677AABBCCDD /* StashRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB22223344556677AABBCCDD /* StashRow.swift */; };
+		AA33223344556677AABBCCDD /* StashSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB33223344556677AABBCCDD /* StashSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +143,8 @@
 		FBBDBB65A2EE4F9852ECBD6B /* AppTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppTheme.swift; sourceTree = "<group>"; };
 		FC75BDB09E09BDCC4EE6847B /* DailyTodoWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = DailyTodoWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		BB11223344556677AABBCCDD /* UndoToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoToast.swift; sourceTree = "<group>"; };
+		BB22223344556677AABBCCDD /* StashRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashRow.swift; sourceTree = "<group>"; };
+		BB33223344556677AABBCCDD /* StashSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -231,6 +235,8 @@
 				1FFA5B72AF1AD3AD4EE336AA /* SettingsView.swift */,
 				4B449DAE99E7995EB9F9530E /* TaskRow.swift */,
 				BB11223344556677AABBCCDD /* UndoToast.swift */,
+				BB22223344556677AABBCCDD /* StashRow.swift */,
+				BB33223344556677AABBCCDD /* StashSheet.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -427,6 +433,8 @@
 				F7D32C00D19C3667BE5F250A /* TaskRow.swift in Sources */,
 				ED584530F9278FE0B51D7E69 /* TaskStore.swift in Sources */,
 				AA11223344556677AABBCCDD /* UndoToast.swift in Sources */,
+				AA22223344556677AABBCCDD /* StashRow.swift in Sources */,
+				AA33223344556677AABBCCDD /* StashSheet.swift in Sources */,
 				9376B3C47CAA1ABCB65EC971 /* TaskStyle.swift in Sources */,
 				3F2C0B71B718CD2746F64774 /* Theme.swift in Sources */,
 				228BD8877265A2449CB0387B /* TodoActivityAttributes.swift in Sources */,

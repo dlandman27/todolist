@@ -14,6 +14,8 @@ struct ListView: View {
     @State private var showClearAllConfirm = false
     @State private var showClearCompletedConfirm = false
     @State private var pendingUndo: PendingUndo?
+    @State private var stashTarget: TaskItem?
+    @State private var showStash = false
     @Environment(\.scenePhase) private var scenePhase
 
     /// Tasks removed within the current undo window, accumulated across deletes and
@@ -27,8 +29,9 @@ struct ListView: View {
 
     @Query(sort: \TaskItem.createdAt, order: .forward) private var tasks: [TaskItem]
 
-    /// Open tasks first, completed ones sunk to the bottom in check-off order.
-    private var orderedTasks: [TaskItem] { TaskOrdering.ordered(tasks) }
+    /// Open tasks first, completed ones sunk to the bottom — excluding stashed tasks,
+    /// which live in the stash drawer.
+    private var orderedTasks: [TaskItem] { TaskOrdering.ordered(tasks.filter { !$0.isStashed }) }
 
     /// A signature of the displayed order and each row's done-state. Driving the
     /// list's animation off this value (rather than a per-tap `withAnimation`) means
@@ -48,7 +51,10 @@ struct ListView: View {
 
     /// Tasks the user can actually see — excludes the in-progress blank draft row so
     /// the "Delete all" dialog never claims a count the empty-looking list contradicts.
-    private var visibleTaskCount: Int { tasks.filter { !$0.isBlank }.count }
+    private var visibleTaskCount: Int { tasks.filter { !$0.isBlank && !$0.isStashed }.count }
+
+    /// Number of stashed tasks — drives the header bag's fill state and count badge.
+    private var stashedCount: Int { tasks.filter(\.isStashed).count }
 
     var body: some View {
         NavigationStack {
@@ -100,6 +106,21 @@ struct ListView: View {
                 Button("Clear Completed", role: .destructive) { clearCompleted() }
                 Button("Cancel", role: .cancel) {}
             }
+            .confirmationDialog(
+                "Stash this task",
+                isPresented: Binding(
+                    get: { stashTarget != nil },
+                    set: { if !$0 { stashTarget = nil } }
+                ),
+                titleVisibility: .visible
+            ) {
+                ForEach(StashDuration.allCases) { option in
+                    Button(option.label) { stash(stashTarget, for: option) }
+                }
+                Button("Cancel", role: .cancel) { stashTarget = nil }
+            } message: {
+                Text("Hide it from Today until later.")
+            }
         }
         .onChange(of: router.addRequested) { _, requested in
             if requested {
@@ -115,6 +136,10 @@ struct ListView: View {
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { pendingUndo = nil }
+        }
+        .sheet(isPresented: $showStash) {
+            StashSheet()
+                .environment(live)
         }
     }
 
@@ -146,6 +171,7 @@ struct ListView: View {
             }
             Spacer()
             HStack(spacing: 8) {
+                stashButton
                 listOptionsButton
                 settingsButton
             }
@@ -202,6 +228,31 @@ struct ListView: View {
         }
         .accessibilityIdentifier("listOptions")
         .accessibilityLabel("List options")
+    }
+
+    /// Header bag that opens the stash drawer. Outline when empty, filled + count when not.
+    private var stashButton: some View {
+        Button {
+            showStash = true
+        } label: {
+            Image(systemName: stashedCount > 0 ? "bag.fill" : "bag")
+                .font(.title2)
+                .foregroundStyle(Color.brand)
+                .frame(width: 30, height: 44)
+                .overlay(alignment: .topTrailing) {
+                    if stashedCount > 0 {
+                        Text("\(stashedCount)")
+                            .font(.caption2.weight(.bold))
+                            .foregroundStyle(.white)
+                            .padding(3)
+                            .background(Circle().fill(Color.brand))
+                            .offset(x: 4, y: -2)
+                    }
+                }
+                .contentShape(Rectangle())
+        }
+        .accessibilityIdentifier("stash")
+        .accessibilityLabel("Stash, \(stashedCount) items")
     }
 
     /// Gear that pushes the settings page onto the navigation stack.
@@ -269,6 +320,18 @@ struct ListView: View {
                         // Completed rows are locked below the open group; the blank
                         // draft can't be dragged mid-edit.
                         .moveDisabled(task.done || task.isBlank)
+                        // Swipe the opposite way from delete to stash — open tasks only.
+                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                            if !task.done && !task.isBlank {
+                                Button {
+                                    Haptics.impact(.light)
+                                    stashTarget = task
+                                } label: {
+                                    Label("Stash", systemImage: "archivebox")
+                                }
+                                .tint(Color.brand)
+                            }
+                        }
                 }
                 .onDelete(perform: delete)
                 .onMove(perform: move)
@@ -346,6 +409,18 @@ struct ListView: View {
     private func dismissEditing() {
         if titleFocused { finishEditingTitle() }
         focusedTask = nil
+    }
+
+    /// Stash the targeted task for the chosen duration, then dismiss the picker.
+    private func stash(_ task: TaskItem?, for option: StashDuration) {
+        guard let task else { return }
+        withAnimation(.appMotion) {
+            TaskActions.stash(task, until: option.returnDate(), in: context)
+        }
+        Haptics.selection()
+        live.refresh()
+        WidgetCenter.shared.reloadAllTimelines()
+        stashTarget = nil
     }
 
     /// Remove all completed tasks immediately (low-risk; only done items), then offer undo.

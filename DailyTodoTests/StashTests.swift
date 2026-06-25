@@ -12,6 +12,17 @@ final class StashTests: XCTestCase {
         return ModelContext(container)
     }
 
+    func testClearAllLeavesStashedItems() throws {
+        let context = try makeContext()
+        context.insert(TaskItem(title: "Today"))
+        context.insert(TaskItem(title: "Stashed", isStashed: true))
+        try context.save()
+
+        TaskActions.clearAll(in: context)
+
+        XCTAssertEqual(context.allTasks().map(\.title), ["Stashed"])
+    }
+
     // MARK: - StashDuration
 
     func testTomorrowReturnsLocalMidnightNextDay() {
