@@ -67,7 +67,7 @@ struct ListView: View {
                     .onTapGesture { dismissEditing() }
                 VStack(spacing: 0) {
                     titleHeader
-                    if tasks.isEmpty {
+                    if orderedTasks.isEmpty {
                         emptyState
                             .transition(.opacity)
                     } else {
@@ -77,7 +77,7 @@ struct ListView: View {
                 }
                 // Cross-fade between the list and the empty state on any path to/from
                 // empty (clear, last row deleted, discarded draft).
-                .animation(.appMotion, value: tasks.isEmpty)
+                .animation(.appMotion, value: orderedTasks.isEmpty)
             }
             .safeAreaInset(edge: .bottom) {
                 VStack(spacing: 10) {
@@ -217,7 +217,7 @@ struct ListView: View {
                 } label: {
                     Label("Clear All", systemImage: "trash")
                 }
-                .disabled(tasks.isEmpty)
+                .disabled(orderedTasks.isEmpty)
             }
         } label: {
             Image(systemName: "ellipsis.circle")
