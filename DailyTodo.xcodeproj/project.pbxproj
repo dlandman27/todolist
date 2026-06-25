@@ -19,6 +19,8 @@
 		AA1234560000000000000003 /* StashDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000002 /* StashDuration.swift */; };
 		AA1234560000000000000004 /* StashFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000005 /* StashFormatting.swift */; };
 		AA1234560000000000000006 /* StashFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000005 /* StashFormatting.swift */; };
+		AA1234560000000000000007 /* StashReturn.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000008 /* StashReturn.swift */; };
+		AA1234560000000000000009 /* StashReturn.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1234560000000000000008 /* StashReturn.swift */; };
 		243BBEA9F7196417BA55B3B7 /* TaskItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E1A562A947F60569DE08C6 /* TaskItem.swift */; };
 		24CA9DDD823774F3F75E5D8E /* LiveActivityBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */; };
 		2E65F03DD31AB269B1F95107 /* DailyCleanup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3734206842CDD79EB3D09B75 /* DailyCleanup.swift */; };
@@ -111,6 +113,7 @@
 		45E1A562A947F60569DE08C6 /* TaskItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskItem.swift; sourceTree = "<group>"; };
 		AA1234560000000000000002 /* StashDuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashDuration.swift; sourceTree = "<group>"; };
 		AA1234560000000000000005 /* StashFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashFormatting.swift; sourceTree = "<group>"; };
+		AA1234560000000000000008 /* StashReturn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashReturn.swift; sourceTree = "<group>"; };
 		4B449DAE99E7995EB9F9530E /* TaskRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskRow.swift; sourceTree = "<group>"; };
 		6EC66BA5042F27294F869567 /* DailyTodo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyTodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		73610AD06E4FABE20A24D03E /* TaskActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskActions.swift; sourceTree = "<group>"; };
@@ -171,6 +174,7 @@
 				30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */,
 				AA1234560000000000000002 /* StashDuration.swift */,
 				AA1234560000000000000005 /* StashFormatting.swift */,
+				AA1234560000000000000008 /* StashReturn.swift */,
 				73610AD06E4FABE20A24D03E /* TaskActions.swift */,
 				45E1A562A947F60569DE08C6 /* TaskItem.swift */,
 				EA5766443269F0279010B10C /* TaskOrdering.swift */,
@@ -415,6 +419,7 @@
 				23646CD97C2078484E3385BD /* TaskActions.swift in Sources */,
 				AA1234560000000000000001 /* StashDuration.swift in Sources */,
 				AA1234560000000000000004 /* StashFormatting.swift in Sources */,
+				AA1234560000000000000007 /* StashReturn.swift in Sources */,
 				70089E4CF25C7362D9E8212F /* TaskEntity.swift in Sources */,
 				21C61733DB10410F8F196E01 /* TaskIntents.swift in Sources */,
 				A10109AD0ED51CF88D00644F /* TaskItem.swift in Sources */,
@@ -451,6 +456,7 @@
 				7F89147E4BD67D8C9742C979 /* TaskActions.swift in Sources */,
 				AA1234560000000000000003 /* StashDuration.swift in Sources */,
 				AA1234560000000000000006 /* StashFormatting.swift in Sources */,
+				AA1234560000000000000009 /* StashReturn.swift in Sources */,
 				243BBEA9F7196417BA55B3B7 /* TaskItem.swift in Sources */,
 				E6F22E763D5B3B482F8B14B4 /* TaskOrdering.swift in Sources */,
 				692E092BA7C59901FAA1784D /* TaskStore.swift in Sources */,

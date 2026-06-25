@@ -102,6 +102,43 @@ final class StashTests: XCTestCase {
 
 extension StashTests {
 
+    func testDueReturnsOnlyPastDatedStashedItems() {
+        let now = Date(timeIntervalSince1970: 1_000)
+        let past   = TaskItem(title: "Past", isStashed: true,
+                              stashReturnDate: Date(timeIntervalSince1970: 500))
+        let future = TaskItem(title: "Future", isStashed: true,
+                              stashReturnDate: Date(timeIntervalSince1970: 5_000))
+        let never  = TaskItem(title: "Never", isStashed: true, stashReturnDate: nil)
+        let open   = TaskItem(title: "Open")
+
+        let due = StashReturn.due([past, future, never, open], now: now)
+
+        XCTAssertEqual(due.map(\.title), ["Past"])
+    }
+
+    func testRunIfNeededUnstashesDueItemsToBottomOfOpenGroup() throws {
+        let context = try makeContext()
+        let now = Date(timeIntervalSince1970: 1_000)
+        let open = TaskItem(title: "Open", sortOrder: 0)
+        let due  = TaskItem(title: "Due", isStashed: true,
+                            stashReturnDate: Date(timeIntervalSince1970: 500))
+        let notYet = TaskItem(title: "NotYet", isStashed: true,
+                              stashReturnDate: Date(timeIntervalSince1970: 5_000))
+        [open, due, notYet].forEach(context.insert)
+        try context.save()
+
+        let count = StashReturn.runIfNeeded(in: context, now: now)
+
+        XCTAssertEqual(count, 1)
+        XCTAssertFalse(due.isStashed)
+        XCTAssertEqual(due.sortOrder, 1)          // bottom of open group
+        XCTAssertTrue(notYet.isStashed)           // future item untouched
+        XCTAssertEqual(context.orderedTasks().map(\.title), ["Open", "Due"])
+    }
+}
+
+extension StashTests {
+
     func testOrderedTasksExcludesStashed() throws {
         let context = try makeContext()
         context.insert(TaskItem(title: "Today"))

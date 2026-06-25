@@ -24,6 +24,7 @@ struct DailyTodoApp: App {
     @MainActor
     private func runDailyCleanup() {
         DailyCleanup.runIfNeeded(in: TaskStore.shared.mainContext)
+        StashReturn.runIfNeeded(in: TaskStore.shared.mainContext)
     }
 
     var body: some Scene {
