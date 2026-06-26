@@ -190,8 +190,8 @@ struct ListView: View {
             }
             Spacer()
             HStack(spacing: 8) {
-                stashButton
                 listOptionsButton
+                stashButton
                 settingsButton
             }
         }
