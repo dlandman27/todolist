@@ -17,6 +17,8 @@ struct ListView: View {
     @State private var stashTarget: TaskItem?
     @State private var showStash = false
     @State private var showStashAllPicker = false
+    /// Tasks mid-stash — their row exits by shrinking toward the bag instead of a plain fade.
+    @State private var stashingIDs: Set<UUID> = []
     @Environment(\.scenePhase) private var scenePhase
 
     /// Tasks removed within the current undo window, accumulated across deletes and
@@ -270,17 +272,22 @@ struct ListView: View {
             Image(systemName: stashedCount > 0 ? "archivebox.fill" : "archivebox")
                 .font(.title2)
                 .foregroundStyle(Color.brand)
+                // Bounce the bag each time something lands in (or leaves) the stash.
+                .symbolEffect(.bounce, value: stashedCount)
                 .frame(width: 30, height: 44)
                 .overlay(alignment: .topTrailing) {
                     if stashedCount > 0 {
                         Text("\(stashedCount)")
                             .font(.caption2.weight(.bold))
                             .foregroundStyle(.white)
+                            .contentTransition(.numericText())
                             .padding(3)
                             .background(Circle().fill(Color.stashAccent))
                             .offset(x: 4, y: -2)
+                            .transition(.scale.combined(with: .opacity))
                     }
                 }
+                .animation(.appMotion, value: stashedCount)
                 .contentShape(Rectangle())
         }
         .accessibilityIdentifier("stash")
@@ -365,6 +372,13 @@ struct ListView: View {
                                 .tint(Color.stashAccent)
                             }
                         }
+                        // Stashed rows shrink toward the top-right (the bag); everything
+                        // else just fades.
+                        .transition(
+                            stashingIDs.contains(task.id)
+                                ? .scale(scale: 0.15, anchor: .topTrailing).combined(with: .opacity)
+                                : .opacity
+                        )
                 }
                 .onDelete(perform: delete)
                 .onMove(perform: move)
@@ -448,6 +462,8 @@ struct ListView: View {
     private func stashAll(for option: StashDuration) {
         let toStash = stashableTasks
         guard !toStash.isEmpty else { return }
+        let ids = Set(toStash.map(\.id))
+        stashingIDs = ids
         let returnDate = option.returnDate()
         withAnimation(.appMotion) {
             for task in toStash { TaskActions.stash(task, until: returnDate, in: context) }
@@ -455,11 +471,13 @@ struct ListView: View {
         Haptics.selection()
         live.refresh()
         WidgetCenter.shared.reloadAllTimelines()
+        clearStashing(ids)
     }
 
     /// Stash the targeted task for the chosen duration, then dismiss the picker.
     private func stash(_ task: TaskItem?, for option: StashDuration) {
         guard let task else { return }
+        stashingIDs = [task.id]
         withAnimation(.appMotion) {
             TaskActions.stash(task, until: option.returnDate(), in: context)
         }
@@ -467,6 +485,12 @@ struct ListView: View {
         live.refresh()
         WidgetCenter.shared.reloadAllTimelines()
         stashTarget = nil
+        clearStashing([task.id])
+    }
+
+    /// Drop ids from `stashingIDs` once their fly-to-bag exit has played.
+    private func clearStashing(_ ids: Set<UUID>) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { stashingIDs.subtract(ids) }
     }
 
     /// Remove all completed tasks immediately (low-risk; only done items), then offer undo.
