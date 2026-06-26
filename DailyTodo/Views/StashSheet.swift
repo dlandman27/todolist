@@ -14,6 +14,7 @@ struct StashSheet: View {
 
     @State private var pendingUndo: PendingUndo?
     @State private var resnoozeTarget: TaskItem?
+    @State private var detent: PresentationDetent = .large
     @FocusState private var focusedStashTask: UUID?
 
     /// Stash-only rolling undo (delete / Clear Stash), walled off from the Today undo.
@@ -53,45 +54,48 @@ struct StashSheet: View {
                 if stashed.isEmpty {
                     stashEmptyState
                 } else {
-                    List {
-                        ForEach(stashed) { task in
-                            StashRow(
-                                task: task,
-                                focus: $focusedStashTask,
-                                onComplete: { complete(task) },
-                                onResnoozeTap: { resnoozeTarget = task }
-                            )
-                                .listRowSeparator(.hidden)
-                                .listRowInsets(EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4))
-                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                    Button { bringBack(task) } label: {
-                                        Label("Unstash", systemImage: "tray.and.arrow.up")
+                    GeometryReader { geo in
+                        List {
+                            ForEach(stashed) { task in
+                                StashRow(
+                                    task: task,
+                                    focus: $focusedStashTask,
+                                    onComplete: { complete(task) },
+                                    onResnoozeTap: { resnoozeTarget = task }
+                                )
+                                    .listRowSeparator(.hidden)
+                                    .listRowInsets(EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4))
+                                    .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                        Button { bringBack(task) } label: {
+                                            Label("Unstash", systemImage: "tray.and.arrow.up")
+                                        }
+                                        .tint(Color.stashAccent)
                                     }
-                                    .tint(Color.stashAccent)
-                                }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button(role: .destructive) { deleteFromStash(task) } label: {
-                                        Label("Delete", systemImage: "trash")
+                                    .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                        Button(role: .destructive) { deleteFromStash(task) } label: {
+                                            Label("Delete", systemImage: "trash")
+                                        }
                                     }
-                                }
-                        }
+                            }
 
-                        // Tap the empty space below to add a new stashed task.
-                        Button {
-                            if focusedStashTask != nil { focusedStashTask = nil } else { addStashTask() }
-                        } label: {
-                            Color.clear
-                                .frame(minHeight: 80)
-                                .contentShape(Rectangle())
+                            // Tap the empty space below to add a new stashed task — sized to
+                            // fill the sheet so the whole area is a reliable tap target.
+                            Button {
+                                if focusedStashTask != nil { focusedStashTask = nil } else { addStashTask() }
+                            } label: {
+                                Color.clear
+                                    .frame(minHeight: max(120, geo.size.height - CGFloat(stashed.count) * 56))
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                            .listRowBackground(Color.appBackground)
+                            .listRowSeparator(.hidden)
                         }
-                        .buttonStyle(.plain)
-                        .listRowBackground(Color.appBackground)
-                        .listRowSeparator(.hidden)
+                        .listStyle(.plain)
+                        .scrollContentBackground(.hidden)
+                        .environment(\.defaultMinListRowHeight, 36)
+                        .animation(.appMotion, value: stashed.map(\.id))
                     }
-                    .listStyle(.plain)
-                    .scrollContentBackground(.hidden)
-                    .environment(\.defaultMinListRowHeight, 36)
-                    .animation(.appMotion, value: stashed.map(\.id))
                 }
 
                 if let pending = pendingUndo {
@@ -153,7 +157,7 @@ struct StashSheet: View {
                 if phase == .background { pendingUndo = nil }
             }
         }
-        .presentationDetents([.medium, .large])
+        .presentationDetents([.medium, .large], selection: $detent)
         .presentationDragIndicator(.visible)
     }
 
