@@ -57,7 +57,8 @@ struct ListView: View {
     private var visibleTaskCount: Int { tasks.filter { !$0.isBlank && !$0.isStashed }.count }
 
     /// Number of stashed tasks — drives the header bag's fill state and count badge.
-    private var stashedCount: Int { tasks.filter(\.isStashed).count }
+    /// Blank stashed drafts (being typed in the stash sheet) don't count yet.
+    private var stashedCount: Int { tasks.filter { $0.isStashed && !$0.isBlank }.count }
 
     /// Open, real (non-blank) tasks in Today — what "Stash All Todos" would stash.
     private var stashableTasks: [TaskItem] { orderedTasks.filter { !$0.done && !$0.isBlank } }
@@ -436,9 +437,10 @@ struct ListView: View {
 
     /// Insert a fresh, empty task and drop the cursor straight into it.
     private func addTask() {
-        // If a blank draft already exists, stay on it instead of stacking another.
+        // If a blank Today draft already exists, stay on it instead of stacking another.
+        // Exclude stashed drafts — those belong to the stash sheet, not Today.
         if let draft = tasks.first(where: {
-            $0.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            !$0.isStashed && $0.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         }) {
             focusedTask = draft.id
             return

@@ -103,6 +103,16 @@ enum TaskActions {
         try? context.save()
     }
 
+    /// Insert a new blank task straight into the stash as a "Never" (no return) item.
+    /// Returns the inserted task so the caller can focus it for editing.
+    @discardableResult
+    static func addStashed(in context: ModelContext) -> TaskItem {
+        let item = TaskItem(title: "", isStashed: true, stashReturnDate: nil)
+        context.insert(item)
+        try? context.save()
+        return item
+    }
+
     /// Tuck an open task into the stash with an optional auto-return date (nil = Never).
     static func stash(_ task: TaskItem, until returnDate: Date?, in context: ModelContext) {
         task.isStashed = true

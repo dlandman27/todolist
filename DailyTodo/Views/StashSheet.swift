@@ -14,6 +14,7 @@ struct StashSheet: View {
 
     @State private var pendingUndo: PendingUndo?
     @State private var resnoozeTarget: TaskItem?
+    @FocusState private var focusedStashTask: UUID?
 
     /// Stash-only rolling undo (delete / Clear Stash), walled off from the Today undo.
     private struct PendingUndo {
@@ -34,13 +35,15 @@ struct StashSheet: View {
                 .foregroundStyle(Color.brand)
             Text("Nothing stashed")
                 .foregroundStyle(Color.textSecondary)
-            Text("Swipe a task right to stash it for later.")
+            Text("Tap to add one for later, or swipe a task right to stash it.")
                 .font(.footnote)
                 .foregroundStyle(Color.textSecondary)
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .padding()
+        .contentShape(Rectangle())
+        .onTapGesture { addStashTask() }
     }
 
     var body: some View {
@@ -52,7 +55,12 @@ struct StashSheet: View {
                 } else {
                     List {
                         ForEach(stashed) { task in
-                            StashRow(task: task) { complete(task) }
+                            StashRow(
+                                task: task,
+                                focus: $focusedStashTask,
+                                onComplete: { complete(task) },
+                                onResnoozeTap: { resnoozeTarget = task }
+                            )
                                 .listRowSeparator(.hidden)
                                 .listRowInsets(EdgeInsets(top: 2, leading: 16, bottom: 2, trailing: 16))
                                 .swipeActions(edge: .leading, allowsFullSwipe: true) {
@@ -66,9 +74,19 @@ struct StashSheet: View {
                                         Label("Delete", systemImage: "trash")
                                     }
                                 }
-                                .contentShape(Rectangle())
-                                .onTapGesture { resnoozeTarget = task }
                         }
+
+                        // Tap the empty space below to add a new stashed task.
+                        Button {
+                            if focusedStashTask != nil { focusedStashTask = nil } else { addStashTask() }
+                        } label: {
+                            Color.clear
+                                .frame(minHeight: 80)
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain)
+                        .listRowBackground(Color.appBackground)
+                        .listRowSeparator(.hidden)
                     }
                     .listStyle(.plain)
                     .scrollContentBackground(.hidden)
@@ -137,6 +155,21 @@ struct StashSheet: View {
         }
         .presentationDetents([.medium, .large])
         .presentationDragIndicator(.visible)
+    }
+
+    /// Add a new blank task straight into the stash (defaults to "Never") and focus it.
+    private func addStashTask() {
+        // Reuse an existing blank stashed draft instead of stacking another.
+        if let draft = allTasks.first(where: {
+            $0.isStashed && $0.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        }) {
+            focusedStashTask = draft.id
+            return
+        }
+        let item = TaskActions.addStashed(in: context)
+        Haptics.impact(.light)
+        WidgetCenter.shared.reloadAllTimelines()
+        DispatchQueue.main.async { focusedStashTask = item.id }
     }
 
     /// Pull a task back into Today now.
