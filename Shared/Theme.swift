@@ -91,16 +91,4 @@ extension View {
             )
         }
     }
-
-    /// Non-interactive Liquid Glass capsule for grouping toolbar-style controls. Unlike
-    /// `glassCapsule`, it omits `.interactive()` (whose specular shimmer reads as flashing
-    /// on a container that isn't itself the tap target — the buttons inside handle taps).
-    @ViewBuilder
-    func glassCluster() -> some View {
-        if #available(iOS 26.0, *) {
-            self.glassEffect(.regular, in: .capsule)
-        } else {
-            self.background(Capsule().fill(.ultraThinMaterial))
-        }
-    }
 }
