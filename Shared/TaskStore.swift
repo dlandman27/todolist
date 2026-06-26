@@ -16,13 +16,33 @@ enum TaskStore {
 
     static func makeContainer() -> ModelContainer {
         let schema = Schema([TaskItem.self])
-        let config: ModelConfiguration = isUITesting
-            ? ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
-            : ModelConfiguration(schema: schema, groupContainer: .identifier(AppGroup.identifier))
+
+        if isUITesting {
+            let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+            return try! ModelContainer(for: schema, configurations: [config])
+        }
+
+        // Production: shared App Group store, mirrored to the user's private iCloud DB.
+        let cloudConfig = ModelConfiguration(
+            schema: schema,
+            groupContainer: .identifier(AppGroup.identifier),
+            cloudKitDatabase: .private("iCloud.com.dylanlandman.dailytodo")
+        )
+        if let container = try? ModelContainer(for: schema, configurations: [cloudConfig]) {
+            return container
+        }
+
+        // CloudKit unavailable (no iCloud account, missing entitlement, etc.) — keep the
+        // app fully usable offline with a local-only store in the same shared container.
+        print("CloudKit container unavailable; falling back to local-only store.")
+        let localConfig = ModelConfiguration(
+            schema: schema,
+            groupContainer: .identifier(AppGroup.identifier)
+        )
         do {
-            return try ModelContainer(for: schema, configurations: [config])
+            return try ModelContainer(for: schema, configurations: [localConfig])
         } catch {
-            fatalError("Failed to create shared ModelContainer: \(error)")
+            fatalError("Failed to create local ModelContainer: \(error)")
         }
     }
 }
