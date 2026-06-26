@@ -190,15 +190,10 @@ struct ListView: View {
             }
             Spacer()
             HStack(spacing: 8) {
-                // The bag only appears once something's stashed — no empty placeholder.
-                if stashedCount > 0 {
-                    stashButton
-                        .transition(.scale.combined(with: .opacity))
-                }
+                stashButton
                 listOptionsButton
                 settingsButton
             }
-            .animation(.appMotion, value: stashedCount > 0)
         }
         .padding(.horizontal)
         .padding(.top, 12)

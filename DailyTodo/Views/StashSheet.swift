@@ -114,27 +114,29 @@ struct StashSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button {
-                            unstashAll()
+                    // Only show the options menu when there's something to act on.
+                    if !stashed.isEmpty {
+                        Menu {
+                            Button {
+                                unstashAll()
+                            } label: {
+                                Label("Unstash All", systemImage: "tray.and.arrow.up")
+                            }
+                            Button(role: .destructive) {
+                                clearStash()
+                            } label: {
+                                Label("Delete Stashed Items", systemImage: "trash")
+                            }
                         } label: {
-                            Label("Unstash All", systemImage: "tray.and.arrow.up")
+                            Image(systemName: "ellipsis.circle")
+                                .font(.title2)
+                                .foregroundStyle(Color.brand)
+                                .frame(width: 30, height: 44)
+                                .contentShape(Rectangle())
                         }
-                        Button(role: .destructive) {
-                            clearStash()
-                        } label: {
-                            Label("Delete Stashed Items", systemImage: "trash")
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis.circle")
-                            .font(.title2)
-                            .foregroundStyle(Color.brand)
-                            .frame(width: 30, height: 44)
-                            .contentShape(Rectangle())
+                        .simultaneousGesture(TapGesture().onEnded { Haptics.impact(.light) })
+                        .accessibilityLabel("Stash options")
                     }
-                    .disabled(stashed.isEmpty)
-                    .simultaneousGesture(TapGesture().onEnded { Haptics.impact(.light) })
-                    .accessibilityLabel("Stash options")
                 }
             }
             .confirmationDialog(
