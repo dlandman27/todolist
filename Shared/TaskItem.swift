@@ -4,11 +4,11 @@ import SwiftData
 /// A single to-do in the one and only list. No dates, no buckets — just an item.
 @Model
 final class TaskItem {
-    @Attribute(.unique) var id: UUID
-    var title: String
-    var done: Bool
+    var id: UUID = UUID()
+    var title: String = ""
+    var done: Bool = false
     /// Creation timestamp, used as a stable tiebreaker for ordering.
-    var createdAt: Date
+    var createdAt: Date = Date()
     /// When the task was last checked off; nil while it's still open.
     var completedAt: Date?
     /// User-assigned priority within the open group; lower sorts first. Untouched

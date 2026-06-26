@@ -149,6 +149,24 @@ extension StashTests {
 }
 
 extension StashTests {
+    /// With the DB unique-constraint gone, `restore`'s own guard must still prevent a
+    /// duplicate id from creating a second row.
+    func testRestoreStillDedupesByIdWithoutUniqueConstraint() throws {
+        let context = try makeContext()
+        let id = UUID()
+        let live = TaskItem(id: id, title: "Live")
+        context.insert(live)
+        try context.save()
+
+        let ghost = TaskSnapshot(TaskItem(id: id, title: "Ghost"))
+        TaskActions.restore([ghost], in: context)
+
+        XCTAssertEqual(context.allTasks().count, 1)
+        XCTAssertEqual(context.allTasks().first?.title, "Live")
+    }
+}
+
+extension StashTests {
 
     func testOrderedTasksExcludesStashed() throws {
         let context = try makeContext()
