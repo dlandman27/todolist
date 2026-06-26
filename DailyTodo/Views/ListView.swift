@@ -190,8 +190,15 @@ struct ListView: View {
             Spacer()
             HStack(spacing: 8) {
                 stashButton
-                listOptionsButton
-                settingsButton
+                    .padding(.horizontal, 6)
+                    .glassCluster()
+
+                HStack(spacing: 8) {
+                    listOptionsButton
+                    settingsButton
+                }
+                .padding(.horizontal, 6)
+                .glassCluster()
             }
         }
         .padding(.horizontal)
@@ -276,7 +283,9 @@ struct ListView: View {
                             .contentTransition(.numericText())
                             .padding(3)
                             .background(Circle().fill(Color.stashAccent))
-                            .offset(x: 4, y: -2)
+                            // Keep the badge tucked inside the glass capsule (it used to
+                            // poke past the glass edge, which made it glitch).
+                            .offset(x: -1, y: 2)
                             .transition(.scale.combined(with: .opacity))
                     }
                 }
