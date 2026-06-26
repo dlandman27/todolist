@@ -53,6 +53,7 @@ struct StashSheet: View {
                 Color.appBackground.ignoresSafeArea()
                 if stashed.isEmpty {
                     stashEmptyState
+                        .transition(.opacity)
                 } else {
                     GeometryReader { geo in
                         List {
@@ -96,6 +97,7 @@ struct StashSheet: View {
                         .environment(\.defaultMinListRowHeight, 36)
                         .animation(.appMotion, value: stashed.map(\.id))
                     }
+                    .transition(.opacity)
                 }
 
                 if let pending = pendingUndo {
@@ -107,6 +109,7 @@ struct StashSheet: View {
                     .animation(.appMotion, value: pendingUndo?.id)
                 }
             }
+            .animation(.appMotion, value: stashed.isEmpty)
             .navigationTitle("Stashed Todos")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
