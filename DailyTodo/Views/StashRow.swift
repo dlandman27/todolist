@@ -2,8 +2,8 @@ import SwiftUI
 import SwiftData
 
 /// One stashed task: checkbox + an editable title + a quiet relative return label.
-/// Editing mirrors the main list's `TaskRow` — focus drives the field, and a row left
-/// blank on commit is discarded.
+/// Editing mirrors the main list's `TaskRow` — focus drives the field and the edit
+/// card, and a row left blank on commit is discarded.
 struct StashRow: View {
     @Environment(\.modelContext) private var context
     @Bindable var task: TaskItem
@@ -12,6 +12,11 @@ struct StashRow: View {
     /// Tapped the relative label → caller opens the re-snooze picker.
     var onResnoozeTap: () -> Void
 
+    /// Whether the edit card is shown — mirrors focus, toggled in a `withAnimation` so it
+    /// fades on every focus change (matching `TaskRow`).
+    @State private var cardVisible = false
+
+    private var isEditing: Bool { focus.wrappedValue == task.id }
     private var trimmed: String {
         task.title.trimmingCharacters(in: .whitespacesAndNewlines)
     }
@@ -32,6 +37,7 @@ struct StashRow: View {
                 .submitLabel(.done)
                 .onChange(of: focus.wrappedValue) { old, new in
                     if old == task.id && new != task.id { commit() }
+                    withAnimation(.appMotion) { cardVisible = (new == task.id) }
                 }
                 .onSubmit {
                     commit()
@@ -46,7 +52,19 @@ struct StashRow: View {
                 .contentShape(Rectangle())
                 .onTapGesture { onResnoozeTap() }
         }
+        .padding(.horizontal, 12)
         .padding(.vertical, 6)
+        .background {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(Color.appSurface)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .strokeBorder(Color.brand.opacity(0.35), lineWidth: 1)
+                )
+                .shadow(color: Color.brand.opacity(0.12), radius: 8, y: 2)
+                .opacity(cardVisible ? 1 : 0)
+        }
+        .onAppear { cardVisible = isEditing }
         .listRowBackground(Color.appBackground)
     }
 

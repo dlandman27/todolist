@@ -62,7 +62,7 @@ struct StashSheet: View {
                                 onResnoozeTap: { resnoozeTarget = task }
                             )
                                 .listRowSeparator(.hidden)
-                                .listRowInsets(EdgeInsets(top: 2, leading: 16, bottom: 2, trailing: 16))
+                                .listRowInsets(EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4))
                                 .swipeActions(edge: .leading, allowsFullSwipe: true) {
                                     Button { bringBack(task) } label: {
                                         Label("Unstash", systemImage: "tray.and.arrow.up")
