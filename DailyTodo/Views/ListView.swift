@@ -191,7 +191,6 @@ struct ListView: View {
             Spacer()
             HStack(spacing: 8) {
                 stashButton
-                    .padding(.horizontal, 6)
                     .glassCapsule(tinted: false)
 
                 HStack(spacing: 8) {
@@ -275,7 +274,8 @@ struct ListView: View {
                 .foregroundStyle(Color.brand)
                 // Bounce the bag each time something lands in (or leaves) the stash.
                 .symbolEffect(.bounce, value: stashedCount)
-                .frame(width: 30, height: 44)
+                // Square frame so the glass capsule renders as a 1:1 circle.
+                .frame(width: 44, height: 44)
                 .overlay(alignment: .topTrailing) {
                     if stashedCount > 0 {
                         Text("\(stashedCount)")
@@ -284,9 +284,8 @@ struct ListView: View {
                             .contentTransition(.numericText())
                             .padding(3)
                             .background(Circle().fill(Color.stashAccent))
-                            // Keep the badge tucked inside the glass capsule (it used to
-                            // poke past the glass edge, which made it glitch).
-                            .offset(x: -1, y: 2)
+                            // Pull the badge in so it sits on the circle's edge, inside the glass.
+                            .offset(x: -5, y: 5)
                             .transition(.scale.combined(with: .opacity))
                     }
                 }
