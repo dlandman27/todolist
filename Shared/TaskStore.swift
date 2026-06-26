@@ -1,4 +1,5 @@
 import Foundation
+import os
 import SwiftData
 
 /// Shared SwiftData container, placed in the App Group container so the app and the
@@ -28,13 +29,15 @@ enum TaskStore {
             groupContainer: .identifier(AppGroup.identifier),
             cloudKitDatabase: .private("iCloud.com.dylanlandman.dailytodo")
         )
-        if let container = try? ModelContainer(for: schema, configurations: [cloudConfig]) {
-            return container
+        do {
+            return try ModelContainer(for: schema, configurations: [cloudConfig])
+        } catch {
+            // CloudKit unavailable (no iCloud account, missing entitlement, etc.). Log the
+            // real error — CloudKit can only be diagnosed from on-device logs — and keep the
+            // app fully usable offline with a local-only store in the same shared container.
+            Logger(subsystem: "com.dylanlandman.dailytodo", category: "store")
+                .error("CloudKit container unavailable, falling back to local store: \(error.localizedDescription, privacy: .public)")
         }
-
-        // CloudKit unavailable (no iCloud account, missing entitlement, etc.) — keep the
-        // app fully usable offline with a local-only store in the same shared container.
-        print("CloudKit container unavailable; falling back to local-only store.")
         let localConfig = ModelConfiguration(
             schema: schema,
             groupContainer: .identifier(AppGroup.identifier)
