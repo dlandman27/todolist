@@ -16,6 +16,7 @@ struct ListView: View {
     @State private var pendingUndo: PendingUndo?
     @State private var stashTarget: TaskItem?
     @State private var showStash = false
+    @State private var showStashAllPicker = false
     @Environment(\.scenePhase) private var scenePhase
 
     /// Tasks removed within the current undo window, accumulated across deletes and
@@ -55,6 +56,9 @@ struct ListView: View {
 
     /// Number of stashed tasks — drives the header bag's fill state and count badge.
     private var stashedCount: Int { tasks.filter(\.isStashed).count }
+
+    /// Open, real (non-blank) tasks in Today — what "Stash All Todos" would stash.
+    private var stashableTasks: [TaskItem] { orderedTasks.filter { !$0.done && !$0.isBlank } }
 
     var body: some View {
         NavigationStack {
@@ -121,6 +125,18 @@ struct ListView: View {
             } message: {
                 Text("Hide it from Today until later.")
             }
+            .confirmationDialog(
+                "Stash all todos",
+                isPresented: $showStashAllPicker,
+                titleVisibility: .visible
+            ) {
+                ForEach(StashDuration.allCases) { option in
+                    Button(option.label) { stashAll(for: option) }
+                }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Hide every open task from Today until later.")
+            }
         }
         .onChange(of: router.addRequested) { _, requested in
             if requested {
@@ -172,8 +188,15 @@ struct ListView: View {
             Spacer()
             HStack(spacing: 8) {
                 stashButton
-                listOptionsButton
-                settingsButton
+                    .padding(.horizontal, 6)
+                    .glassCapsule(tinted: false)
+
+                HStack(spacing: 8) {
+                    listOptionsButton
+                    settingsButton
+                }
+                .padding(.horizontal, 6)
+                .glassCapsule(tinted: false)
             }
         }
         .padding(.horizontal)
@@ -204,6 +227,13 @@ struct ListView: View {
     /// future "Sort By" section without adding another header button.
     private var listOptionsButton: some View {
         Menu {
+            Button {
+                showStashAllPicker = true
+            } label: {
+                Label("Stash All Todos", systemImage: "archivebox")
+            }
+            .disabled(stashableTasks.isEmpty)
+
             Section {
                 Button {
                     showClearCompletedConfirm = true
@@ -245,7 +275,7 @@ struct ListView: View {
                     if stashedCount > 0 {
                         Text("\(stashedCount)")
                             .font(.caption2.weight(.bold))
-                            .foregroundStyle(.black)
+                            .foregroundStyle(.white)
                             .padding(3)
                             .background(Circle().fill(Color.stashAccent))
                             .offset(x: 4, y: -2)
@@ -254,7 +284,7 @@ struct ListView: View {
                 .contentShape(Rectangle())
         }
         .accessibilityIdentifier("stash")
-        .accessibilityLabel("Stash, \(stashedCount) items")
+        .accessibilityLabel("Stashed todos, \(stashedCount) items")
     }
 
     /// Gear that pushes the settings page onto the navigation stack.
@@ -412,6 +442,19 @@ struct ListView: View {
     private func dismissEditing() {
         if titleFocused { finishEditingTitle() }
         focusedTask = nil
+    }
+
+    /// Stash every open Today task for the chosen duration.
+    private func stashAll(for option: StashDuration) {
+        let toStash = stashableTasks
+        guard !toStash.isEmpty else { return }
+        let returnDate = option.returnDate()
+        withAnimation(.appMotion) {
+            for task in toStash { TaskActions.stash(task, until: returnDate, in: context) }
+        }
+        Haptics.selection()
+        live.refresh()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     /// Stash the targeted task for the chosen duration, then dismiss the picker.

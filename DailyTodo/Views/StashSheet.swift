@@ -27,34 +27,54 @@ struct StashSheet: View {
             .sorted { ($0.stashReturnDate ?? .distantFuture) < ($1.stashReturnDate ?? .distantFuture) }
     }
 
+    private var stashEmptyState: some View {
+        VStack(spacing: 12) {
+            Image(systemName: "archivebox")
+                .font(.system(size: 40))
+                .foregroundStyle(Color.brand)
+            Text("Nothing stashed")
+                .foregroundStyle(Color.textSecondary)
+            Text("Swipe a task right to stash it for later.")
+                .font(.footnote)
+                .foregroundStyle(Color.textSecondary)
+                .multilineTextAlignment(.center)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .padding()
+    }
+
     var body: some View {
         NavigationStack {
             ZStack {
                 Color.appBackground.ignoresSafeArea()
-                List {
-                    ForEach(stashed) { task in
-                        StashRow(task: task) { complete(task) }
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 2, leading: 16, bottom: 2, trailing: 16))
-                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                Button { bringBack(task) } label: {
-                                    Label("To Today", systemImage: "tray.and.arrow.up")
+                if stashed.isEmpty {
+                    stashEmptyState
+                } else {
+                    List {
+                        ForEach(stashed) { task in
+                            StashRow(task: task) { complete(task) }
+                                .listRowSeparator(.hidden)
+                                .listRowInsets(EdgeInsets(top: 2, leading: 16, bottom: 2, trailing: 16))
+                                .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                    Button { bringBack(task) } label: {
+                                        Label("Unstash", systemImage: "tray.and.arrow.up")
+                                    }
+                                    .tint(Color.stashAccent)
                                 }
-                                .tint(Color.stashAccent)
-                            }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) { deleteFromStash(task) } label: {
-                                    Label("Delete", systemImage: "trash")
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button(role: .destructive) { deleteFromStash(task) } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
                                 }
-                            }
-                            .contentShape(Rectangle())
-                            .onTapGesture { resnoozeTarget = task }
+                                .contentShape(Rectangle())
+                                .onTapGesture { resnoozeTarget = task }
+                        }
                     }
+                    .listStyle(.plain)
+                    .scrollContentBackground(.hidden)
+                    .environment(\.defaultMinListRowHeight, 36)
+                    .animation(.appMotion, value: stashed.map(\.id))
                 }
-                .listStyle(.plain)
-                .scrollContentBackground(.hidden)
-                .environment(\.defaultMinListRowHeight, 36)
-                .animation(.appMotion, value: stashed.map(\.id))
 
                 if let pending = pendingUndo {
                     VStack {
@@ -65,14 +85,31 @@ struct StashSheet: View {
                     .animation(.appMotion, value: pendingUndo?.id)
                 }
             }
-            .navigationTitle("Stash")
+            .navigationTitle("Stashed Todos")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(role: .destructive) { clearStash() } label: {
-                        Label("Clear Stash", systemImage: "trash")
+                    Menu {
+                        Button {
+                            unstashAll()
+                        } label: {
+                            Label("Unstash All", systemImage: "tray.and.arrow.up")
+                        }
+                        Button(role: .destructive) {
+                            clearStash()
+                        } label: {
+                            Label("Delete Stashed Items", systemImage: "trash")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.title2)
+                            .foregroundStyle(Color.brand)
+                            .frame(width: 30, height: 44)
+                            .contentShape(Rectangle())
                     }
                     .disabled(stashed.isEmpty)
+                    .simultaneousGesture(TapGesture().onEnded { Haptics.impact(.light) })
+                    .accessibilityLabel("Stash options")
                 }
             }
             .confirmationDialog(
@@ -128,6 +165,16 @@ struct StashSheet: View {
         Haptics.notify(.warning)
         WidgetCenter.shared.reloadAllTimelines()
         registerUndo(removed)
+    }
+
+    /// Pull every stashed task back into Today at once.
+    private func unstashAll() {
+        withAnimation(.appMotion) {
+            for task in stashed { TaskActions.unstash(task, in: context) }
+        }
+        Haptics.selection()
+        live.refresh()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     /// Empty the whole stash, registering the sheet-local undo.

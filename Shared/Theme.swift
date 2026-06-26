@@ -49,9 +49,9 @@ extension Color {
     /// Soft brand wash for subtle fills and selected rows.
     static let brandTint = Color(uiColor: .appBrandTint)
 
-    /// Warm gold accent that marks the stash — distinct from the brand red, and dark
-    /// enough text sits on it in black. Hex #DDB967.
-    static let stashAccent = Color(hex: 0xDDB967)
+    /// Muted sage-teal accent that marks the stash — complementary to the brand red and
+    /// calm, reading as "set aside." Light text sits on it. Hex #5C8A7D.
+    static let stashAccent = Color(hex: 0x5C8A7D)
 
     // MARK: Surfaces
 
