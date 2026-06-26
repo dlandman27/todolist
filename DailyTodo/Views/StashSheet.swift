@@ -14,7 +14,7 @@ struct StashSheet: View {
 
     @State private var pendingUndo: PendingUndo?
     @State private var resnoozeTarget: TaskItem?
-    @State private var detent: PresentationDetent = .large
+    @State private var detent: PresentationDetent = .medium
     @FocusState private var focusedStashTask: UUID?
 
     /// Stash-only rolling undo (delete / Clear Stash), walled off from the Today undo.
@@ -155,6 +155,10 @@ struct StashSheet: View {
             }
             .onChange(of: scenePhase) { _, phase in
                 if phase == .background { pendingUndo = nil }
+            }
+            // Grow to full height while editing so the keyboard doesn't cover the new row.
+            .onChange(of: focusedStashTask) { _, new in
+                if new != nil { detent = .large }
             }
         }
         .presentationDetents([.medium, .large], selection: $detent)
