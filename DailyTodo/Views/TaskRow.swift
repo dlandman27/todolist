@@ -67,6 +67,10 @@ struct TaskRow: View {
         // clips its border.
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
+        // Make the whole row a tap target for editing, not just the text field — tapping
+        // anywhere (except the checkbox, which keeps its own tap) focuses the field.
+        .contentShape(Rectangle())
+        .onTapGesture { focus.wrappedValue = task.id }
         // Card is always present and fades via `cardVisible`, which is toggled inside a
         // `withAnimation` block on focus change (see the TextField's `onChange`) rather
         // than via an implicit `.animation(value:)` — the latter only animated while

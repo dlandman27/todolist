@@ -196,7 +196,7 @@ struct ListView: View {
                     settingsButton
                 }
                 .padding(.horizontal, 6)
-                .glassCapsule(tinted: false)
+                .glassCluster()
             }
         }
         .padding(.horizontal)
