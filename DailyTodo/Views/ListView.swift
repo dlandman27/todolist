@@ -190,15 +190,8 @@ struct ListView: View {
             Spacer()
             HStack(spacing: 8) {
                 stashButton
-                    .padding(.horizontal, 6)
-                    .glassCapsule(tinted: false)
-
-                HStack(spacing: 8) {
-                    listOptionsButton
-                    settingsButton
-                }
-                .padding(.horizontal, 6)
-                .glassCluster()
+                listOptionsButton
+                settingsButton
             }
         }
         .padding(.horizontal)
