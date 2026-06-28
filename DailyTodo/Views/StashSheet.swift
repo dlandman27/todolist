@@ -208,7 +208,7 @@ struct StashSheet: View {
         }
         let item = TaskActions.addStashed(in: context)
         Haptics.impact(.light)
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         DispatchQueue.main.async { focusedStashTask = item.id }
     }
 
@@ -217,7 +217,7 @@ struct StashSheet: View {
         withAnimation(.appMotion) { TaskActions.unstash(task, in: context) }
         Haptics.selection()
         live.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
     }
 
     /// Complete a task straight from the stash: un-stash, then mark done.
@@ -228,7 +228,7 @@ struct StashSheet: View {
         }
         Haptics.notify(.success)
         live.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
     }
 
     /// Delete one stashed task, registering the sheet-local undo.
@@ -236,7 +236,7 @@ struct StashSheet: View {
         var removed: [TaskSnapshot] = []
         withAnimation(.appMotion) { removed = TaskActions.delete([task], in: context) }
         Haptics.notify(.warning)
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         registerUndo(removed)
     }
 
@@ -247,7 +247,7 @@ struct StashSheet: View {
         }
         Haptics.selection()
         live.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
     }
 
     /// Empty the whole stash, registering the sheet-local undo.
@@ -255,7 +255,7 @@ struct StashSheet: View {
         var removed: [TaskSnapshot] = []
         withAnimation(.appMotion) { removed = TaskActions.clearStash(in: context) }
         Haptics.notify(.warning)
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         registerUndo(removed)
     }
 
@@ -266,7 +266,7 @@ struct StashSheet: View {
             TaskActions.stash(task, until: option.returnDate(), in: context)
         }
         Haptics.selection()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         resnoozeTarget = nil
     }
 
@@ -281,7 +281,7 @@ struct StashSheet: View {
         guard let pending = pendingUndo else { return }
         withAnimation(.appMotion) { TaskActions.restore(pending.snapshots, in: context) }
         Haptics.selection()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         pendingUndo = nil
     }
 

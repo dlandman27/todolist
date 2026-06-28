@@ -32,7 +32,7 @@ struct ToggleTaskIntent: LiveActivityIntent {
         }
 
         await LiveActivityBridge.updateRunningActivities()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         return .result()
     }
 }

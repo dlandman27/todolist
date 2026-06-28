@@ -33,8 +33,11 @@ struct DailyTodoApp: App {
                 .environment(router)
                 .environment(live)
                 .onOpenURL { url in
-                    if url.scheme == DeepLink.scheme, url.host == DeepLink.addHost {
-                        router.addRequested = true
+                    guard url.scheme == DeepLink.scheme else { return }
+                    switch url.host {
+                    case DeepLink.addHost: router.addRequested = true
+                    case DeepLink.stashHost: router.stashRequested = true
+                    default: break
                     }
                 }
                 .onChange(of: scenePhase) { _, phase in
@@ -60,8 +63,10 @@ struct DailyTodoApp: App {
     }
 }
 
-/// Signals an add request (e.g. from the widget's deep link) for the list to act on.
+/// Signals an add or stash request (e.g. from a deep link / Control Center control)
+/// for the list to act on.
 @Observable
 final class Router {
     var addRequested = false
+    var stashRequested = false
 }

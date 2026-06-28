@@ -53,7 +53,7 @@ enum DailyCleanup {
         defaults?.set(result.newMarker, forKey: lastClearedKey)
         if result.purge {
             TaskActions.clearCompleted(in: context)
-            WidgetCenter.shared.reloadAllTimelines()
+            Surfaces.reload()
         }
         return result.purge
     }

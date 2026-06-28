@@ -159,6 +159,12 @@ struct ListView: View {
                 router.addRequested = false
             }
         }
+        .onChange(of: router.stashRequested) { _, requested in
+            if requested {
+                showStash = true
+                router.stashRequested = false
+            }
+        }
         .task(id: pendingUndo?.id) {
             guard pendingUndo != nil else { return }
             try? await Task.sleep(for: .seconds(5))
@@ -228,7 +234,7 @@ struct ListView: View {
         titleFocused = false
         Haptics.selection()
         live.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
     }
 
     /// The ⋯ list-options menu: bulk actions on this list. Sections keep room for a
@@ -497,7 +503,7 @@ struct ListView: View {
         }
         Haptics.selection()
         live.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         clearStashing(ids)
     }
 
@@ -510,7 +516,7 @@ struct ListView: View {
         }
         Haptics.selection()
         live.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         stashTarget = nil
         clearStashing([task.id])
     }
@@ -526,7 +532,7 @@ struct ListView: View {
         withAnimation(.appMotion) { removed = TaskActions.clearCompleted(in: context) }
         Haptics.notify(.warning)
         live.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         registerUndo(removed)
     }
 
@@ -536,7 +542,7 @@ struct ListView: View {
         withAnimation(.appMotion) { removed = TaskActions.clearAll(in: context) }
         Haptics.notify(.warning)
         live.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         registerUndo(removed)
     }
 
@@ -560,7 +566,7 @@ struct ListView: View {
         withAnimation(.appMotion) { TaskActions.restore(pending.snapshots, in: context) }
         Haptics.selection()
         live.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         pendingUndo = nil
     }
 
@@ -576,7 +582,7 @@ struct ListView: View {
         try? context.save()
         Haptics.impact(.light)
         live.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
     }
 
     private func delete(_ offsets: IndexSet) {
@@ -586,7 +592,7 @@ struct ListView: View {
         withAnimation(.appMotion) { removed = TaskActions.delete(toDelete, in: context) }
         Haptics.notify(.warning)
         live.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
         registerUndo(removed)
     }
 }

@@ -23,7 +23,7 @@ enum StashReturn {
             TaskActions.unstash(task, in: context)
         }
         if !due.isEmpty {
-            WidgetCenter.shared.reloadAllTimelines()
+            Surfaces.reload()
         }
         return due.count
     }

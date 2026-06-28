@@ -116,7 +116,7 @@ struct TaskRow: View {
         if task.done { Haptics.notify(.success) } else { Haptics.impact(.light) }
         try? context.save()
         LiveActivityController.shared.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
     }
 
     /// Trim the title; an empty row is discarded rather than left as a blank entry.
@@ -127,6 +127,6 @@ struct TaskRow: View {
         }
         try? context.save()
         LiveActivityController.shared.refresh()
-        WidgetCenter.shared.reloadAllTimelines()
+        Surfaces.reload()
     }
 }

@@ -23,9 +23,12 @@ enum ListSettings {
     }
 }
 
-/// The custom URL scheme used to deep-link into the app (e.g. from the widget's add button).
+/// The custom URL scheme used to deep-link into the app (e.g. from the widget's add
+/// button or a Control Center control).
 enum DeepLink {
     static let scheme = "dailytodo"
     static let addHost = "add"
     static let addURL = URL(string: "\(scheme)://\(addHost)")!
+    static let stashHost = "stash"
+    static let stashURL = URL(string: "\(scheme)://\(stashHost)")!
 }

@@ -6,7 +6,7 @@ import WidgetKit
 /// mirroring what `ToggleTaskIntent` does. Shared by every mutating intent below.
 private func refreshSurfaces() async {
     await LiveActivityBridge.updateRunningActivities()
-    WidgetCenter.shared.reloadAllTimelines()
+    Surfaces.reload()
 }
 
 /// Add a new to-do. By voice, Siri prompts for the title; in the Shortcuts app the
