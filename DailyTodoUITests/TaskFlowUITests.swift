@@ -64,4 +64,23 @@ final class TaskFlowUITests: XCTestCase {
         app.buttons["Delete"].firstMatch.tap()
         XCTAssertFalse(field(withValue: "Temp").waitForExistence(timeout: 2))
     }
+
+    func testAddButtonAddsTask() {
+        let addButton = app.buttons["addTask"]
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5), "Add button should be visible")
+        addButton.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "tapping Add should focus a new task")
+        app.typeText("From FAB")
+        dismissKeyboard()
+        XCTAssertTrue(field(withValue: "From FAB").waitForExistence(timeout: 3))
+        XCTAssertEqual(taskFields.count, 1)
+    }
+
+    func testStashAddButtonAddsTask() {
+        app.buttons["stash"].tap()
+        let addButton = app.buttons["addStashTask"]
+        XCTAssertTrue(addButton.waitForExistence(timeout: 5), "Stash add button should be visible")
+        addButton.tap()
+        XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "tapping stash Add should focus a new stashed task")
+    }
 }

@@ -110,6 +110,16 @@ struct StashSheet: View {
                 }
             }
             .animation(.appMotion, value: stashed.isEmpty)
+            // Floating Add button, mirroring Today. Hidden while editing a stash row.
+            .overlay(alignment: .bottomTrailing) {
+                if focusedStashTask == nil {
+                    addButton
+                        .padding(.trailing, 20)
+                        .padding(.bottom, 12)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+            .animation(.appMotion, value: focusedStashTask)
             .navigationTitle("Stashed Todos")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -168,6 +178,23 @@ struct StashSheet: View {
         }
         .presentationDetents([.medium, .large], selection: $detent)
         .presentationDragIndicator(.visible)
+    }
+
+    /// The stash's primary action: a solid "+" mirroring Today's Add button, so adding
+    /// to the stash isn't only reachable by the (VoiceOver-invisible) tap-empty-space path.
+    private var addButton: some View {
+        Button(action: addStashTask) {
+            Image(systemName: "plus")
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(.white)
+                .frame(width: 56, height: 56)
+                .background(Circle().fill(Color.brand))
+                .shadow(color: .black.opacity(0.2), radius: 8, y: 4)
+                .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("addStashTask")
+        .accessibilityLabel("Add stashed task")
     }
 
     /// Add a new blank task straight into the stash (defaults to "Never") and focus it.

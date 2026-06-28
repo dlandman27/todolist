@@ -86,6 +86,18 @@ struct ListView: View {
                 // empty (clear, last row deleted, discarded draft).
                 .animation(.appMotion, value: orderedTasks.isEmpty)
             }
+            // Floating Add button, overlaid so it doesn't reserve layout space (which
+            // would shrink the list). Hidden while editing — the keyboard's there and
+            // Return already chains to the next task.
+            .overlay(alignment: .bottomTrailing) {
+                if !isEditing {
+                    addButton
+                        .padding(.trailing, 20)
+                        .padding(.bottom, 12)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
+            .animation(.appMotion, value: isEditing)
             .safeAreaInset(edge: .bottom) {
                 VStack(spacing: 10) {
                     if let pending = pendingUndo {
@@ -303,6 +315,25 @@ struct ListView: View {
         .simultaneousGesture(TapGesture().onEnded { Haptics.impact(.light) })
         .accessibilityIdentifier("settings")
         .accessibilityLabel("Settings")
+    }
+
+    /// The primary action: a solid, always-visible "+" that adds a task. Reuses
+    /// `addTask()` so it inherits the focus-the-existing-draft behavior, and carries
+    /// an accessibility label so VoiceOver users can add a task from the main screen
+    /// (tapping empty space — the other add path — is invisible to VoiceOver).
+    private var addButton: some View {
+        Button(action: addTask) {
+            Image(systemName: "plus")
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(.white)
+                .frame(width: 56, height: 56)
+                .background(Circle().fill(Color.brand))
+                .shadow(color: .black.opacity(0.2), radius: 8, y: 4)
+                .contentShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("addTask")
+        .accessibilityLabel("Add task")
     }
 
     /// Bottom control to pin the list to the Lock Screen as a Live Activity.
