@@ -11,7 +11,7 @@ settings:
     CURRENT_PROJECT_VERSION: "7"
     SWIFT_VERSION: "5.0"
     CODE_SIGN_STYLE: Automatic            # Xcode manages provisioning (incl. the App Group)
-    DEVELOPMENT_TEAM: "62TKJF387W"        # Dylan Landman's team
+    DEVELOPMENT_TEAM: "Z78633LQDS"        # signing team used for TestFlight distribution
     TARGETED_DEVICE_FAMILY: "1"           # iPhone
 
 targets:
