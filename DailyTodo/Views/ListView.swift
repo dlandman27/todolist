@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import WidgetKit
+import UIKit
 
 /// The whole app: one running list you add to inline, check off, edit, and delete.
 struct ListView: View {
@@ -14,6 +15,8 @@ struct ListView: View {
     @State private var showClearAllConfirm = false
     @State private var showClearCompletedConfirm = false
     @State private var pendingUndo: PendingUndo?
+    /// A brief auto-dismissing status message shown when toggling the Live Activity.
+    @State private var liveToast: LiveToast?
     @State private var stashTarget: TaskItem?
     @State private var showStash = false
     @State private var showStashAllPicker = false
@@ -28,6 +31,13 @@ struct ListView: View {
         let id = UUID()
         let snapshots: [TaskSnapshot]
         var message: String { "Removed \(snapshots.count) task\(snapshots.count == 1 ? "" : "s")" }
+    }
+
+    /// A transient Live Activity status message. `id` changes each time so the
+    /// auto-dismiss timer restarts on a fresh toggle.
+    private struct LiveToast {
+        let id = UUID()
+        let message: String
     }
 
     @Query(sort: \TaskItem.createdAt, order: .forward) private var tasks: [TaskItem]
@@ -89,24 +99,43 @@ struct ListView: View {
             // Floating Add button, overlaid so it doesn't reserve layout space (which
             // would shrink the list). Hidden while editing — the keyboard's there and
             // Return already chains to the next task.
+            // Bottom controls float as a symmetric pair — Go Live bottom-left, Add
+            // bottom-right — both hidden while editing so they don't crowd the keyboard.
+            .overlay(alignment: .bottomLeading) {
+                if !isEditing {
+                    liveActivityButton
+                        .padding(.leading, 20)
+                        .padding(.bottom, 16)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
             .overlay(alignment: .bottomTrailing) {
                 if !isEditing {
                     addButton
                         .padding(.trailing, 20)
-                        .padding(.bottom, 12)
+                        .padding(.bottom, 16)
                         .transition(.scale.combined(with: .opacity))
                 }
             }
             .animation(.appMotion, value: isEditing)
-            .safeAreaInset(edge: .bottom) {
+            // Transient toasts (undo + Live Activity status) animate up just above the
+            // bottom button row, so they never sit under the Add / Go Live circles.
+            .overlay(alignment: .bottom) {
                 VStack(spacing: 10) {
                     if let pending = pendingUndo {
                         UndoToast(message: pending.message, onUndo: undo, onDismiss: dismissUndo)
                             .transition(.move(edge: .bottom).combined(with: .opacity))
                     }
-                    liveActivityButton
+                    if let toast = liveToast {
+                        InfoToast(message: toast.message) {
+                            withAnimation(.appMotion) { liveToast = nil }
+                        }
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
                 }
+                .padding(.bottom, 88)
                 .animation(.appMotion, value: pendingUndo?.id)
+                .animation(.appMotion, value: liveToast?.id)
             }
             .toolbar(.hidden, for: .navigationBar)
             .confirmationDialog(
@@ -170,6 +199,12 @@ struct ListView: View {
             try? await Task.sleep(for: .seconds(5))
             guard !Task.isCancelled else { return }
             withAnimation(.appMotion) { pendingUndo = nil }
+        }
+        .task(id: liveToast?.id) {
+            guard liveToast != nil else { return }
+            try? await Task.sleep(for: .seconds(3))
+            guard !Task.isCancelled else { return }
+            withAnimation(.appMotion) { liveToast = nil }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { pendingUndo = nil }
@@ -342,38 +377,52 @@ struct ListView: View {
         .accessibilityLabel("Add task")
     }
 
-    /// Bottom control to pin the list to the Lock Screen as a Live Activity.
+    /// Bottom-left control to pin the list to the Lock Screen as a Live Activity.
+    /// An icon-only circle sized to mirror the Add button, but glass (quiet) so it
+    /// reads as secondary to the solid Add FAB. Brand-colored and pulsing while live,
+    /// muted otherwise. (A 56pt capsule is a circle — reuses `glassCapsule`.)
     @ViewBuilder
     private var liveActivityButton: some View {
-        if !live.systemEnabled {
-            Label("Turn on Live Activities in Settings", systemImage: "lock.slash")
-                .font(.footnote)
-                .foregroundStyle(Color.textSecondary)
-                .padding(.bottom, 8)
-        } else {
+        if live.systemEnabled {
             Button {
                 Haptics.impact(.medium)
                 withAnimation(.snappy) { live.toggle() }
+                // Confirm the (otherwise silent) state change — the button itself is
+                // text-free, so the toast is what tells the user what just happened.
+                liveToast = LiveToast(message: live.isRunning
+                    ? "You're now live. Tasks will show in your Live Activities."
+                    : "Live Activities disabled.")
             } label: {
-                HStack(spacing: 8) {
-                    if live.isRunning {
-                        LiveDot()
-                    } else {
-                        Circle()
-                            .stroke(Color.textSecondary, lineWidth: 1.5)
-                            .frame(width: 9, height: 9)
-                    }
-                    Text(live.isRunning ? "Live" : "Go Live")
-                        .font(.subheadline.weight(.semibold))
-                }
-                .foregroundStyle(Color.brand)
-                .padding(.vertical, 12)
-                .padding(.horizontal, 20)
-                .glassCapsule(tinted: live.isRunning)
-                .contentShape(Capsule())
+                // The slash carries the off/on meaning: a clear antenna (brand-red +
+                // tinted glass) when live, a slashed muted antenna when not — so the
+                // state reads at a glance, not just by color. No animation (visual noise).
+                Image(systemName: live.isRunning
+                    ? "antenna.radiowaves.left.and.right"
+                    : "antenna.radiowaves.left.and.right.slash")
+                    .font(.title2)
+                    .foregroundStyle(live.isRunning ? Color.brand : Color.textSecondary)
+                    .frame(width: 56, height: 56)
+                    .glassCapsule(tinted: live.isRunning)
+                    .contentShape(Circle())
             }
             .buttonStyle(.plain)
-            .padding(.bottom, 8)
+            .accessibilityLabel(live.isRunning ? "Live on Lock Screen, tap to stop" : "Show list on Lock Screen")
+        } else {
+            // Live Activities are off system-wide — the tap sends the user to Settings.
+            Button {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            } label: {
+                Image(systemName: "antenna.radiowaves.left.and.right.slash")
+                    .font(.title2)
+                    .foregroundStyle(Color.textSecondary)
+                    .frame(width: 56, height: 56)
+                    .glassCapsule(tinted: false)
+                    .contentShape(Circle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Live Activities are off. Open Settings")
         }
     }
 
@@ -597,22 +646,3 @@ struct ListView: View {
     }
 }
 
-/// The classic "we're live" indicator: a red dot that gently pulses while active.
-private struct LiveDot: View {
-    @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    @State private var pulse = false
-
-    var body: some View {
-        Circle()
-            .fill(Color.red)
-            .frame(width: 9, height: 9)
-            // Solid when Reduce Motion is on (no endless pulse); otherwise breathe.
-            .opacity(reduceMotion ? 1.0 : (pulse ? 1.0 : 0.55))
-            .onAppear {
-                guard !reduceMotion else { return }
-                withAnimation(.easeInOut(duration: 1.4).repeatForever(autoreverses: true)) {
-                    pulse = true
-                }
-            }
-    }
-}
