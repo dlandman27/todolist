@@ -19,10 +19,16 @@ private func dynamic(light: UInt32, dark: UInt32) -> UIColor {
 }
 
 extension UIColor {
-    // MARK: Brand
-    static let appBrand = rgb(0xBC4749)
-    static let appBrandDark = rgb(0x97383A)
-    static let appBrandTint = dynamic(light: 0xF6DEDF, dark: 0x4A2E30)
+    // MARK: Brand (accent-derived — see ThemeStore)
+    static var appBrand: UIColor { rgb(ThemeStore.hexValue(ThemeStore.accentHex)) }
+    static var appBrandDark: UIColor { appBrand.adjustingBrightness(0.8) }
+    static var appBrandTint: UIColor {
+        UIColor { trait in
+            let towards: UIColor = trait.userInterfaceStyle == .dark ? rgb(0x171113) : .white
+            let frac: CGFloat = trait.userInterfaceStyle == .dark ? 0.72 : 0.82
+            return appBrand.blended(with: towards, fraction: frac)
+        }
+    }
     // MARK: Surfaces
     static let appBackgroundColor = dynamic(light: 0xFFF9FB, dark: 0x171113)
     static let appSurfaceColor = dynamic(light: 0xFFFFFF, dark: 0x261E20)
@@ -42,12 +48,12 @@ extension Color {
 
     // MARK: Brand
 
-    /// Primary brand color. Hex #BC4749.
-    static let brand = Color(uiColor: .appBrand)
-    /// Darker brand shade for pressed / emphasis states. Hex #97383A.
-    static let brandDark = Color(uiColor: .appBrandDark)
-    /// Soft brand wash for subtle fills and selected rows.
-    static let brandTint = Color(uiColor: .appBrandTint)
+    /// Primary brand/accent color (user-customizable via ThemeStore).
+    static var brand: Color { Color(uiColor: .appBrand) }
+    /// Darker accent shade for pressed / emphasis states.
+    static var brandDark: Color { Color(uiColor: .appBrandDark) }
+    /// Soft accent wash for subtle fills and selected rows.
+    static var brandTint: Color { Color(uiColor: .appBrandTint) }
 
     /// Muted sage-teal accent that marks the stash — complementary to the brand red and
     /// calm, reading as "set aside." Light text sits on it. Hex #5C8A7D.
@@ -72,6 +78,36 @@ extension Animation {
     /// Shared spring for the app's micro-interactions: gentle, no bounce — the
     /// single curve every add / complete / delete / reorder reuses for coherence.
     static let appMotion = Animation.smooth(duration: 0.3)
+}
+
+extension UIColor {
+    /// Scale HSB brightness by `factor` (clamped 0...1).
+    func adjustingBrightness(_ factor: CGFloat) -> UIColor {
+        var h: CGFloat = 0, s: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        guard getHue(&h, saturation: &s, brightness: &b, alpha: &a) else { return self }
+        return UIColor(hue: h, saturation: s, brightness: max(0, min(1, b * factor)), alpha: a)
+    }
+
+    /// Linear RGBA blend toward `other` by `fraction` (0 = self, 1 = other).
+    func blended(with other: UIColor, fraction: CGFloat) -> UIColor {
+        var r1: CGFloat = 0, g1: CGFloat = 0, b1: CGFloat = 0, a1: CGFloat = 0
+        var r2: CGFloat = 0, g2: CGFloat = 0, b2: CGFloat = 0, a2: CGFloat = 0
+        getRed(&r1, green: &g1, blue: &b1, alpha: &a1)
+        other.getRed(&r2, green: &g2, blue: &b2, alpha: &a2)
+        let f = max(0, min(1, fraction))
+        return UIColor(red: r1 + (r2 - r1) * f, green: g1 + (g2 - g1) * f,
+                       blue: b1 + (b2 - b1) * f, alpha: a1 + (a2 - a1) * f)
+    }
+}
+
+extension Color {
+    /// 6-digit UPPERCASE sRGB hex (no `#`) — used to persist a picked color.
+    func toHex() -> String {
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
+        let c = { (v: CGFloat) in Int((max(0, min(1, v)) * 255).rounded()) }
+        return String(format: "%02X%02X%02X", c(r), c(g), c(b))
+    }
 }
 
 extension View {
