@@ -10,6 +10,9 @@ struct ListView: View {
     @Environment(\.modelContext) private var context
     @FocusState private var focusedTask: UUID?
     @AppStorage(ListSettings.nameKey, store: AppGroup.defaults) private var listName = ListSettings.defaultName
+    // Observing the theme model repaints the whole list the moment the accent
+    // changes (Color.brand then re-reads the now-updated ThemeStore).
+    @Environment(ThemeModel.self) private var theme
     @State private var editingTitle = false
     @FocusState private var titleFocused: Bool
     @State private var showClearAllConfirm = false
@@ -213,6 +216,9 @@ struct ListView: View {
             StashSheet()
                 .environment(live)
         }
+        // Reading theme.accent here makes ListView.body observe the accent, so the
+        // whole tree repaints live on change; it also tints nav controls.
+        .tint(theme.accent)
     }
 
     /// The app's title — double-tap to rename the list — with the settings gear trailing.

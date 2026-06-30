@@ -28,6 +28,7 @@
 		42D513E29488BF2538E6E366 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97382722425927981E0E4F4 /* ListView.swift */; };
 		46C9C3793FF6BFE21819328F /* DailyShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC219F6963F7C42E2DCE0A94 /* DailyShortcuts.swift */; };
 		475A84528B0B6E65FA6204D4 /* StashReturn.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE21BABF464879C71ACC84CC /* StashReturn.swift */; };
+		47AC9A4B964EF23899C3A05F /* CustomizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB7CE36194A74D3382316B /* CustomizeView.swift */; };
 		5CC1C0C7D20EA64A1FED7111 /* DailyCleanupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */; };
 		66ED6154C8470046F9A4A8E2 /* ThemeColorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33C5815C702655CE0E02EF04 /* ThemeColorTests.swift */; };
 		692E092BA7C59901FAA1784D /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9009156203DE059C471C455 /* TaskStore.swift */; };
@@ -116,6 +117,7 @@
 		0ED33462BA5ECE0259E64B51 /* StashFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashFormatting.swift; sourceTree = "<group>"; };
 		1028E2BAA40DEE2897D09876 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		15B6ABD81BE72EB3E2D4F9FE /* StashSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashSheet.swift; sourceTree = "<group>"; };
+		1BDB7CE36194A74D3382316B /* CustomizeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizeView.swift; sourceTree = "<group>"; };
 		1D93E764550B345709DDAFC5 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		1DBCCD975217F3C68B020520 /* StashTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashTests.swift; sourceTree = "<group>"; };
 		1FFA5B72AF1AD3AD4EE336AA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -255,6 +257,7 @@
 		B776823B4880EFD547991BF7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				1BDB7CE36194A74D3382316B /* CustomizeView.swift */,
 				D97382722425927981E0E4F4 /* ListView.swift */,
 				1FFA5B72AF1AD3AD4EE336AA /* SettingsView.swift */,
 				4D394E3EB9019A94CCF80F70 /* StashRow.swift */,
@@ -440,6 +443,7 @@
 				C3A5EFAD2CB5C54F0CB92147 /* AppGroup.swift in Sources */,
 				8092AFD861B954C3B6C50A46 /* AppTheme.swift in Sources */,
 				CB759241D43C7A707CB9E6EC /* ControlCounts.swift in Sources */,
+				47AC9A4B964EF23899C3A05F /* CustomizeView.swift in Sources */,
 				2E65F03DD31AB269B1F95107 /* DailyCleanup.swift in Sources */,
 				46C9C3793FF6BFE21819328F /* DailyShortcuts.swift in Sources */,
 				6C8A1CD2EEC3D226B18F4263 /* DailyTodoApp.swift in Sources */,

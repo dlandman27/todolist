@@ -22,8 +22,19 @@ struct SettingsView: View {
                     }
                     .tint(Color.brand)
                     .listRowBackground(Color.appSurface)
+
+                    NavigationLink {
+                        CustomizeView()
+                    } label: {
+                        Label("Customize", systemImage: "paintbrush")
+                            .foregroundStyle(Color.textPrimary)
+                    }
+                    .accessibilityIdentifier("customize")
+                    .listRowBackground(Color.appSurface)
                 } header: {
                     Text("Appearance")
+                } footer: {
+                    Text("Accent color, and soon backgrounds and app icons.")
                 }
 
                 Section {

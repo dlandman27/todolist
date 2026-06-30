@@ -83,4 +83,14 @@ final class TaskFlowUITests: XCTestCase {
         addButton.tap()
         XCTAssertTrue(app.keyboards.firstMatch.waitForExistence(timeout: 5), "tapping stash Add should focus a new stashed task")
     }
+
+    func testAccentSwatchSelectable() {
+        app.buttons["settings"].tap()
+        app.buttons["customize"].tap()
+        let ocean = app.descendants(matching: .any).matching(identifier: "accent-2D6FB0").firstMatch
+        XCTAssertTrue(ocean.waitForExistence(timeout: 5), "preset accent swatch should exist on the Customize page")
+        ocean.tap()
+        // No crash + Customize still up.
+        XCTAssertTrue(app.navigationBars["Customize"].waitForExistence(timeout: 3))
+    }
 }

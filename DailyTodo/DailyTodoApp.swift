@@ -6,6 +6,7 @@ struct DailyTodoApp: App {
     @State private var router = Router()
     @State private var live = LiveActivityController.shared
     @State private var midnight = MidnightScheduler()
+    @State private var theme = ThemeModel()
     @Environment(\.scenePhase) private var scenePhase
     @AppStorage(AppTheme.defaultsKey) private var appTheme = AppTheme.system
 
@@ -32,6 +33,7 @@ struct DailyTodoApp: App {
             ListView()
                 .environment(router)
                 .environment(live)
+                .environment(theme)
                 .onOpenURL { url in
                     guard url.scheme == DeepLink.scheme else { return }
                     switch url.host {
