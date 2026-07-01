@@ -214,7 +214,6 @@ struct ListView: View {
         .sheet(isPresented: $showStash) {
             StashSheet()
                 .environment(live)
-                .environment(theme)
         }
         // Reading theme.accent here makes ListView.body observe the accent, so the
         // whole tree repaints live on change; it also tints nav controls.
