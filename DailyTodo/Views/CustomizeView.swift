@@ -116,6 +116,7 @@ struct CustomizeView: View {
                         if theme.backgroundImage != nil {
                             Button(role: .destructive) { theme.clearPhoto() } label: {
                                 Label("Remove Photo", systemImage: "trash")
+                                    .foregroundStyle(.red)
                             }
                             .listRowBackground(Color.appSurface)
                         }
