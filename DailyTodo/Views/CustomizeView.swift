@@ -140,7 +140,7 @@ struct CustomizeView: View {
             }
             .scrollContentBackground(.hidden)
         }
-        .navigationTitle("Customize")
+        .navigationTitle("Customize (Beta)")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar)
     }
