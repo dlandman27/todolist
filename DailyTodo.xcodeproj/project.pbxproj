@@ -63,6 +63,7 @@
 		B2C6CE32FC0C6485C71B1208 /* RepeatRuleEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43DD220A5E82FBDC4C9CC39 /* RepeatRuleEditorView.swift */; };
 		BD5C0AD348C07424832B8D7C /* LiveActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AA3136636BB9A8D6ED4576 /* LiveActivityController.swift */; };
 		BD66AF97F4B186344D0087DD /* ThemeStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EEB5AB958070839630B1A8 /* ThemeStoreTests.swift */; };
+		C2BEC38E966CF3A5E6D9EDED /* RepeatingRulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC88EAE31AF78E147D3D1AB /* RepeatingRulesView.swift */; };
 		C3A5EFAD2CB5C54F0CB92147 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89172F89B880F640C73953BB /* AppGroup.swift */; };
 		C65406A7736B78E05B241130 /* ThemeBackgroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56855B4451269047A2D9C9B5 /* ThemeBackgroundTests.swift */; };
 		CB759241D43C7A707CB9E6EC /* ControlCounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED241496D4FE366D47BE62AB /* ControlCounts.swift */; };
@@ -148,6 +149,7 @@
 		4F2AB48156EDB0A543C7CDDA /* ControlCountsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlCountsTests.swift; sourceTree = "<group>"; };
 		56855B4451269047A2D9C9B5 /* ThemeBackgroundTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeBackgroundTests.swift; sourceTree = "<group>"; };
 		6CA7FC42EE2FE2AA78F16F02 /* RepeatSpawnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatSpawnerTests.swift; sourceTree = "<group>"; };
+		6DC88EAE31AF78E147D3D1AB /* RepeatingRulesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatingRulesView.swift; sourceTree = "<group>"; };
 		6EC66BA5042F27294F869567 /* DailyTodo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DailyTodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		727A07F2F1A156D598624DD0 /* RepeatRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatRule.swift; sourceTree = "<group>"; };
 		73610AD06E4FABE20A24D03E /* TaskActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskActions.swift; sourceTree = "<group>"; };
@@ -286,6 +288,7 @@
 			children = (
 				1BDB7CE36194A74D3382316B /* CustomizeView.swift */,
 				D97382722425927981E0E4F4 /* ListView.swift */,
+				6DC88EAE31AF78E147D3D1AB /* RepeatingRulesView.swift */,
 				E43DD220A5E82FBDC4C9CC39 /* RepeatRuleEditorView.swift */,
 				1FFA5B72AF1AD3AD4EE336AA /* SettingsView.swift */,
 				4D394E3EB9019A94CCF80F70 /* StashRow.swift */,
@@ -484,6 +487,7 @@
 				417D2FE82DA76F06122C0F10 /* RepeatRule.swift in Sources */,
 				B2C6CE32FC0C6485C71B1208 /* RepeatRuleEditorView.swift in Sources */,
 				AB764F0D10604F2847929EED /* RepeatSpawner.swift in Sources */,
+				C2BEC38E966CF3A5E6D9EDED /* RepeatingRulesView.swift in Sources */,
 				1123159D9C5761E0F5A2E078 /* SettingsView.swift in Sources */,
 				F25D63EA18FDFC3B6FC9FCA7 /* StashDuration.swift in Sources */,
 				DB5A7175B7192ED638B78A11 /* StashFormatting.swift in Sources */,

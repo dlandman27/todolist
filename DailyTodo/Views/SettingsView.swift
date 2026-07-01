@@ -51,6 +51,21 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    NavigationLink {
+                        RepeatingRulesView()
+                    } label: {
+                        Label("Repeating Tasks", systemImage: "repeat")
+                            .foregroundStyle(Color.textPrimary)
+                    }
+                    .accessibilityIdentifier("repeatingTasks")
+                    .listRowBackground(Color.appSurface)
+                } header: {
+                    Text("Repeating")
+                } footer: {
+                    Text("Set up to-dos that get added automatically every week or month.")
+                }
+
+                Section {
                     Toggle(isOn: $hapticsEnabled) {
                         Label("Haptic Feedback", systemImage: "iphone.radiowaves.left.and.right")
                             .foregroundStyle(Color.textPrimary)
