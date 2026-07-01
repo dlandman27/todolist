@@ -88,7 +88,9 @@ struct TaskRow: View {
         // Keep the card in sync if a row appears already focused (e.g. the freshly
         // added draft) without animating it in on scroll.
         .onAppear { cardVisible = isEditing }
-        .listRowBackground(Color.appBackground)
+        // Transparent so a custom background shows behind rows (ThemeBackground draws
+        // appBackground itself when the kind is None — default look unchanged).
+        .listRowBackground(Color.clear)
     }
 
     /// True while this row is the one being edited — drives the draft container styling.

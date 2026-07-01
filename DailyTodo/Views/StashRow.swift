@@ -65,7 +65,7 @@ struct StashRow: View {
                 .opacity(cardVisible ? 1 : 0)
         }
         .onAppear { cardVisible = isEditing }
-        .listRowBackground(Color.appBackground)
+        .listRowBackground(Color.clear)
     }
 
     /// Trim the title; discard the row if it was left empty (a blank stashed draft).

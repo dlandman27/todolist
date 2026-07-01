@@ -89,7 +89,7 @@ struct StashSheet: View {
                                     .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
-                            .listRowBackground(Color.appBackground)
+                            .listRowBackground(Color.clear)
                             .listRowSeparator(.hidden)
                         }
                         .listStyle(.plain)

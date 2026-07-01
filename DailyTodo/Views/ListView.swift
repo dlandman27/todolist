@@ -480,12 +480,14 @@ struct ListView: View {
                         .contentShape(Rectangle())
                 }
                 .buttonStyle(.plain)
-                .listRowBackground(Color.appBackground)
+                .listRowBackground(Color.clear)
                 .listRowSeparator(.hidden)
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
-            .background(Color.appBackground)
+            // Transparent so the ThemeBackground shows through (it draws appBackground
+            // itself when the kind is None, so the default look is unchanged).
+            .background(Color.clear)
             // Default min row height (44) leaves single-line rows looking spaced out;
             // shrink it so rows hug their content.
             .environment(\.defaultMinListRowHeight, 36)
