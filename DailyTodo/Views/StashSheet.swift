@@ -50,7 +50,7 @@ struct StashSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.appBackground.ignoresSafeArea()
+                ThemeBackground()
                 if stashed.isEmpty {
                     stashEmptyState
                         .transition(.opacity)

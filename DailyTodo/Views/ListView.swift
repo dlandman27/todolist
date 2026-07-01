@@ -79,8 +79,7 @@ struct ListView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.appBackground
-                    .ignoresSafeArea()
+                ThemeBackground()
                     .contentShape(Rectangle())
                     // Tapping empty chrome (header, sides) only dismisses an active edit —
                     // it must NOT add a task. Adding is handled by the explicit areas below.
@@ -215,6 +214,7 @@ struct ListView: View {
         .sheet(isPresented: $showStash) {
             StashSheet()
                 .environment(live)
+                .environment(theme)
         }
         // Reading theme.accent here makes ListView.body observe the accent, so the
         // whole tree repaints live on change; it also tints nav controls.
