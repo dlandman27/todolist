@@ -26,6 +26,7 @@ struct DailyTodoApp: App {
     private func runDailyCleanup() {
         DailyCleanup.runIfNeeded(in: TaskStore.shared.mainContext)
         StashReturn.runIfNeeded(in: TaskStore.shared.mainContext)
+        RepeatSpawner.runIfNeeded(in: TaskStore.shared.mainContext)
     }
 
     var body: some Scene {

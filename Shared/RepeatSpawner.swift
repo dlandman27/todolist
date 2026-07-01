@@ -1,5 +1,6 @@
 import Foundation
 import SwiftData
+import WidgetKit
 
 /// Decides when a `RepeatRule` should add a fresh task, and (via `runIfNeeded`) does it
 /// during the app's daily catch-up. `shouldSpawn` is the pure, testable core — same
@@ -42,5 +43,25 @@ enum RepeatSpawner {
             dayCursor = calendar.date(byAdding: .day, value: 1, to: dayCursor)!
         }
         return false
+    }
+
+    /// For each rule, spawn a task if it's due (see `shouldSpawn`) and advance its marker.
+    /// Called from the app's daily catch-up alongside `DailyCleanup` / `StashReturn`.
+    static func runIfNeeded(in context: ModelContext, now: Date = Date(), calendar: Calendar = .current) {
+        var spawned = false
+        for rule in context.repeatRules() {
+            guard let cadence = rule.cadence else { continue }
+            let hasOpen = context.hasOpenInstance(ofRule: rule.id)
+            if shouldSpawn(cadence: cadence, lastSpawnedDay: rule.lastSpawnedDay,
+                           now: now, hasOpenInstance: hasOpen, calendar: calendar) {
+                TaskActions.add(title: rule.name, repeatRuleID: rule.id, in: context)
+                rule.lastSpawnedDay = calendar.startOfDay(for: now)
+                spawned = true
+            }
+        }
+        if spawned {
+            try? context.save()
+            Surfaces.reload()
+        }
     }
 }

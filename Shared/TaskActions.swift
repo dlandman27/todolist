@@ -34,11 +34,12 @@ enum TaskActions {
     /// `sortOrder` is one past the current maximum (matching the app's inline add) so
     /// the row lands last. Returns the inserted task.
     @discardableResult
-    static func add(title: String, in context: ModelContext) -> TaskItem {
+    static func add(title: String, repeatRuleID: UUID? = nil, in context: ModelContext) -> TaskItem {
         let nextOrder = (context.allTasks().map(\.sortOrder).max() ?? -1) + 1
         let item = TaskItem(
             title: title.trimmingCharacters(in: .whitespacesAndNewlines),
-            sortOrder: nextOrder
+            sortOrder: nextOrder,
+            repeatRuleID: repeatRuleID
         )
         context.insert(item)
         try? context.save()
