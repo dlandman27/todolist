@@ -71,8 +71,7 @@ struct TodoWidgetView: View {
     private var maxRows: Int {
         switch family {
         case .systemLarge: return 9
-        case .systemSmall: return 3
-        default: return 4
+        default: return 3   // small + medium: up to 3, no "+N more"
         }
     }
 
@@ -98,8 +97,9 @@ struct TodoWidgetView: View {
                 Spacer()
             } else {
                 ForEach(entry.tasks.prefix(maxRows)) { row($0) }
-                // The small widget stays clean: up to 3 tasks, no "+N more" line.
-                if entry.tasks.count > maxRows, family != .systemSmall {
+                // Only the large widget shows the overflow count; small + medium stay
+                // clean at up to 3 tasks with no "+N more" line.
+                if entry.tasks.count > maxRows, family == .systemLarge {
                     Text("+\(entry.tasks.count - maxRows) more")
                         .font(.caption2)
                         .foregroundStyle(Color.textSecondary)
