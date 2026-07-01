@@ -48,12 +48,6 @@ struct CustomizeView: View {
                     }
                     .padding(.vertical, 4)
                     .listRowBackground(Color.appSurface)
-
-                    ColorPicker(selection: accentBinding, supportsOpacity: false) {
-                        Label("Custom", systemImage: "eyedropper")
-                            .foregroundStyle(Color.textPrimary)
-                    }
-                    .listRowBackground(Color.appSurface)
                 } header: {
                     Text("Accent")
                 } footer: {
@@ -174,11 +168,6 @@ struct CustomizeView: View {
                 .strikethrough(done)
             Spacer()
         }
-    }
-
-    /// Two-way bridge between the live accent and SwiftUI's ColorPicker.
-    private var accentBinding: Binding<Color> {
-        Binding(get: { theme.accent }, set: { setAccent($0.toHex()) })
     }
 
     /// Update the accent live (model), persist it, and push it to every surface.
