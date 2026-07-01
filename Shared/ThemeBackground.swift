@@ -55,7 +55,16 @@ struct ThemeBackground: View {
                 )
             case .photo:
                 if let image = theme.backgroundImage {
-                    Image(uiImage: image).resizable().scaledToFill()
+                    // Color.clear is the sizer (fills the container); the image fills it
+                    // via scaledToFill and is clipped, so it can't overflow and blow up
+                    // the enclosing layout (which would push the app's content off-screen).
+                    Color.clear
+                        .overlay {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                        }
+                        .clipped()
                 } else {
                     Color.appBackground
                 }
