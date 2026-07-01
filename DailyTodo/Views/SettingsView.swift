@@ -33,8 +33,6 @@ struct SettingsView: View {
                     .listRowBackground(Color.appSurface)
                 } header: {
                     Text("Appearance")
-                } footer: {
-                    Text("Accent color, and soon backgrounds and app icons.")
                 }
 
                 Section {
@@ -48,6 +46,21 @@ struct SettingsView: View {
                     Text("End of Day")
                 } footer: {
                     Text("Automatically remove completed tasks at midnight. Unfinished tasks carry over.")
+                }
+
+                Section {
+                    NavigationLink {
+                        RepeatingRulesView()
+                    } label: {
+                        Label("Repeating Tasks", systemImage: "repeat")
+                            .foregroundStyle(Color.textPrimary)
+                    }
+                    .accessibilityIdentifier("repeatingTasks")
+                    .listRowBackground(Color.appSurface)
+                } header: {
+                    Text("Repeating")
+                } footer: {
+                    Text("Set up to-dos that get added automatically every week or month.")
                 }
 
                 Section {

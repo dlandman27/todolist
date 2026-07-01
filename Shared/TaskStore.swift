@@ -16,7 +16,7 @@ enum TaskStore {
     }
 
     static func makeContainer() -> ModelContainer {
-        let schema = Schema([TaskItem.self])
+        let schema = Schema([TaskItem.self, RepeatRule.self])
 
         if isUITesting {
             let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
@@ -74,5 +74,19 @@ extension ModelContext {
             .sorted {
                 ($0.stashReturnDate ?? .distantFuture) < ($1.stashReturnDate ?? .distantFuture)
             }
+    }
+
+    /// All repeat rules, oldest first.
+    func repeatRules() -> [RepeatRule] {
+        let descriptor = FetchDescriptor<RepeatRule>(
+            sortBy: [SortDescriptor(\.createdAt, order: .forward)]
+        )
+        return (try? fetch(descriptor)) ?? []
+    }
+
+    /// Whether an OPEN (not-done) task spawned by this rule still exists (Today or stash).
+    /// A completed instance is on its way out and does not count.
+    func hasOpenInstance(ofRule id: UUID) -> Bool {
+        allTasks().contains { $0.repeatRuleID == id && !$0.done }
     }
 }
