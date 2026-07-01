@@ -16,7 +16,7 @@ enum TaskStore {
     }
 
     static func makeContainer() -> ModelContainer {
-        let schema = Schema([TaskItem.self])
+        let schema = Schema([TaskItem.self, RepeatRule.self])
 
         if isUITesting {
             let config = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)

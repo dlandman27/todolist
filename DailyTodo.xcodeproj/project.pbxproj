@@ -24,9 +24,11 @@
 		24CA9DDD823774F3F75E5D8E /* LiveActivityBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */; };
 		2E65F03DD31AB269B1F95107 /* DailyCleanup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3734206842CDD79EB3D09B75 /* DailyCleanup.swift */; };
 		3DC68F83918C8C70A90EEFAF /* TodoControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5A6C518B3ADBD6B57963ECE /* TodoControls.swift */; };
+		3F289E8CCC423DDE1AC1C870 /* RepeatSpawnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA7FC42EE2FE2AA78F16F02 /* RepeatSpawnerTests.swift */; };
 		3F2C0B71B718CD2746F64774 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D93E764550B345709DDAFC5 /* Theme.swift */; };
 		3FAC60A266B9BA9B0EAD064B /* TaskFlowUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869BF8AEC58F9C8C1F2522F8 /* TaskFlowUITests.swift */; };
 		4031410E3C085C39EF7B8139 /* RepeatCadence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF0527765C4EEF01E0900BA /* RepeatCadence.swift */; };
+		417D2FE82DA76F06122C0F10 /* RepeatRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727A07F2F1A156D598624DD0 /* RepeatRule.swift */; };
 		42D513E29488BF2538E6E366 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97382722425927981E0E4F4 /* ListView.swift */; };
 		46C9C3793FF6BFE21819328F /* DailyShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC219F6963F7C42E2DCE0A94 /* DailyShortcuts.swift */; };
 		475A84528B0B6E65FA6204D4 /* StashReturn.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE21BABF464879C71ACC84CC /* StashReturn.swift */; };
@@ -39,6 +41,7 @@
 		6F3D0294FD22A9F1ADC3CFB5 /* StashReturn.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE21BABF464879C71ACC84CC /* StashReturn.swift */; };
 		70089E4CF25C7362D9E8212F /* TaskEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96E894FFEFC4883CA731D35F /* TaskEntity.swift */; };
 		799A1A3760376FA054D4C6CB /* TaskStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D13070A7F47697A07ED02B43 /* TaskStyle.swift */; };
+		79A49F5E89D33D5AB3DC9DBD /* RepeatRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727A07F2F1A156D598624DD0 /* RepeatRule.swift */; };
 		7A780ACBF2C8BE9438E970B4 /* StashDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4353BE4D9E35D01527FFC21 /* StashDuration.swift */; };
 		7F89147E4BD67D8C9742C979 /* TaskActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73610AD06E4FABE20A24D03E /* TaskActions.swift */; };
 		8092AFD861B954C3B6C50A46 /* AppTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBBDBB65A2EE4F9852ECBD6B /* AppTheme.swift */; };
@@ -141,7 +144,9 @@
 		4D394E3EB9019A94CCF80F70 /* StashRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashRow.swift; sourceTree = "<group>"; };
 		4F2AB48156EDB0A543C7CDDA /* ControlCountsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlCountsTests.swift; sourceTree = "<group>"; };
 		56855B4451269047A2D9C9B5 /* ThemeBackgroundTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeBackgroundTests.swift; sourceTree = "<group>"; };
+		6CA7FC42EE2FE2AA78F16F02 /* RepeatSpawnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatSpawnerTests.swift; sourceTree = "<group>"; };
 		6EC66BA5042F27294F869567 /* DailyTodo.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = DailyTodo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		727A07F2F1A156D598624DD0 /* RepeatRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatRule.swift; sourceTree = "<group>"; };
 		73610AD06E4FABE20A24D03E /* TaskActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskActions.swift; sourceTree = "<group>"; };
 		7435A558E61FFD6D0D94E67F /* TodoLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoLiveActivity.swift; sourceTree = "<group>"; };
 		77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyCleanupTests.swift; sourceTree = "<group>"; };
@@ -194,6 +199,7 @@
 				4F2AB48156EDB0A543C7CDDA /* ControlCountsTests.swift */,
 				77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */,
 				F3E10D835F8060ED0BE27A5B /* RepeatCadenceTests.swift */,
+				6CA7FC42EE2FE2AA78F16F02 /* RepeatSpawnerTests.swift */,
 				1DBCCD975217F3C68B020520 /* StashTests.swift */,
 				AE7D7222B5700EC8880F8776 /* TaskActionsTests.swift */,
 				2CB52BDD24FBF88FA3D25F05 /* TaskLogicTests.swift */,
@@ -212,6 +218,7 @@
 				3734206842CDD79EB3D09B75 /* DailyCleanup.swift */,
 				30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */,
 				8AF0527765C4EEF01E0900BA /* RepeatCadence.swift */,
+				727A07F2F1A156D598624DD0 /* RepeatRule.swift */,
 				D4353BE4D9E35D01527FFC21 /* StashDuration.swift */,
 				0ED33462BA5ECE0259E64B51 /* StashFormatting.swift */,
 				BE21BABF464879C71ACC84CC /* StashReturn.swift */,
@@ -467,6 +474,7 @@
 				BD5C0AD348C07424832B8D7C /* LiveActivityController.swift in Sources */,
 				02A81E8E91F06342DB768595 /* MidnightScheduler.swift in Sources */,
 				A0668DC74239FE8D2D4D8E40 /* RepeatCadence.swift in Sources */,
+				417D2FE82DA76F06122C0F10 /* RepeatRule.swift in Sources */,
 				1123159D9C5761E0F5A2E078 /* SettingsView.swift in Sources */,
 				F25D63EA18FDFC3B6FC9FCA7 /* StashDuration.swift in Sources */,
 				DB5A7175B7192ED638B78A11 /* StashFormatting.swift in Sources */,
@@ -498,6 +506,7 @@
 				82FB1B946C85BB629A8C8939 /* ControlCountsTests.swift in Sources */,
 				5CC1C0C7D20EA64A1FED7111 /* DailyCleanupTests.swift in Sources */,
 				68194E45AAFFE623D42FEB06 /* RepeatCadenceTests.swift in Sources */,
+				3F289E8CCC423DDE1AC1C870 /* RepeatSpawnerTests.swift in Sources */,
 				222A755BFA92196030C27EB2 /* StashTests.swift in Sources */,
 				E726D9511A6997ECDFCB415D /* TaskActionsTests.swift in Sources */,
 				011B9C15A648B7BE3C980BBC /* TaskLogicTests.swift in Sources */,
@@ -517,6 +526,7 @@
 				AF067AF85273961953A8998E /* DailyTodoWidgetsBundle.swift in Sources */,
 				F49D77A16FB12001BDB1584D /* LiveActivityBridge.swift in Sources */,
 				4031410E3C085C39EF7B8139 /* RepeatCadence.swift in Sources */,
+				79A49F5E89D33D5AB3DC9DBD /* RepeatRule.swift in Sources */,
 				7A780ACBF2C8BE9438E970B4 /* StashDuration.swift in Sources */,
 				03A67552E3F70B7CC4E41509 /* StashFormatting.swift in Sources */,
 				6F3D0294FD22A9F1ADC3CFB5 /* StashReturn.swift in Sources */,

@@ -21,6 +21,10 @@ final class TaskItem {
     /// When a stashed task auto-returns to Today (local midnight). `nil` while stashed
     /// means "Never" — it returns only when manually pulled back. Ignored when not stashed.
     var stashReturnDate: Date? = nil
+    /// Which `RepeatRule` spawned this task, if any. `nil` for hand-added tasks. Used
+    /// only by the spawn guard — the task is otherwise an ordinary todo (no badge, no
+    /// special behavior).
+    var repeatRuleID: UUID? = nil
 
     init(
         id: UUID = UUID(),
@@ -30,7 +34,8 @@ final class TaskItem {
         completedAt: Date? = nil,
         sortOrder: Int = 0,
         isStashed: Bool = false,
-        stashReturnDate: Date? = nil
+        stashReturnDate: Date? = nil,
+        repeatRuleID: UUID? = nil
     ) {
         self.id = id
         self.title = title
@@ -40,6 +45,7 @@ final class TaskItem {
         self.sortOrder = sortOrder
         self.isStashed = isStashed
         self.stashReturnDate = stashReturnDate
+        self.repeatRuleID = repeatRuleID
     }
 
     /// An in-progress, untitled draft (the app inserts an empty row to type into).
