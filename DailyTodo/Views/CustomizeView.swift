@@ -9,6 +9,7 @@ struct CustomizeView: View {
     @State private var photoItem: PhotosPickerItem?
 
     private let swatchColumns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 6)
+    private let gradientColumns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
 
     var body: some View {
         ZStack {
@@ -78,6 +79,25 @@ struct CustomizeView: View {
                         }
                         .listRowBackground(Color.appSurface)
                     case .gradient:
+                        LazyVGrid(columns: gradientColumns, spacing: 12) {
+                            ForEach(ThemeStore.gradientPresets) { preset in
+                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                    .fill(preset.gradient)
+                                    .frame(height: 52)
+                                    .overlay {
+                                        if theme.gradientTopHex == preset.top && theme.gradientBottomHex == preset.bottom {
+                                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                                .stroke(Color.textPrimary, lineWidth: 2)
+                                        }
+                                    }
+                                    .contentShape(Rectangle())
+                                    .onTapGesture { theme.setGradient(top: preset.top, bottom: preset.bottom) }
+                                    .accessibilityLabel("Gradient \(preset.id)")
+                            }
+                        }
+                        .padding(.vertical, 4)
+                        .listRowBackground(Color.appSurface)
+
                         ColorPicker(selection: gradientTopBinding, supportsOpacity: false) {
                             Label("Top", systemImage: "arrow.up").foregroundStyle(Color.textPrimary)
                         }

@@ -32,6 +32,20 @@ enum BackgroundKind: String, CaseIterable, Identifiable {
     }
 }
 
+/// A named-less two-stop gradient preset (top → bottom hex, no `#`).
+struct GradientPreset: Identifiable, Hashable {
+    let top: String
+    let bottom: String
+    var id: String { "\(top)\(bottom)" }
+
+    var gradient: LinearGradient {
+        LinearGradient(
+            colors: [Color(hex: ThemeStore.hexValue(top)), Color(hex: ThemeStore.hexValue(bottom))],
+            startPoint: .top, endPoint: .bottom
+        )
+    }
+}
+
 /// The app's main background: the user's chosen fill (color/gradient/photo) with a
 /// legibility scrim over it, or the flat `appBackground` when kind is `.none`.
 /// Reads `ThemeModel` from the environment so it repaints live.

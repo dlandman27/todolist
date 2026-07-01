@@ -65,6 +65,37 @@ enum ThemeStore {
     static let defaultGradientTopHex = "3A3897"      // indigo
     static let defaultGradientBottomHex = "8E2D6B"   // plum
 
+    /// Curated two-stop background gradients (top → bottom). A mix of deep tones
+    /// (most legible) and brighter/pastel picks. Very light ones trade some contrast
+    /// for fun — the scrim softens them.
+    static let gradientPresets: [GradientPreset] = [
+        // Deep / moody
+        GradientPreset(top: "3A3897", bottom: "8E2D6B"), // Indigo · Plum (default)
+        GradientPreset(top: "2C3E50", bottom: "4CA1AF"), // Steel · Teal
+        GradientPreset(top: "0F2027", bottom: "2C5364"), // Deep Ocean
+        GradientPreset(top: "42275A", bottom: "734B6D"), // Plum · Mauve
+        GradientPreset(top: "134E5E", bottom: "3D7A5C"), // Pine · Sage
+        GradientPreset(top: "4E0E1E", bottom: "B24C3B"), // Ember
+        GradientPreset(top: "232526", bottom: "414345"), // Charcoal
+        GradientPreset(top: "1A2980", bottom: "2A6E8F"), // Blue · Cyan
+        GradientPreset(top: "6A2C70", bottom: "B33771"), // Berry
+        GradientPreset(top: "2B1055", bottom: "7597DE"), // Night · Periwinkle
+        // Vibrant
+        GradientPreset(top: "FF6FD8", bottom: "3813C2"), // Miami
+        GradientPreset(top: "7F00FF", bottom: "E100FF"), // Grape Soda
+        GradientPreset(top: "FF9966", bottom: "FF5E62"), // Warm Sunset
+        GradientPreset(top: "EB3349", bottom: "F45C43"), // Cherry
+        GradientPreset(top: "43E97B", bottom: "38F9D7"), // Mint
+        GradientPreset(top: "2980B9", bottom: "6DD5FA"), // Sky
+        GradientPreset(top: "FFE259", bottom: "FFA751"), // Mango
+        // Pastel / soft
+        GradientPreset(top: "FBC2EB", bottom: "A6C1EE"), // Cotton Candy
+        GradientPreset(top: "FF9A9E", bottom: "FECFEF"), // Bubblegum
+        GradientPreset(top: "A1C4FD", bottom: "C2E9FB"), // Baby Blue
+        GradientPreset(top: "D4FC79", bottom: "96E6A1"), // Honeydew
+        GradientPreset(top: "F4C4F3", bottom: "FC67FA"), // Rose Petal
+    ]
+
     static var backgroundKind: BackgroundKind {
         get { BackgroundKind.from(AppGroup.defaults?.string(forKey: backgroundKindKey)) }
         set { AppGroup.defaults?.set(newValue.rawValue, forKey: backgroundKindKey) }
