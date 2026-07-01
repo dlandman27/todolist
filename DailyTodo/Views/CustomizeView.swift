@@ -1,10 +1,12 @@
 import SwiftUI
+import PhotosUI
 
 /// Dedicated "make it yours" screen, pushed from Settings → Appearance → Customize.
-/// Hosts the accent now; backgrounds (Spec 2) and app icons land here next.
+/// Hosts the accent and background; app icons land here next.
 struct CustomizeView: View {
     @Environment(ThemeModel.self) private var theme
     @Environment(LiveActivityController.self) private var live
+    @State private var photoItem: PhotosPickerItem?
 
     private let swatchColumns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 6)
 
@@ -13,7 +15,15 @@ struct CustomizeView: View {
             Color.appBackground.ignoresSafeArea()
             Form {
                 Section {
-                    previewTile.listRowBackground(Color.appSurface)
+                    previewTile
+                        .padding(12)
+                        .frame(maxWidth: .infinity)
+                        .background {
+                            ThemeBackground()
+                                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        }
+                        .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                        .listRowBackground(Color.appSurface)
                 } header: {
                     Text("Preview")
                 }
@@ -47,6 +57,61 @@ struct CustomizeView: View {
                     Text("Accent")
                 } footer: {
                     Text("Sets the highlight color across the app, widget, and Live Activity.")
+                }
+
+                Section {
+                    Picker("Background", selection: backgroundKindBinding) {
+                        ForEach(BackgroundKind.allCases) { kind in
+                            Text(kind.label).tag(kind)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .listRowBackground(Color.appSurface)
+
+                    switch theme.backgroundKind {
+                    case .none:
+                        EmptyView()
+                    case .solid:
+                        ColorPicker(selection: solidBinding, supportsOpacity: false) {
+                            Label("Color", systemImage: "paintpalette")
+                                .foregroundStyle(Color.textPrimary)
+                        }
+                        .listRowBackground(Color.appSurface)
+                    case .gradient:
+                        ColorPicker(selection: gradientTopBinding, supportsOpacity: false) {
+                            Label("Top", systemImage: "arrow.up").foregroundStyle(Color.textPrimary)
+                        }
+                        .listRowBackground(Color.appSurface)
+                        ColorPicker(selection: gradientBottomBinding, supportsOpacity: false) {
+                            Label("Bottom", systemImage: "arrow.down").foregroundStyle(Color.textPrimary)
+                        }
+                        .listRowBackground(Color.appSurface)
+                    case .photo:
+                        PhotosPicker(selection: $photoItem, matching: .images) {
+                            Label(theme.backgroundImage == nil ? "Choose Photo" : "Change Photo",
+                                  systemImage: "photo")
+                                .foregroundStyle(Color.brand)
+                        }
+                        .listRowBackground(Color.appSurface)
+                        if theme.backgroundImage != nil {
+                            Button(role: .destructive) { theme.clearPhoto() } label: {
+                                Label("Remove Photo", systemImage: "trash")
+                            }
+                            .listRowBackground(Color.appSurface)
+                        }
+                    }
+                } header: {
+                    Text("Background")
+                } footer: {
+                    Text("Applies to the main list and stash. Photos stay on your device.")
+                }
+                .onChange(of: photoItem) { _, item in
+                    guard let item else { return }
+                    Task {
+                        if let data = try? await item.loadTransferable(type: Data.self) {
+                            theme.setPhoto(data)
+                        }
+                    }
                 }
             }
             .scrollContentBackground(.hidden)
@@ -92,5 +157,23 @@ struct CustomizeView: View {
         Haptics.selection()
         Surfaces.reload()
         live.refresh()
+    }
+
+    // MARK: Background bindings
+
+    private var backgroundKindBinding: Binding<BackgroundKind> {
+        Binding(get: { theme.backgroundKind }, set: { theme.setBackgroundKind($0) })
+    }
+    private var solidBinding: Binding<Color> {
+        Binding(get: { Color(hex: ThemeStore.hexValue(theme.backgroundColorHex)) },
+                set: { theme.setSolid($0.toHex()) })
+    }
+    private var gradientTopBinding: Binding<Color> {
+        Binding(get: { Color(hex: ThemeStore.hexValue(theme.gradientTopHex)) },
+                set: { theme.setGradient(top: $0.toHex(), bottom: theme.gradientBottomHex) })
+    }
+    private var gradientBottomBinding: Binding<Color> {
+        Binding(get: { Color(hex: ThemeStore.hexValue(theme.gradientBottomHex)) },
+                set: { theme.setGradient(top: theme.gradientTopHex, bottom: $0.toHex()) })
     }
 }
