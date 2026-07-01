@@ -33,8 +33,6 @@ struct SettingsView: View {
                     .listRowBackground(Color.appSurface)
                 } header: {
                     Text("Appearance")
-                } footer: {
-                    Text("Accent color, and soon backgrounds and app icons.")
                 }
 
                 Section {
