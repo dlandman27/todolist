@@ -98,7 +98,8 @@ struct TodoWidgetView: View {
                 Spacer()
             } else {
                 ForEach(entry.tasks.prefix(maxRows)) { row($0) }
-                if entry.tasks.count > maxRows {
+                // The small widget stays clean: up to 3 tasks, no "+N more" line.
+                if entry.tasks.count > maxRows, family != .systemSmall {
                     Text("+\(entry.tasks.count - maxRows) more")
                         .font(.caption2)
                         .foregroundStyle(Color.textSecondary)
