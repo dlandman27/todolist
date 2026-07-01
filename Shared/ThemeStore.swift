@@ -1,5 +1,7 @@
 import SwiftUI
 import UIKit
+import ImageIO
+import WidgetKit
 
 /// Single source of truth for the user's theme choices, backed by the App Group
 /// defaults so the app, widget, and Live Activity all read the same values.
@@ -121,11 +123,32 @@ enum ThemeStore {
         set { AppGroup.defaults?.set(newValue, forKey: backgroundPhotoTokenKey) }
     }
 
+    static let showBackgroundOnWidgetKey = "themeShowBackgroundOnWidget"
+    /// Whether home-screen widgets mirror the app background. Off by default.
+    static var showBackgroundOnWidget: Bool {
+        get { AppGroup.defaults?.bool(forKey: showBackgroundOnWidgetKey) ?? false }
+        set { AppGroup.defaults?.set(newValue, forKey: showBackgroundOnWidgetKey) }
+    }
+
     /// File holding the downscaled background photo, in the shared container.
     static var backgroundPhotoURL: URL? {
         FileManager.default
             .containerURL(forSecurityApplicationGroupIdentifier: AppGroup.identifier)?
             .appendingPathComponent("background.jpg")
+    }
+
+    /// Load the background photo downsampled so its longest side is ~`maxDimension`
+    /// pixels — cheap enough for the widget's tight memory budget (uses ImageIO).
+    static func loadBackgroundImage(maxDimension: CGFloat) -> UIImage? {
+        guard let url = backgroundPhotoURL,
+              let source = CGImageSourceCreateWithURL(url as CFURL, nil) else { return nil }
+        let options: [CFString: Any] = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxDimension,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+        ]
+        guard let cg = CGImageSourceCreateThumbnailAtIndex(source, 0, options as CFDictionary) else { return nil }
+        return UIImage(cgImage: cg)
     }
 }
 
@@ -141,6 +164,7 @@ final class ThemeModel {
     var gradientTopHex: String
     var gradientBottomHex: String
     var backgroundImage: UIImage?
+    var showBackgroundOnWidget: Bool
 
     init() {
         accentHex = ThemeStore.accentHex
@@ -148,8 +172,14 @@ final class ThemeModel {
         backgroundColorHex = ThemeStore.backgroundColorHex
         gradientTopHex = ThemeStore.gradientTopHex
         gradientBottomHex = ThemeStore.gradientBottomHex
+        showBackgroundOnWidget = ThemeStore.showBackgroundOnWidget
         backgroundImage = nil
         if backgroundKind == .photo { backgroundImage = Self.loadPhoto() }
+    }
+
+    /// Reload home-screen widgets when they're mirroring the app background.
+    private func reloadWidgetIfShowing() {
+        if ThemeStore.showBackgroundOnWidget { WidgetCenter.shared.reloadAllTimelines() }
     }
 
     /// The accent as a SwiftUI `Color` (reads `accentHex`, so it is observed).
@@ -169,6 +199,13 @@ final class ThemeModel {
         ThemeStore.backgroundKind = kind
         backgroundKind = kind
         if kind == .photo, backgroundImage == nil { backgroundImage = Self.loadPhoto() }
+        reloadWidgetIfShowing()
+    }
+
+    func setShowBackgroundOnWidget(_ enabled: Bool) {
+        ThemeStore.showBackgroundOnWidget = enabled
+        showBackgroundOnWidget = enabled
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     func setSolid(_ hex: String) {

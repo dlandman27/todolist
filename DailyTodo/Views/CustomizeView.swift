@@ -120,10 +120,19 @@ struct CustomizeView: View {
                             .listRowBackground(Color.appSurface)
                         }
                     }
+
+                    if theme.backgroundKind != .none {
+                        Toggle(isOn: showOnWidgetBinding) {
+                            Label("Show on Widget", systemImage: "apps.iphone")
+                                .foregroundStyle(Color.textPrimary)
+                        }
+                        .tint(Color.brand)
+                        .listRowBackground(Color.appSurface)
+                    }
                 } header: {
                     Text("Background")
                 } footer: {
-                    Text("Applies to the main list and stash. Photos stay on your device.")
+                    Text("Applies to the main list and stash. Turn on \u{201C}Show on Widget\u{201D} to mirror it on home-screen widgets. Photos stay on your device.")
                 }
                 .onChange(of: photoItem) { _, item in
                     guard let item else { return }
@@ -195,5 +204,8 @@ struct CustomizeView: View {
     private var gradientBottomBinding: Binding<Color> {
         Binding(get: { Color(hex: ThemeStore.hexValue(theme.gradientBottomHex)) },
                 set: { theme.setGradient(top: theme.gradientTopHex, bottom: $0.toHex()) })
+    }
+    private var showOnWidgetBinding: Binding<Bool> {
+        Binding(get: { theme.showBackgroundOnWidget }, set: { theme.setShowBackgroundOnWidget($0) })
     }
 }

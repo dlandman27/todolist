@@ -46,32 +46,36 @@ struct GradientPreset: Identifiable, Hashable {
     }
 }
 
-/// The app's main background: the user's chosen fill (color/gradient/photo) with a
-/// legibility scrim over it, or the flat `appBackground` when kind is `.none`.
-/// Reads `ThemeModel` from the environment so it repaints live.
-struct ThemeBackground: View {
-    @Environment(ThemeModel.self) private var theme
+/// Renders a background from explicit values (the user's chosen fill + a legibility
+/// scrim, or flat `appBackground` when `.none`). Shared by the app and the widget —
+/// the widget can't read `ThemeModel`, so it passes values from `ThemeStore` directly.
+struct ThemeBackgroundContent: View {
+    let kind: BackgroundKind
+    let colorHex: String
+    let gradientTop: String
+    let gradientBottom: String
+    let image: UIImage?
 
     var body: some View {
         ZStack {
-            switch theme.backgroundKind {
+            switch kind {
             case .none:
                 Color.appBackground
             case .solid:
-                Color(hex: ThemeStore.hexValue(theme.backgroundColorHex))
+                Color(hex: ThemeStore.hexValue(colorHex))
             case .gradient:
                 LinearGradient(
                     colors: [
-                        Color(hex: ThemeStore.hexValue(theme.gradientTopHex)),
-                        Color(hex: ThemeStore.hexValue(theme.gradientBottomHex)),
+                        Color(hex: ThemeStore.hexValue(gradientTop)),
+                        Color(hex: ThemeStore.hexValue(gradientBottom)),
                     ],
                     startPoint: .top, endPoint: .bottom
                 )
             case .photo:
-                if let image = theme.backgroundImage {
+                if let image {
                     // Color.clear is the sizer (fills the container); the image fills it
                     // via scaledToFill and is clipped, so it can't overflow and blow up
-                    // the enclosing layout (which would push the app's content off-screen).
+                    // the enclosing layout (which would push content off-screen).
                     Color.clear
                         .overlay {
                             Image(uiImage: image)
@@ -83,8 +87,23 @@ struct ThemeBackground: View {
                     Color.appBackground
                 }
             }
-            Color.appBackground.opacity(theme.backgroundKind.scrimOpacity)
+            Color.appBackground.opacity(kind.scrimOpacity)
         }
+    }
+}
+
+/// The app's main background: reads the live `ThemeModel` and fills the screen.
+struct ThemeBackground: View {
+    @Environment(ThemeModel.self) private var theme
+
+    var body: some View {
+        ThemeBackgroundContent(
+            kind: theme.backgroundKind,
+            colorHex: theme.backgroundColorHex,
+            gradientTop: theme.gradientTopHex,
+            gradientBottom: theme.gradientBottomHex,
+            image: theme.backgroundImage
+        )
         .ignoresSafeArea()
     }
 }

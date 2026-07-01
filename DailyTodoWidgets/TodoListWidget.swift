@@ -14,6 +14,8 @@ struct WidgetTaskEntry: Identifiable {
 struct TodoEntry: TimelineEntry {
     let date: Date
     let tasks: [WidgetTaskEntry]
+    /// Downsampled app background photo, only when the user opted the widget in.
+    var backgroundImage: UIImage? = nil
     var openCount: Int { tasks.filter { !$0.done }.count }
 }
 
@@ -39,7 +41,11 @@ struct TodoProvider: TimelineProvider {
         let tasks = context.orderedTasks().map {
             WidgetTaskEntry(id: $0.id, title: $0.title, done: $0.done)
         }
-        return TodoEntry(date: Date(), tasks: tasks)
+        var backgroundImage: UIImage?
+        if ThemeStore.showBackgroundOnWidget, ThemeStore.backgroundKind == .photo {
+            backgroundImage = ThemeStore.loadBackgroundImage(maxDimension: 900)
+        }
+        return TodoEntry(date: Date(), tasks: tasks, backgroundImage: backgroundImage)
     }
 }
 
@@ -100,7 +106,24 @@ struct TodoWidgetView: View {
                 Spacer(minLength: 0)
             }
         }
-        .containerBackground(for: .widget) { Color.appBackground }
+        .containerBackground(for: .widget) { widgetBackground }
+    }
+
+    /// The home-screen widget background: mirrors the app background when the user
+    /// opted in, otherwise the flat app color.
+    @ViewBuilder
+    private var widgetBackground: some View {
+        if ThemeStore.showBackgroundOnWidget {
+            ThemeBackgroundContent(
+                kind: ThemeStore.backgroundKind,
+                colorHex: ThemeStore.backgroundColorHex,
+                gradientTop: ThemeStore.gradientTopHex,
+                gradientBottom: ThemeStore.gradientBottomHex,
+                image: entry.backgroundImage
+            )
+        } else {
+            Color.appBackground
+        }
     }
 
     private func row(_ task: WidgetTaskEntry) -> some View {
