@@ -60,6 +60,7 @@
 		ADCDDACE1CFA05A309D64CB8 /* ControlCounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED241496D4FE366D47BE62AB /* ControlCounts.swift */; };
 		AF067AF85273961953A8998E /* DailyTodoWidgetsBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29071CED0BA1D606CD45764 /* DailyTodoWidgetsBundle.swift */; };
 		B035CB4F1C6449EFD369BF59 /* ThemeBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8B6F8BF3091F80F0AF36EA /* ThemeBackground.swift */; };
+		B2C6CE32FC0C6485C71B1208 /* RepeatRuleEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43DD220A5E82FBDC4C9CC39 /* RepeatRuleEditorView.swift */; };
 		BD5C0AD348C07424832B8D7C /* LiveActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AA3136636BB9A8D6ED4576 /* LiveActivityController.swift */; };
 		BD66AF97F4B186344D0087DD /* ThemeStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EEB5AB958070839630B1A8 /* ThemeStoreTests.swift */; };
 		C3A5EFAD2CB5C54F0CB92147 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89172F89B880F640C73953BB /* AppGroup.swift */; };
@@ -175,6 +176,7 @@
 		D97382722425927981E0E4F4 /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		E15DD08C4939DAB6CAF52E99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		E217AFC141B32F095DA09E51 /* DailyTodoWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DailyTodoWidgets.entitlements; sourceTree = "<group>"; };
+		E43DD220A5E82FBDC4C9CC39 /* RepeatRuleEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatRuleEditorView.swift; sourceTree = "<group>"; };
 		E4D3C6DF79E6AD4BD3CE3C31 /* TaskIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskIntents.swift; sourceTree = "<group>"; };
 		EA5766443269F0279010B10C /* TaskOrdering.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskOrdering.swift; sourceTree = "<group>"; };
 		ED241496D4FE366D47BE62AB /* ControlCounts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlCounts.swift; sourceTree = "<group>"; };
@@ -284,6 +286,7 @@
 			children = (
 				1BDB7CE36194A74D3382316B /* CustomizeView.swift */,
 				D97382722425927981E0E4F4 /* ListView.swift */,
+				E43DD220A5E82FBDC4C9CC39 /* RepeatRuleEditorView.swift */,
 				1FFA5B72AF1AD3AD4EE336AA /* SettingsView.swift */,
 				4D394E3EB9019A94CCF80F70 /* StashRow.swift */,
 				15B6ABD81BE72EB3E2D4F9FE /* StashSheet.swift */,
@@ -479,6 +482,7 @@
 				02A81E8E91F06342DB768595 /* MidnightScheduler.swift in Sources */,
 				A0668DC74239FE8D2D4D8E40 /* RepeatCadence.swift in Sources */,
 				417D2FE82DA76F06122C0F10 /* RepeatRule.swift in Sources */,
+				B2C6CE32FC0C6485C71B1208 /* RepeatRuleEditorView.swift in Sources */,
 				AB764F0D10604F2847929EED /* RepeatSpawner.swift in Sources */,
 				1123159D9C5761E0F5A2E078 /* SettingsView.swift in Sources */,
 				F25D63EA18FDFC3B6FC9FCA7 /* StashDuration.swift in Sources */,
