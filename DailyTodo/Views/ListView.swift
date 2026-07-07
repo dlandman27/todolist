@@ -220,13 +220,32 @@ struct ListView: View {
         .tint(theme.accent)
     }
 
-    /// The app's title — double-tap to rename the list — with the settings gear trailing.
+    /// Glass control bar — stash in its own capsule on the left, list options +
+    /// settings sharing a capsule on the right — with the app's title (double-tap
+    /// to rename) on its own line below, where it no longer competes with the
+    /// icons for width.
     private var titleHeader: some View {
-        HStack(alignment: .center) {
+        VStack(alignment: .leading, spacing: 18) {
+            HStack {
+                stashButton
+                    .glassCapsule(tinted: false)
+                Spacer()
+                HStack(spacing: 2) {
+                    settingsButton
+                    listOptionsButton
+                }
+                .glassCapsule(tinted: false)
+                if isEditing {
+                    doneEditingButton
+                        .glassCapsule(tinted: false)
+                        .transition(.scale.combined(with: .opacity))
+                }
+            }
             if editingTitle {
                 TextField(ListSettings.defaultName, text: $listName)
                     .font(.largeTitle.bold())
-                    .foregroundStyle(Color.textPrimary)
+                    .fontDesign(.rounded)
+                    .foregroundStyle(Color.brand)
                     .focused($titleFocused)
                     .submitLabel(.done)
                     .onSubmit(finishEditingTitle)
@@ -242,15 +261,10 @@ struct ListView: View {
             } else {
                 Text(listName)
                     .font(.largeTitle.bold())
-                    .foregroundStyle(Color.textPrimary)
+                    .fontDesign(.rounded)
+                    .foregroundStyle(Color.brand)
                     .accessibilityIdentifier("title")
                     .onTapGesture(count: 2, perform: beginEditingTitle)
-            }
-            Spacer()
-            HStack(spacing: 8) {
-                listOptionsButton
-                stashButton
-                settingsButton
             }
         }
         .padding(.horizontal)
@@ -304,10 +318,10 @@ struct ListView: View {
                 .disabled(orderedTasks.isEmpty)
             }
         } label: {
-            Image(systemName: "ellipsis.circle")
-                .font(.title2)
-                .foregroundStyle(Color.brand)
-                .frame(width: 30, height: 44)
+            Image(systemName: "ellipsis")
+                .font(.system(size: 24))
+                .foregroundStyle(Color.textPrimary)
+                .frame(width: 44, height: 44)
                 .contentShape(Rectangle())
         }
         .simultaneousGesture(TapGesture().onEnded { Haptics.impact(.light) })
@@ -321,30 +335,46 @@ struct ListView: View {
             Haptics.impact(.light)
             showStash = true
         } label: {
-            Image(systemName: stashedCount > 0 ? "archivebox.fill" : "archivebox")
-                .font(.title2)
-                .foregroundStyle(Color.brand)
-                // Bounce the bag each time something lands in (or leaves) the stash.
-                .symbolEffect(.bounce, value: stashedCount)
-                .frame(width: 30, height: 44)
-                .overlay(alignment: .topTrailing) {
-                    if stashedCount > 0 {
-                        Text("\(stashedCount)")
-                            .font(.caption2.weight(.bold))
-                            .foregroundStyle(.white)
-                            .contentTransition(.numericText())
-                            .padding(3)
-                            .background(Circle().fill(Color.stashAccent))
-                            // Tucked at the top-right, inside the glass capsule.
-                            .offset(x: -1, y: 2)
-                            .transition(.scale.combined(with: .opacity))
-                    }
+            // Bag + inline count sharing the pill: the outline bag alone when the
+            // stash is empty, "bag N" once items are in — the capsule stretching to
+            // fit the number is itself the something-is-stashed signal.
+            HStack(spacing: 0) {
+                Image(systemName: stashedCount > 0 ? "archivebox.fill" : "archivebox")
+                    .font(.system(size: 24))
+                    // Bounce the bag each time something lands in (or leaves) the stash.
+                    .symbolEffect(.bounce, value: stashedCount)
+                    .frame(width: 44, height: 44)
+                if stashedCount > 0 {
+                    Text("\(stashedCount)")
+                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+                        .contentTransition(.numericText())
+                        .padding(.trailing, 14)
+                        .transition(.opacity)
                 }
-                .animation(.appMotion, value: stashedCount)
-                .contentShape(Rectangle())
+            }
+            .foregroundStyle(Color.textPrimary)
+            .animation(.appMotion, value: stashedCount)
+            .contentShape(Rectangle())
         }
         .accessibilityIdentifier("stash")
         .accessibilityLabel("Stashed todos, \(stashedCount) items")
+    }
+
+    /// Shown only while a task (or the title) is being edited: commits the edit
+    /// and drops the keyboard. Accent-filled so it reads as the bar's one action.
+    private var doneEditingButton: some View {
+        Button {
+            Haptics.impact(.light)
+            dismissEditing()
+        } label: {
+            Image(systemName: "checkmark.circle.fill")
+                .font(.system(size: 24))
+                .foregroundStyle(Color.brand)
+                .frame(width: 44, height: 44)
+                .contentShape(Rectangle())
+        }
+        .accessibilityIdentifier("doneEditing")
+        .accessibilityLabel("Done editing")
     }
 
     /// Gear that pushes the settings page onto the navigation stack.
@@ -353,9 +383,9 @@ struct ListView: View {
             SettingsView()
         } label: {
             Image(systemName: "gearshape")
-                .font(.title2)
-                .foregroundStyle(Color.brand)
-                .frame(width: 30, height: 44)
+                .font(.system(size: 24))
+                .foregroundStyle(Color.textPrimary)
+                .frame(width: 44, height: 44)
                 .contentShape(Rectangle())
         }
         .simultaneousGesture(TapGesture().onEnded { Haptics.impact(.light) })
