@@ -13,6 +13,7 @@ struct TaskSnapshot {
     let sortOrder: Int
     let isStashed: Bool
     let stashReturnDate: Date?
+    let notes: String
 
     init(_ task: TaskItem) {
         id = task.id
@@ -23,6 +24,7 @@ struct TaskSnapshot {
         sortOrder = task.sortOrder
         isStashed = task.isStashed
         stashReturnDate = task.stashReturnDate
+        notes = task.notes
     }
 }
 
@@ -97,7 +99,8 @@ enum TaskActions {
                     completedAt: snap.completedAt,
                     sortOrder: snap.sortOrder,
                     isStashed: snap.isStashed,
-                    stashReturnDate: snap.stashReturnDate
+                    stashReturnDate: snap.stashReturnDate,
+                    notes: snap.notes
                 )
             )
         }

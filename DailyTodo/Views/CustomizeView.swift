@@ -47,6 +47,39 @@ struct CustomizeView: View {
                     }
                     .pickerStyle(.segmented)
 
+                    if theme.backgroundKind == .solid {
+                        // Accent-matched solid presets, light tints through deep
+                        // darks — recomputed live from the current accent, so a
+                        // new accent immediately offers backgrounds that fit it.
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 10) {
+                                ForEach(solidPresets, id: \.self) { hex in
+                                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                        .fill(Color(hex: ThemeStore.hexValue(hex)))
+                                        .frame(width: 64, height: 40)
+                                        .overlay {
+                                            // Faint edge so near-white tints don't vanish.
+                                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                                .strokeBorder(Color.textSecondary.opacity(0.25), lineWidth: 1)
+                                        }
+                                        .overlay {
+                                            if theme.backgroundColorHex == hex {
+                                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                                    .stroke(Color.textPrimary, lineWidth: 2)
+                                            }
+                                        }
+                                        .contentShape(Rectangle())
+                                        .onTapGesture {
+                                            theme.setSolid(hex)
+                                            Haptics.selection()
+                                        }
+                                        .accessibilityLabel("Background \(hex)")
+                                }
+                            }
+                            .padding(2)
+                        }
+                    }
+
                     if theme.backgroundKind == .gradient {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 10) {
@@ -157,6 +190,33 @@ struct CustomizeView: View {
         content()
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+    }
+
+    /// Solid background presets: the app's own neutral backgrounds (FFF9FB
+    /// light / 171113 dark) with a little accent blended IN — so they read as
+    /// "the default, leaned toward your color", not a saturated wall of it.
+    /// Two light tints, then three dark shades of increasing tint strength.
+    private var solidPresets: [String] {
+        let accent = theme.accentHex
+        return [
+            blend(accent, into: "FFF9FB", amount: 0.10),
+            blend(accent, into: "FFF9FB", amount: 0.22),
+            blend(accent, into: "171113", amount: 0.12),
+            blend(accent, into: "171113", amount: 0.25),
+            blend(accent, into: "171113", amount: 0.40),
+        ]
+    }
+
+    /// Tint `base` with `amount` of the accent, per RGB channel.
+    private func blend(_ accentHex: String, into baseHex: String, amount: Double) -> String {
+        let accent = ThemeStore.hexValue(accentHex)
+        let base = ThemeStore.hexValue(baseHex)
+        func channel(_ shift: UInt32) -> Int {
+            let a = Double((accent >> shift) & 0xFF)
+            let b = Double((base >> shift) & 0xFF)
+            return Int((b + (a - b) * amount).rounded())
+        }
+        return String(format: "%02X%02X%02X", channel(16), channel(8), channel(0))
     }
 
     private func caption(_ text: String) -> some View {

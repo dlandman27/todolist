@@ -25,6 +25,9 @@ final class TaskItem {
     /// only by the spawn guard — the task is otherwise an ordinary todo (no badge, no
     /// special behavior).
     var repeatRuleID: UUID? = nil
+    /// Free-form notes, edited on the task's detail page. Empty for most tasks;
+    /// defaults in place so existing stores migrate untouched.
+    var notes: String = ""
 
     init(
         id: UUID = UUID(),
@@ -35,7 +38,8 @@ final class TaskItem {
         sortOrder: Int = 0,
         isStashed: Bool = false,
         stashReturnDate: Date? = nil,
-        repeatRuleID: UUID? = nil
+        repeatRuleID: UUID? = nil,
+        notes: String = ""
     ) {
         self.id = id
         self.title = title
@@ -46,6 +50,7 @@ final class TaskItem {
         self.isStashed = isStashed
         self.stashReturnDate = stashReturnDate
         self.repeatRuleID = repeatRuleID
+        self.notes = notes
     }
 
     /// An in-progress, untitled draft (the app inserts an empty row to type into).

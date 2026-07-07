@@ -42,6 +42,26 @@ enum ThemeStore {
 
     static var accent: Color { Color(hex: hexValue(accentHex)) }
 
+    /// The "None" background recipe, shared by app, widget, and Live Activity:
+    /// a near-neutral base leaned slightly toward the accent (~3.5% light /
+    /// 5% dark). The original hardcoded FFF9FB / 171113 were exactly this
+    /// recipe baked in for Brick.
+    static func tintedBackgroundHex(accentHex: String, dark: Bool) -> UInt32 {
+        blend(hexValue(accentHex),
+              into: dark ? 0x0E0E10 : 0xFFFFFF,
+              amount: dark ? 0.05 : 0.035)
+    }
+
+    /// Per-channel mix of `amount` of `color` into `base`.
+    static func blend(_ color: UInt32, into base: UInt32, amount: Double) -> UInt32 {
+        func channel(_ shift: UInt32) -> UInt32 {
+            let c = Double((color >> shift) & 0xFF)
+            let b = Double((base >> shift) & 0xFF)
+            return UInt32((b + (c - b) * amount).rounded())
+        }
+        return channel(16) << 16 | channel(8) << 8 | channel(0)
+    }
+
     /// Validate a 6-digit hex (optional leading `#`), returning canonical UPPERCASE
     /// 6 chars, or nil if malformed.
     static func normalizedHex(_ raw: String?) -> String? {

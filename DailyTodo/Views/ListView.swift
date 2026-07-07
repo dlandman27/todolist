@@ -194,6 +194,14 @@ struct ListView: View {
                 Text("Hide every open task from Today until later.")
             }
         }
+        // If the focused task ceases to exist (deleted by any path while its row
+        // was mid-edit), clear the dangling focus — otherwise the UI is stuck in
+        // editing mode with no keyboard and no editable row.
+        .onChange(of: tasks.count) { _, _ in
+            if let focused = focusedTask, !tasks.contains(where: { $0.id == focused }) {
+                focusedTask = nil
+            }
+        }
         .onChange(of: sortRaw) { _, _ in
             live.refresh()
             Surfaces.reload()

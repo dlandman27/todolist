@@ -120,7 +120,8 @@ struct TodoWidgetView: View {
                 colorHex: ThemeStore.backgroundColorHex,
                 gradientTop: ThemeStore.gradientTopHex,
                 gradientBottom: ThemeStore.gradientBottomHex,
-                image: entry.backgroundImage
+                image: entry.backgroundImage,
+                accentHex: ThemeStore.accentHex
             )
         } else {
             Color.appBackground

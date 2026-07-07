@@ -2,20 +2,27 @@ import SwiftUI
 import UIKit
 
 /// One pickable app icon. `iconName` is the alternate-icon asset name, nil for
-/// the primary (Brick) icon. Mirrors the accent presets one-to-one; previews
-/// are 128px copies of the real icons (IconPreview-<Name> imagesets).
+/// the primary (Brick) icon. Mirrors the accent presets one-to-one (paired by
+/// position with `ThemeStore.presets`, so `hex` links each icon to its accent);
+/// previews are 128px copies of the real icons (IconPreview-<Name> imagesets).
 private struct AppIconOption: Identifiable {
     let label: String
     let iconName: String?
+    let hex: String
     var id: String { label }
     var previewName: String { "IconPreview-\(label)" }
 }
 
-private let appIconOptions: [AppIconOption] =
-    [AppIconOption(label: "Brick", iconName: nil)] +
-    ["Red", "Sunset", "Gold", "Lime", "Forest", "Teal", "Cyan", "Sky", "Ocean",
-     "Indigo", "Grape", "Purple", "Magenta", "Pink", "Rose", "Clay", "Slate"]
-        .map { AppIconOption(label: $0, iconName: "AppIcon-\($0)") }
+private let appIconOptions: [AppIconOption] = {
+    let names = ["Brick", "Red", "Sunset", "Gold", "Lime", "Forest", "Teal", "Cyan",
+                 "Sky", "Ocean", "Indigo", "Grape", "Purple", "Magenta", "Pink",
+                 "Rose", "Clay", "Slate"]
+    return zip(names, ThemeStore.presets).map { name, hex in
+        AppIconOption(label: name,
+                      iconName: name == "Brick" ? nil : "AppIcon-\(name)",
+                      hex: hex)
+    }
+}()
 
 /// App settings. Pushed onto the list's navigation stack from the title-bar gear.
 /// Currently just haptics, but structured as a grouped form so it can grow.
@@ -27,8 +34,6 @@ struct SettingsView: View {
     @AppStorage(DailyCleanup.enabledKey, store: AppGroup.defaults) private var autoClearEnabled = true
     @AppStorage(LiveActivityController.enabledKey, store: AppGroup.defaults) private var liveActivityEnabled = true
     @State private var showCustomize = false
-    /// Mirrors UIApplication's alternate icon so the selection ring updates instantly.
-    @State private var currentIconName: String?
 
     var body: some View {
         ZStack {
@@ -46,6 +51,15 @@ struct SettingsView: View {
                     .tint(Color.brand)
                     .listRowBackground(Color.appSurface)
 
+                    NavigationLink {
+                        AppIconPickerView()
+                    } label: {
+                        Label("App Icon", systemImage: "app.badge.checkmark")
+                            .foregroundStyle(Color.textPrimary)
+                    }
+                    .accessibilityIdentifier("appIcon")
+                    .listRowBackground(Color.appSurface)
+
                     Button {
                         showCustomize = true
                     } label: {
@@ -56,48 +70,6 @@ struct SettingsView: View {
                     .listRowBackground(Color.appSurface)
                 } header: {
                     Text("Appearance")
-                }
-
-                Section {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 12) {
-                            ForEach(appIconOptions) { option in
-                                Image(option.previewName)
-                                    .resizable()
-                                    .frame(width: 48, height: 48)
-                                    .clipShape(RoundedRectangle(cornerRadius: 11, style: .continuous))
-                                    .overlay {
-                                        if currentIconName == option.iconName {
-                                            RoundedRectangle(cornerRadius: 13, style: .continuous)
-                                                .stroke(Color.brand, lineWidth: 2)
-                                                .padding(-3)
-                                        }
-                                    }
-                                    .contentShape(Rectangle())
-                                    .onTapGesture { setIcon(option) }
-                                    .accessibilityLabel("App icon \(option.label)")
-                            }
-                        }
-                        .padding(4)
-                    }
-                    .listRowBackground(Color.appSurface)
-                } header: {
-                    Text("App Icon")
-                } footer: {
-                    Text("Changes the icon on your Home Screen.")
-                }
-
-                Section {
-                    Toggle(isOn: $autoClearEnabled) {
-                        Label("Clear Completed at End of Day", systemImage: "clock.arrow.circlepath")
-                            .foregroundStyle(Color.textPrimary)
-                    }
-                    .tint(Color.brand)
-                    .listRowBackground(Color.appSurface)
-                } header: {
-                    Text("End of Day")
-                } footer: {
-                    Text("Automatically remove completed tasks at midnight. Unfinished tasks carry over.")
                 }
 
                 Section {
@@ -113,6 +85,19 @@ struct SettingsView: View {
                     Text("Repeating")
                 } footer: {
                     Text("Set up to-dos that get added automatically every week or month.")
+                }
+
+                Section {
+                    Toggle(isOn: $autoClearEnabled) {
+                        Label("Clear Completed at End of Day", systemImage: "clock.arrow.circlepath")
+                            .foregroundStyle(Color.textPrimary)
+                    }
+                    .tint(Color.brand)
+                    .listRowBackground(Color.appSurface)
+                } header: {
+                    Text("End of Day")
+                } footer: {
+                    Text("Automatically remove completed tasks at midnight. Unfinished tasks carry over.")
                 }
 
                 Section {
@@ -164,7 +149,6 @@ struct SettingsView: View {
         }
         // Same live-preview sheet the ellipsis menu opens — Settings itself
         // recolors behind it as changes land.
-        .onAppear { currentIconName = UIApplication.shared.alternateIconName }
         .sheet(isPresented: $showCustomize) {
             CustomizeView()
                 .environment(theme)
@@ -177,6 +161,63 @@ struct SettingsView: View {
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar)
+    }
+}
+
+/// Dedicated App Icon page, pushed from Settings — a labeled grid of every
+/// accent-matched icon, kept off the main Settings page to avoid clutter.
+struct AppIconPickerView: View {
+    @Environment(ThemeModel.self) private var theme
+    /// Mirrors UIApplication's alternate icon so the selection ring updates instantly.
+    @State private var currentIconName: String?
+
+    private let columns = Array(repeating: GridItem(.flexible(), spacing: 16), count: 4)
+
+    var body: some View {
+        ZStack {
+            Color.appBackground.ignoresSafeArea()
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 18) {
+                    ForEach(appIconOptions) { option in
+                        VStack(spacing: 6) {
+                            Image(option.previewName)
+                                .resizable()
+                                .frame(width: 60, height: 60)
+                                .clipShape(RoundedRectangle(cornerRadius: 13, style: .continuous))
+                                .overlay {
+                                    if currentIconName == option.iconName {
+                                        RoundedRectangle(cornerRadius: 15, style: .continuous)
+                                            .stroke(Color.brand, lineWidth: 2)
+                                            .padding(-3)
+                                    }
+                                }
+                                // Quiet marker on the icon that matches the
+                                // current accent, so it's findable while browsing.
+                                .overlay(alignment: .bottomTrailing) {
+                                    if option.hex == theme.accentHex {
+                                        Circle()
+                                            .fill(Color.brand)
+                                            .frame(width: 12, height: 12)
+                                            .overlay(Circle().stroke(Color.appBackground, lineWidth: 2))
+                                            .offset(x: 4, y: 4)
+                                    }
+                                }
+                            Text(option.label)
+                                .font(.caption2)
+                                .foregroundStyle(currentIconName == option.iconName
+                                    ? Color.textPrimary : Color.textSecondary)
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture { setIcon(option) }
+                        .accessibilityLabel("App icon \(option.label)")
+                    }
+                }
+                .padding(20)
+            }
+        }
+        .navigationTitle("App Icon")
+        .navigationBarTitleDisplayMode(.inline)
+        .onAppear { currentIconName = UIApplication.shared.alternateIconName }
     }
 
     /// Swap the home-screen icon. iOS confirms the change with a system alert.

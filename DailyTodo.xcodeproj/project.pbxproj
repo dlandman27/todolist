@@ -17,6 +17,7 @@
 		1123159D9C5761E0F5A2E078 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA5B72AF1AD3AD4EE336AA /* SettingsView.swift */; };
 		13C3DB02B9B503FCB8253585 /* UndoToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13F4C7D9665AC95F23B34BF /* UndoToast.swift */; };
 		158277BB29DB5C047D841AC3 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410DB01E84062242E5B6E10C /* ThemeStore.swift */; };
+		17A0E35ED0851953F86DE17B /* TaskDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85AE7F26EE4426A0C0DB13FA /* TaskDetailView.swift */; };
 		1D9E3F19592C898F7F7AFAEF /* ToggleTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */; };
 		21C61733DB10410F8F196E01 /* TaskIntents.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4D3C6DF79E6AD4BD3CE3C31 /* TaskIntents.swift */; };
 		222A755BFA92196030C27EB2 /* StashTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DBCCD975217F3C68B020520 /* StashTests.swift */; };
@@ -163,6 +164,7 @@
 		77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyCleanupTests.swift; sourceTree = "<group>"; };
 		7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleTaskIntent.swift; sourceTree = "<group>"; };
 		83FFE0729BBB4CE88C6E2456 /* LiveActivityPlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityPlannerTests.swift; sourceTree = "<group>"; };
+		85AE7F26EE4426A0C0DB13FA /* TaskDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailView.swift; sourceTree = "<group>"; };
 		869BF8AEC58F9C8C1F2522F8 /* TaskFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskFlowUITests.swift; sourceTree = "<group>"; };
 		89172F89B880F640C73953BB /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		8AF0527765C4EEF01E0900BA /* RepeatCadence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatCadence.swift; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 				1FFA5B72AF1AD3AD4EE336AA /* SettingsView.swift */,
 				4D394E3EB9019A94CCF80F70 /* StashRow.swift */,
 				15B6ABD81BE72EB3E2D4F9FE /* StashSheet.swift */,
+				85AE7F26EE4426A0C0DB13FA /* TaskDetailView.swift */,
 				4B449DAE99E7995EB9F9530E /* TaskRow.swift */,
 				B13F4C7D9665AC95F23B34BF /* UndoToast.swift */,
 			);
@@ -508,6 +511,7 @@
 				F4405311440900F9DEDA1D87 /* StashSheet.swift in Sources */,
 				AD481854B08E955B47C6092E /* Surfaces.swift in Sources */,
 				23646CD97C2078484E3385BD /* TaskActions.swift in Sources */,
+				17A0E35ED0851953F86DE17B /* TaskDetailView.swift in Sources */,
 				70089E4CF25C7362D9E8212F /* TaskEntity.swift in Sources */,
 				21C61733DB10410F8F196E01 /* TaskIntents.swift in Sources */,
 				A10109AD0ED51CF88D00644F /* TaskItem.swift in Sources */,

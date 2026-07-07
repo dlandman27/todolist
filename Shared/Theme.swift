@@ -30,7 +30,17 @@ extension UIColor {
         }
     }
     // MARK: Surfaces
-    static let appBackgroundColor = dynamic(light: 0xFFF9FB, dark: 0x171113)
+    /// App-wide background: a near-neutral base leaned ever so slightly toward
+    /// the current accent. The old hardcoded values (FFF9FB / 171113) were
+    /// exactly this recipe baked in for Brick — ~3.5% tint in light, ~5% in
+    /// dark — so the default accent still renders (near) identically, and any
+    /// other accent warms/cools the background to match it.
+    static let appBackgroundColor = UIColor { trait in
+        rgb(ThemeStore.tintedBackgroundHex(
+            accentHex: ThemeStore.accentHex,
+            dark: trait.userInterfaceStyle == .dark
+        ))
+    }
     static let appSurfaceColor = dynamic(light: 0xFFFFFF, dark: 0x261E20)
     // MARK: Text
     static let appTextPrimary = dynamic(light: 0x2A1E1F, dark: 0xF5ECEE)

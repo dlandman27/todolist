@@ -55,12 +55,26 @@ struct ThemeBackgroundContent: View {
     let gradientTop: String
     let gradientBottom: String
     let image: UIImage?
+    /// Drives the accent-tinted `.none` fill (and the scrim). Passed explicitly —
+    /// reading it through the observable ThemeModel is what makes the app
+    /// repaint the instant the accent changes (Color.appBackground's dynamic
+    /// provider resolves lazily and can lag until the next full redraw).
+    let accentHex: String
+
+    /// Near-neutral base leaned toward the accent — same recipe on all surfaces.
+    private func tinted(dark: Bool) -> Color {
+        Color(hex: ThemeStore.tintedBackgroundHex(accentHex: accentHex, dark: dark))
+    }
+
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var base: Color { tinted(dark: colorScheme == .dark) }
 
     var body: some View {
         ZStack {
             switch kind {
             case .none:
-                Color.appBackground
+                base
             case .solid:
                 Color(hex: ThemeStore.hexValue(colorHex))
             case .gradient:
@@ -84,10 +98,10 @@ struct ThemeBackgroundContent: View {
                         }
                         .clipped()
                 } else {
-                    Color.appBackground
+                    base
                 }
             }
-            Color.appBackground.opacity(kind.scrimOpacity)
+            base.opacity(kind.scrimOpacity)
         }
     }
 }
@@ -102,7 +116,8 @@ struct ThemeBackground: View {
             colorHex: theme.backgroundColorHex,
             gradientTop: theme.gradientTopHex,
             gradientBottom: theme.gradientBottomHex,
-            image: theme.backgroundImage
+            image: theme.backgroundImage,
+            accentHex: theme.accentHex
         )
         .ignoresSafeArea()
     }

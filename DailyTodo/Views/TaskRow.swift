@@ -13,6 +13,8 @@ struct TaskRow: View {
     /// Whether the edit card is shown. Mirrors focus, but is toggled inside an explicit
     /// `withAnimation` so the fade animates on every focus change, not just the first.
     @State private var cardVisible = false
+    /// Full-screen task detail page, opened from the focused row's info button.
+    @State private var showDetail = false
 
     var body: some View {
         // First-baseline alignment keeps the checkbox on the first line when a
@@ -32,6 +34,7 @@ struct TaskRow: View {
             .accessibilityLabel(task.done ? "Mark as not done" : "Mark as done")
             .accessibilityValue(task.done ? "done" : "open")
 
+            VStack(alignment: .leading, spacing: 2) {
             // Vertical axis so long titles wrap instead of scrolling off-screen.
             // No built-in prompt: a vertical-axis field renders its placeholder on
             // an extra line while empty (the draft row showed two lines tall), so
@@ -73,6 +76,41 @@ struct TaskRow: View {
                     commit()
                     if hadText { onReturn() }
                 }
+
+            // One-line peek at the note (Reminders-style) so tasks with details
+            // are recognizable without opening them. Rows without notes are
+            // unaffected.
+            if !task.notes.isEmpty {
+                Text(task.notes)
+                    .font(.caption)
+                    .foregroundStyle(Color.textSecondary)
+                    .lineLimit(1)
+                    .allowsHitTesting(false)
+            }
+            }
+
+            // Door to the task's detail page — visible only while this row is
+            // focused, but ALWAYS in the layout (just transparent otherwise) so
+            // the text never rewraps when focus toggles it.
+            Button {
+                showDetail = true
+            } label: {
+                Image(systemName: "info.circle")
+                    .font(.title3)
+                    .foregroundStyle(Color.brand)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .opacity(isEditing ? 1 : 0)
+            .disabled(!isEditing)
+            .animation(.appMotion, value: isEditing)
+            .accessibilityIdentifier("taskDetails")
+            .accessibilityLabel("Task details")
+            .accessibilityHidden(!isEditing)
+        }
+        // Standard iOS card modal — slides up over the list, swipe-down to dismiss.
+        .sheet(isPresented: $showDetail) {
+            TaskDetailView(task: task)
         }
         // Constant padding keeps the row height fixed in every state, so the only
         // thing that changes when editing is the card's opacity — and the card stays
