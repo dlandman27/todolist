@@ -13,6 +13,7 @@
 		0307B212E6A1D3E281711478 /* ThemeBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8B6F8BF3091F80F0AF36EA /* ThemeBackground.swift */; };
 		03A67552E3F70B7CC4E41509 /* StashFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED33462BA5ECE0259E64B51 /* StashFormatting.swift */; };
 		06B8378414F3389FFBAA5190 /* TodoLiveActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7435A558E61FFD6D0D94E67F /* TodoLiveActivity.swift */; };
+		0F14B387218D2F20A9B99D54 /* LiveActivityPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B923E5A29FAD5A6018BBA350 /* LiveActivityPlanner.swift */; };
 		1123159D9C5761E0F5A2E078 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFA5B72AF1AD3AD4EE336AA /* SettingsView.swift */; };
 		13C3DB02B9B503FCB8253585 /* UndoToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = B13F4C7D9665AC95F23B34BF /* UndoToast.swift */; };
 		158277BB29DB5C047D841AC3 /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 410DB01E84062242E5B6E10C /* ThemeStore.swift */; };
@@ -31,6 +32,7 @@
 		4031410E3C085C39EF7B8139 /* RepeatCadence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AF0527765C4EEF01E0900BA /* RepeatCadence.swift */; };
 		417D2FE82DA76F06122C0F10 /* RepeatRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727A07F2F1A156D598624DD0 /* RepeatRule.swift */; };
 		42D513E29488BF2538E6E366 /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D97382722425927981E0E4F4 /* ListView.swift */; };
+		4355D3A4E810160CD525C9E6 /* LiveActivityPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B923E5A29FAD5A6018BBA350 /* LiveActivityPlanner.swift */; };
 		46C9C3793FF6BFE21819328F /* DailyShortcuts.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC219F6963F7C42E2DCE0A94 /* DailyShortcuts.swift */; };
 		475A84528B0B6E65FA6204D4 /* StashReturn.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE21BABF464879C71ACC84CC /* StashReturn.swift */; };
 		47AC9A4B964EF23899C3A05F /* CustomizeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BDB7CE36194A74D3382316B /* CustomizeView.swift */; };
@@ -68,6 +70,7 @@
 		C65406A7736B78E05B241130 /* ThemeBackgroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56855B4451269047A2D9C9B5 /* ThemeBackgroundTests.swift */; };
 		CB759241D43C7A707CB9E6EC /* ControlCounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED241496D4FE366D47BE62AB /* ControlCounts.swift */; };
 		CF8E400BCDF3F0809AF438F2 /* StashRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D394E3EB9019A94CCF80F70 /* StashRow.swift */; };
+		D8A6E230B796DD5F3F5EF0CB /* LiveActivityPlannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FFE0729BBB4CE88C6E2456 /* LiveActivityPlannerTests.swift */; };
 		DB5A7175B7192ED638B78A11 /* StashFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED33462BA5ECE0259E64B51 /* StashFormatting.swift */; };
 		DBABCC86613BCBC570E923E5 /* TodoListWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2C8A719522F64ED4F37164 /* TodoListWidget.swift */; };
 		DD63C98D2A5C2B5F760D6199 /* Haptics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F4338DD9DEC2A2D9C88DA3 /* Haptics.swift */; };
@@ -156,6 +159,7 @@
 		7435A558E61FFD6D0D94E67F /* TodoLiveActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoLiveActivity.swift; sourceTree = "<group>"; };
 		77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyCleanupTests.swift; sourceTree = "<group>"; };
 		7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleTaskIntent.swift; sourceTree = "<group>"; };
+		83FFE0729BBB4CE88C6E2456 /* LiveActivityPlannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityPlannerTests.swift; sourceTree = "<group>"; };
 		869BF8AEC58F9C8C1F2522F8 /* TaskFlowUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskFlowUITests.swift; sourceTree = "<group>"; };
 		89172F89B880F640C73953BB /* AppGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppGroup.swift; sourceTree = "<group>"; };
 		8AF0527765C4EEF01E0900BA /* RepeatCadence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatCadence.swift; sourceTree = "<group>"; };
@@ -168,6 +172,7 @@
 		AE8B6F8BF3091F80F0AF36EA /* ThemeBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeBackground.swift; sourceTree = "<group>"; };
 		B13F4C7D9665AC95F23B34BF /* UndoToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UndoToast.swift; sourceTree = "<group>"; };
 		B3DD1DD453C848B99281331B /* Surfaces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Surfaces.swift; sourceTree = "<group>"; };
+		B923E5A29FAD5A6018BBA350 /* LiveActivityPlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityPlanner.swift; sourceTree = "<group>"; };
 		BC219F6963F7C42E2DCE0A94 /* DailyShortcuts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyShortcuts.swift; sourceTree = "<group>"; };
 		BE21BABF464879C71ACC84CC /* StashReturn.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashReturn.swift; sourceTree = "<group>"; };
 		C29071CED0BA1D606CD45764 /* DailyTodoWidgetsBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyTodoWidgetsBundle.swift; sourceTree = "<group>"; };
@@ -205,6 +210,7 @@
 			children = (
 				4F2AB48156EDB0A543C7CDDA /* ControlCountsTests.swift */,
 				77295E1113D4713BFB3D1CA1 /* DailyCleanupTests.swift */,
+				83FFE0729BBB4CE88C6E2456 /* LiveActivityPlannerTests.swift */,
 				F3E10D835F8060ED0BE27A5B /* RepeatCadenceTests.swift */,
 				6CA7FC42EE2FE2AA78F16F02 /* RepeatSpawnerTests.swift */,
 				1DBCCD975217F3C68B020520 /* StashTests.swift */,
@@ -224,6 +230,7 @@
 				ED241496D4FE366D47BE62AB /* ControlCounts.swift */,
 				3734206842CDD79EB3D09B75 /* DailyCleanup.swift */,
 				30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */,
+				B923E5A29FAD5A6018BBA350 /* LiveActivityPlanner.swift */,
 				8AF0527765C4EEF01E0900BA /* RepeatCadence.swift */,
 				727A07F2F1A156D598624DD0 /* RepeatRule.swift */,
 				AA97F1E980DC2939AB400B19 /* RepeatSpawner.swift */,
@@ -482,6 +489,7 @@
 				42D513E29488BF2538E6E366 /* ListView.swift in Sources */,
 				24CA9DDD823774F3F75E5D8E /* LiveActivityBridge.swift in Sources */,
 				BD5C0AD348C07424832B8D7C /* LiveActivityController.swift in Sources */,
+				4355D3A4E810160CD525C9E6 /* LiveActivityPlanner.swift in Sources */,
 				02A81E8E91F06342DB768595 /* MidnightScheduler.swift in Sources */,
 				A0668DC74239FE8D2D4D8E40 /* RepeatCadence.swift in Sources */,
 				417D2FE82DA76F06122C0F10 /* RepeatRule.swift in Sources */,
@@ -518,6 +526,7 @@
 			files = (
 				82FB1B946C85BB629A8C8939 /* ControlCountsTests.swift in Sources */,
 				5CC1C0C7D20EA64A1FED7111 /* DailyCleanupTests.swift in Sources */,
+				D8A6E230B796DD5F3F5EF0CB /* LiveActivityPlannerTests.swift in Sources */,
 				68194E45AAFFE623D42FEB06 /* RepeatCadenceTests.swift in Sources */,
 				3F289E8CCC423DDE1AC1C870 /* RepeatSpawnerTests.swift in Sources */,
 				222A755BFA92196030C27EB2 /* StashTests.swift in Sources */,
@@ -538,6 +547,7 @@
 				812EE205BB9E546578089AE5 /* DailyCleanup.swift in Sources */,
 				AF067AF85273961953A8998E /* DailyTodoWidgetsBundle.swift in Sources */,
 				F49D77A16FB12001BDB1584D /* LiveActivityBridge.swift in Sources */,
+				0F14B387218D2F20A9B99D54 /* LiveActivityPlanner.swift in Sources */,
 				4031410E3C085C39EF7B8139 /* RepeatCadence.swift in Sources */,
 				79A49F5E89D33D5AB3DC9DBD /* RepeatRule.swift in Sources */,
 				013A7B167CF7D6C3854CE297 /* RepeatSpawner.swift in Sources */,
