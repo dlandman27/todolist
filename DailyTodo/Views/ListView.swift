@@ -18,10 +18,16 @@ struct ListView: View {
     @State private var showClearAllConfirm = false
     @State private var showClearCompletedConfirm = false
     @State private var pendingUndo: PendingUndo?
-    /// A brief auto-dismissing status message shown when toggling the Live Activity.
-    @State private var liveToast: LiveToast?
     @State private var stashTarget: TaskItem?
     @State private var showStash = false
+    @State private var showSettings = false
+    /// Where the fixed bar ends and where the big title currently sits, both in
+    /// global coordinates — reported by geometry preferences. The title starts
+    /// far offscreen-low so the inline title never flashes at launch.
+    @State private var barBottom: CGFloat = 0
+    @State private var titleMid: CGFloat? = .greatestFiniteMagnitude
+    /// Sort preference shared with the widget + Live Activity via the App Group.
+    @AppStorage(TaskSort.defaultsKey, store: AppGroup.defaults) private var sortRaw = TaskSort.manual.rawValue
     @State private var showStashAllPicker = false
     /// Tasks mid-stash — their row exits by shrinking toward the bag instead of a plain fade.
     @State private var stashingIDs: Set<UUID> = []
@@ -36,18 +42,23 @@ struct ListView: View {
         var message: String { "Removed \(snapshots.count) task\(snapshots.count == 1 ? "" : "s")" }
     }
 
-    /// A transient Live Activity status message. `id` changes each time so the
-    /// auto-dismiss timer restarts on a fresh toggle.
-    private struct LiveToast {
-        let id = UUID()
-        let message: String
-    }
-
     @Query(sort: \TaskItem.createdAt, order: .forward) private var tasks: [TaskItem]
 
-    /// Open tasks first, completed ones sunk to the bottom — excluding stashed tasks,
-    /// which live in the stash drawer.
-    private var orderedTasks: [TaskItem] { TaskOrdering.ordered(tasks.filter { !$0.isStashed }) }
+    private var sortMode: TaskSort { TaskSort(rawValue: sortRaw) ?? .manual }
+
+    /// True once the big title has scrolled under the control bar — the inline
+    /// bar title fades in to take over. `nil` means the List recycled the title
+    /// row entirely (scrolled far away), which also counts as collapsed.
+    private var titleScrolledAway: Bool {
+        guard let titleMid else { return true }
+        return titleMid < barBottom
+    }
+
+    /// Open tasks first (in the chosen sort), completed ones sunk to the bottom —
+    /// excluding stashed tasks, which live in the stash drawer.
+    private var orderedTasks: [TaskItem] {
+        TaskOrdering.ordered(tasks.filter { !$0.isStashed }, by: sortMode)
+    }
 
     /// A signature of the displayed order and each row's done-state. Driving the
     /// list's animation off this value (rather than a per-tap `withAnimation`) means
@@ -87,6 +98,10 @@ struct ListView: View {
                 VStack(spacing: 0) {
                     titleHeader
                     if orderedTasks.isEmpty {
+                        titleView
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal)
+                            .padding(.top, 10)
                         emptyState
                             .transition(.opacity)
                     } else {
@@ -98,19 +113,11 @@ struct ListView: View {
                 // empty (clear, last row deleted, discarded draft).
                 .animation(.appMotion, value: orderedTasks.isEmpty)
             }
+            .onPreferenceChange(BarBottomPreference.self) { barBottom = $0 }
+            .onPreferenceChange(TitleMidPreference.self) { titleMid = $0 }
             // Floating Add button, overlaid so it doesn't reserve layout space (which
             // would shrink the list). Hidden while editing — the keyboard's there and
             // Return already chains to the next task.
-            // Bottom controls float as a symmetric pair — Go Live bottom-left, Add
-            // bottom-right — both hidden while editing so they don't crowd the keyboard.
-            .overlay(alignment: .bottomLeading) {
-                if !isEditing {
-                    liveActivityButton
-                        .padding(.leading, 20)
-                        .padding(.bottom, 16)
-                        .transition(.scale.combined(with: .opacity))
-                }
-            }
             .overlay(alignment: .bottomTrailing) {
                 if !isEditing {
                     addButton
@@ -120,26 +127,22 @@ struct ListView: View {
                 }
             }
             .animation(.appMotion, value: isEditing)
-            // Transient toasts (undo + Live Activity status) animate up just above the
-            // bottom button row, so they never sit under the Add / Go Live circles.
+            // The undo toast animates up just above the bottom row, so it never
+            // sits under the Add circle.
             .overlay(alignment: .bottom) {
-                VStack(spacing: 10) {
-                    if let pending = pendingUndo {
-                        UndoToast(message: pending.message, onUndo: undo, onDismiss: dismissUndo)
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
-                    }
-                    if let toast = liveToast {
-                        InfoToast(message: toast.message) {
-                            withAnimation(.appMotion) { liveToast = nil }
-                        }
+                if let pending = pendingUndo {
+                    UndoToast(message: pending.message, onUndo: undo, onDismiss: dismissUndo)
                         .transition(.move(edge: .bottom).combined(with: .opacity))
-                    }
+                        .padding(.bottom, 88)
+                        .animation(.appMotion, value: pendingUndo?.id)
                 }
-                .padding(.bottom, 88)
-                .animation(.appMotion, value: pendingUndo?.id)
-                .animation(.appMotion, value: liveToast?.id)
             }
             .toolbar(.hidden, for: .navigationBar)
+            // Settings is reached from the ellipsis menu (menus can't hold
+            // NavigationLinks), so the push is driven by this flag instead.
+            .navigationDestination(isPresented: $showSettings) {
+                SettingsView()
+            }
             .confirmationDialog(
                 "Delete all \(visibleTaskCount) tasks?",
                 isPresented: $showClearAllConfirm,
@@ -184,6 +187,10 @@ struct ListView: View {
                 Text("Hide every open task from Today until later.")
             }
         }
+        .onChange(of: sortRaw) { _, _ in
+            live.refresh()
+            Surfaces.reload()
+        }
         .onChange(of: router.addRequested) { _, requested in
             if requested {
                 addTask()
@@ -202,12 +209,6 @@ struct ListView: View {
             guard !Task.isCancelled else { return }
             withAnimation(.appMotion) { pendingUndo = nil }
         }
-        .task(id: liveToast?.id) {
-            guard liveToast != nil else { return }
-            try? await Task.sleep(for: .seconds(3))
-            guard !Task.isCancelled else { return }
-            withAnimation(.appMotion) { liveToast = nil }
-        }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { pendingUndo = nil }
         }
@@ -220,28 +221,87 @@ struct ListView: View {
         .tint(theme.accent)
     }
 
-    /// Glass control bar — stash in its own capsule on the left, list options +
-    /// settings sharing a capsule on the right — with the app's title (double-tap
-    /// to rename) on its own line below, where it no longer competes with the
-    /// icons for width.
+    /// Reports the control bar's bottom edge in global coordinates.
+    private struct BarBottomPreference: PreferenceKey {
+        static let defaultValue: CGFloat = 0
+        static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+            value = nextValue()
+        }
+    }
+
+    /// Reports the big title's vertical midpoint in global coordinates; nil when
+    /// the List has recycled the title row offscreen.
+    private struct TitleMidPreference: PreferenceKey {
+        static let defaultValue: CGFloat? = nil
+        static func reduce(value: inout CGFloat?, nextValue: () -> CGFloat?) {
+            value = nextValue() ?? value
+        }
+    }
+
+    /// The fixed glass control bar — stash in its own capsule on the left, sort +
+    /// list options sharing a capsule on the right. The title itself lives in the
+    /// scroll content (`titleView`) so it slides away with the todos; once it
+    /// passes under this bar, a compact copy fades into the bar's center.
     private var titleHeader: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            HStack {
-                stashButton
-                    .glassCapsule(tinted: false)
-                Spacer()
-                HStack(spacing: 2) {
-                    settingsButton
-                    listOptionsButton
-                }
+        HStack {
+            stashButton
                 .glassCapsule(tinted: false)
-                if isEditing {
-                    doneEditingButton
-                        .glassCapsule(tinted: false)
-                        .transition(.scale.combined(with: .opacity))
+            Spacer()
+            HStack(spacing: 2) {
+                sortButton
+                listOptionsButton
+            }
+            .glassCapsule(tinted: false)
+            if isEditing {
+                doneEditingButton
+                    .glassCapsule(tinted: false)
+                    .transition(.scale.combined(with: .opacity))
+            }
+        }
+        .overlay {
+            // Compact stand-in for the scrolled-away big title. Decorative only —
+            // the real (focusable, renamable) title is the one in the list.
+            Text(listName)
+                .font(.headline.weight(.semibold))
+                .fontDesign(.rounded)
+                .foregroundStyle(Color.brand)
+                .lineLimit(1)
+                .frame(maxWidth: 160)
+                .opacity(titleScrolledAway ? 1 : 0)
+                .offset(y: titleScrolledAway ? 0 : 8)
+                .animation(.appMotion, value: titleScrolledAway)
+                .accessibilityHidden(true)
+        }
+        .padding(.horizontal)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+        .background {
+            GeometryReader { proxy in
+                Color.clear.preference(
+                    key: BarBottomPreference.self,
+                    value: proxy.frame(in: .global).maxY
+                )
+            }
+        }
+    }
+
+    /// The list's title — double-tap to rename. Rendered inside the scrollable
+    /// content (first list row / above the empty state), not the fixed bar.
+    private var titleView: some View {
+        titleContent
+            .background {
+                GeometryReader { proxy in
+                    Color.clear.preference(
+                        key: TitleMidPreference.self,
+                        value: proxy.frame(in: .global).midY
+                    )
                 }
             }
-            if editingTitle {
+    }
+
+    @ViewBuilder
+    private var titleContent: some View {
+        if editingTitle {
                 TextField(ListSettings.defaultName, text: $listName)
                     .font(.largeTitle.bold())
                     .fontDesign(.rounded)
@@ -265,11 +325,7 @@ struct ListView: View {
                     .foregroundStyle(Color.brand)
                     .accessibilityIdentifier("title")
                     .onTapGesture(count: 2, perform: beginEditingTitle)
-            }
         }
-        .padding(.horizontal)
-        .padding(.top, 12)
-        .padding(.bottom, 8)
     }
 
     /// Enter rename mode and drop the cursor into the title field.
@@ -316,6 +372,15 @@ struct ListView: View {
                     Label("Clear All", systemImage: "trash")
                 }
                 .disabled(orderedTasks.isEmpty)
+            }
+
+            Section {
+                Button {
+                    showSettings = true
+                } label: {
+                    Label("Settings", systemImage: "gearshape")
+                }
+                .accessibilityIdentifier("settings")
             }
         } label: {
             Image(systemName: "ellipsis")
@@ -377,20 +442,26 @@ struct ListView: View {
         .accessibilityLabel("Done editing")
     }
 
-    /// Gear that pushes the settings page onto the navigation stack.
-    private var settingsButton: some View {
-        NavigationLink {
-            SettingsView()
+    /// Sort menu — a non-destructive view preference. Manual is the drag order;
+    /// the widget and Live Activity read the same stored mode, so every surface
+    /// shows the list the same way.
+    private var sortButton: some View {
+        Menu {
+            Picker("Sort By", selection: $sortRaw) {
+                ForEach(TaskSort.allCases) { option in
+                    Text(option.label).tag(option.rawValue)
+                }
+            }
         } label: {
-            Image(systemName: "gearshape")
-                .font(.system(size: 24))
+            Image(systemName: "arrow.up.arrow.down")
+                .font(.system(size: 22))
                 .foregroundStyle(Color.textPrimary)
                 .frame(width: 44, height: 44)
                 .contentShape(Rectangle())
         }
         .simultaneousGesture(TapGesture().onEnded { Haptics.impact(.light) })
-        .accessibilityIdentifier("settings")
-        .accessibilityLabel("Settings")
+        .accessibilityIdentifier("sortMenu")
+        .accessibilityLabel("Sort")
     }
 
     /// The primary action: a solid, always-visible "+" that adds a task. Reuses
@@ -412,60 +483,16 @@ struct ListView: View {
         .accessibilityLabel("Add task")
     }
 
-    /// Bottom-left control to pin the list to the Lock Screen as a Live Activity.
-    /// An icon-only circle sized to mirror the Add button, but glass (quiet) so it
-    /// reads as secondary to the solid Add FAB. Brand-colored and pulsing while live,
-    /// muted otherwise. (A 56pt capsule is a circle — reuses `glassCapsule`.)
-    @ViewBuilder
-    private var liveActivityButton: some View {
-        if live.systemEnabled {
-            Button {
-                Haptics.impact(.medium)
-                withAnimation(.snappy) { live.toggle() }
-                // Confirm the (otherwise silent) state change — the button itself is
-                // text-free, so the toast is what tells the user what just happened.
-                liveToast = LiveToast(message: live.isRunning
-                    ? "You're now live. Tasks will show in your Live Activities."
-                    : "Live Activities disabled.")
-            } label: {
-                // The slash carries the off/on meaning: a clear antenna (brand-red +
-                // tinted glass) when live, a slashed muted antenna when not — so the
-                // state reads at a glance, not just by color. No animation (visual noise).
-                Image(systemName: live.isRunning
-                    ? "antenna.radiowaves.left.and.right"
-                    : "antenna.radiowaves.left.and.right.slash")
-                    .font(.title2)
-                    .foregroundStyle(live.isRunning ? Color.brand : Color.textSecondary)
-                    .frame(width: 56, height: 56)
-                    .glassCapsule(tinted: live.isRunning)
-                    .contentShape(Circle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(live.isRunning ? "Live on Lock Screen, tap to stop" : "Show list on Lock Screen")
-        } else {
-            // Live Activities are off system-wide — the tap sends the user to Settings.
-            Button {
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url)
-                }
-            } label: {
-                Image(systemName: "antenna.radiowaves.left.and.right.slash")
-                    .font(.title2)
-                    .foregroundStyle(Color.textSecondary)
-                    .frame(width: 56, height: 56)
-                    .glassCapsule(tinted: false)
-                    .contentShape(Circle())
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel("Live Activities are off. Open Settings")
-        }
-    }
-
     private var list: some View {
         // GeometryReader so the tap-to-add area can fill the full viewport height —
         // a fixed height leaves dead, non-tappable List background below it on tall screens.
         GeometryReader { geo in
             List {
+                titleView
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 8, trailing: 16))
+
                 ForEach(orderedTasks) { task in
                     TaskRow(task: task, focus: $focusedTask, onReturn: addTask)
                         .listRowSeparator(.hidden)
@@ -475,7 +502,7 @@ struct ListView: View {
                         .listRowInsets(EdgeInsets(top: 2, leading: 4, bottom: 2, trailing: 4))
                         // Completed rows are locked below the open group; the blank
                         // draft can't be dragged mid-edit.
-                        .moveDisabled(task.done || task.isBlank)
+                        .moveDisabled(task.done || task.isBlank || sortMode != .manual)
                         // Swipe the opposite way from delete to stash — open tasks only.
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
                             if !task.done && !task.isBlank {

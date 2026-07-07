@@ -5,12 +5,27 @@ import Foundation
 /// the bottom in the order they were checked off. Pure and testable.
 enum TaskOrdering {
     static func ordered(_ tasks: [TaskItem]) -> [TaskItem] {
+        ordered(tasks, by: .manual)
+    }
+
+    /// Display order under a sort mode. The mode only reorders the open group —
+    /// completed tasks always sink to the bottom in checked-off order.
+    static func ordered(_ tasks: [TaskItem], by sort: TaskSort) -> [TaskItem] {
         let open = tasks.filter { !$0.done }
             .sorted { lhs, rhs in
-                if lhs.sortOrder != rhs.sortOrder {
-                    return lhs.sortOrder < rhs.sortOrder
+                switch sort {
+                case .manual:
+                    if lhs.sortOrder != rhs.sortOrder {
+                        return lhs.sortOrder < rhs.sortOrder
+                    }
+                    return lhs.createdAt < rhs.createdAt
+                case .newest:
+                    return lhs.createdAt > rhs.createdAt
+                case .oldest:
+                    return lhs.createdAt < rhs.createdAt
+                case .alphabetical:
+                    return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
                 }
-                return lhs.createdAt < rhs.createdAt
             }
         let done = tasks.filter { $0.done }
             .sorted { ($0.completedAt ?? .distantPast) < ($1.completedAt ?? .distantPast) }

@@ -65,6 +65,7 @@
 		B2C6CE32FC0C6485C71B1208 /* RepeatRuleEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E43DD220A5E82FBDC4C9CC39 /* RepeatRuleEditorView.swift */; };
 		BD5C0AD348C07424832B8D7C /* LiveActivityController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02AA3136636BB9A8D6ED4576 /* LiveActivityController.swift */; };
 		BD66AF97F4B186344D0087DD /* ThemeStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33EEB5AB958070839630B1A8 /* ThemeStoreTests.swift */; };
+		BEB5F996580EDEB43D5E44F8 /* TaskSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C29059432EA1399934EF308 /* TaskSort.swift */; };
 		C2BEC38E966CF3A5E6D9EDED /* RepeatingRulesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC88EAE31AF78E147D3D1AB /* RepeatingRulesView.swift */; };
 		C3A5EFAD2CB5C54F0CB92147 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89172F89B880F640C73953BB /* AppGroup.swift */; };
 		C65406A7736B78E05B241130 /* ThemeBackgroundTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56855B4451269047A2D9C9B5 /* ThemeBackgroundTests.swift */; };
@@ -81,6 +82,7 @@
 		E726D9511A6997ECDFCB415D /* TaskActionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7D7222B5700EC8880F8776 /* TaskActionsTests.swift */; };
 		E76DE0262846BF97231DBBD6 /* ToggleTaskIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DC4964B31DD2B046AB39997 /* ToggleTaskIntent.swift */; };
 		ED584530F9278FE0B51D7E69 /* TaskStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9009156203DE059C471C455 /* TaskStore.swift */; };
+		F2268A2E0A30542DF0F78A81 /* TaskSort.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C29059432EA1399934EF308 /* TaskSort.swift */; };
 		F25D63EA18FDFC3B6FC9FCA7 /* StashDuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4353BE4D9E35D01527FFC21 /* StashDuration.swift */; };
 		F4405311440900F9DEDA1D87 /* StashSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15B6ABD81BE72EB3E2D4F9FE /* StashSheet.swift */; };
 		F49D77A16FB12001BDB1584D /* LiveActivityBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30BB8CB51F7440FE3C57DF1E /* LiveActivityBridge.swift */; };
@@ -129,6 +131,7 @@
 /* Begin PBXFileReference section */
 		02AA3136636BB9A8D6ED4576 /* LiveActivityController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveActivityController.swift; sourceTree = "<group>"; };
 		07F4338DD9DEC2A2D9C88DA3 /* Haptics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Haptics.swift; sourceTree = "<group>"; };
+		0C29059432EA1399934EF308 /* TaskSort.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskSort.swift; sourceTree = "<group>"; };
 		0E2C8A719522F64ED4F37164 /* TodoListWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListWidget.swift; sourceTree = "<group>"; };
 		0ED33462BA5ECE0259E64B51 /* StashFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StashFormatting.swift; sourceTree = "<group>"; };
 		1028E2BAA40DEE2897D09876 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -241,6 +244,7 @@
 				73610AD06E4FABE20A24D03E /* TaskActions.swift */,
 				45E1A562A947F60569DE08C6 /* TaskItem.swift */,
 				EA5766443269F0279010B10C /* TaskOrdering.swift */,
+				0C29059432EA1399934EF308 /* TaskSort.swift */,
 				C9009156203DE059C471C455 /* TaskStore.swift */,
 				D13070A7F47697A07ED02B43 /* TaskStyle.swift */,
 				1D93E764550B345709DDAFC5 /* Theme.swift */,
@@ -509,6 +513,7 @@
 				A10109AD0ED51CF88D00644F /* TaskItem.swift in Sources */,
 				E5AC5E534377B1D07B9768C2 /* TaskOrdering.swift in Sources */,
 				F7D32C00D19C3667BE5F250A /* TaskRow.swift in Sources */,
+				BEB5F996580EDEB43D5E44F8 /* TaskSort.swift in Sources */,
 				ED584530F9278FE0B51D7E69 /* TaskStore.swift in Sources */,
 				9376B3C47CAA1ABCB65EC971 /* TaskStyle.swift in Sources */,
 				3F2C0B71B718CD2746F64774 /* Theme.swift in Sources */,
@@ -558,6 +563,7 @@
 				7F89147E4BD67D8C9742C979 /* TaskActions.swift in Sources */,
 				243BBEA9F7196417BA55B3B7 /* TaskItem.swift in Sources */,
 				E6F22E763D5B3B482F8B14B4 /* TaskOrdering.swift in Sources */,
+				F2268A2E0A30542DF0F78A81 /* TaskSort.swift in Sources */,
 				692E092BA7C59901FAA1784D /* TaskStore.swift in Sources */,
 				799A1A3760376FA054D4C6CB /* TaskStyle.swift in Sources */,
 				83A2E06198761EC7215AF827 /* Theme.swift in Sources */,

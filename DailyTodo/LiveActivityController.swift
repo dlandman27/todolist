@@ -11,7 +11,9 @@ final class LiveActivityController {
     static let shared = LiveActivityController()
 
     private let defaults = UserDefaults(suiteName: AppGroup.identifier)
-    private let enabledKey = "liveActivityEnabled"
+    /// Shared with the Settings toggle, which binds to the same App Group default.
+    static let enabledKey = "liveActivityEnabled"
+    private var enabledKey: String { Self.enabledKey }
 
     private(set) var isRunning = false
 

@@ -63,7 +63,7 @@ extension ModelContext {
     /// Activity). Excludes blank drafts AND stashed tasks — neither belongs on a
     /// "today" surface.
     func orderedTasks() -> [TaskItem] {
-        TaskOrdering.ordered(allTasks().filter { !$0.isBlank && !$0.isStashed })
+        TaskOrdering.ordered(allTasks().filter { !$0.isBlank && !$0.isStashed }, by: TaskSort.current)
     }
 
     /// Stashed tasks for the stash drawer: soonest auto-return first, "Never" (no
