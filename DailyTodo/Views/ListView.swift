@@ -99,9 +99,7 @@ struct ListView: View {
                     .contentShape(Rectangle())
                     // Tapping empty chrome (header, sides) only dismisses an active edit —
                     // it must NOT add a task. Adding is handled by the explicit areas below.
-                    .onTapGesture {
-                        if showCustomize { showCustomize = false } else { dismissEditing() }
-                    }
+                    .onTapGesture { dismissEditing() }
                 VStack(spacing: 0) {
                     titleHeader
                     if orderedTasks.isEmpty {
@@ -232,13 +230,14 @@ struct ListView: View {
                 .environment(live)
         }
         // Customize rides in a short glass sheet so the list stays visible and
-        // recolors live behind it — the app itself is the preview.
+        // recolors live behind it — the app itself is the preview. A standard
+        // sheet (no background interaction): tapping the visible app behind it
+        // dismisses, exactly like the stash sheet.
         .sheet(isPresented: $showCustomize) {
             CustomizeView()
                 .environment(theme)
                 .environment(live)
                 .presentationDetents([.height(380), .large])
-                .presentationBackgroundInteraction(.enabled(upThrough: .height(380)))
                 .presentationDragIndicator(.visible)
                 .presentationBackground(.regularMaterial)
         }
@@ -542,9 +541,10 @@ struct ListView: View {
                         // Completed rows are locked below the open group; the blank
                         // draft can't be dragged mid-edit.
                         .moveDisabled(task.done || task.isBlank || sortMode != .manual)
-                        // Swipe the opposite way from delete to stash — open tasks only.
+                        // Swipe the opposite way from delete to stash — completed
+                        // tasks too (the stash protects them from the midnight purge).
                         .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            if !task.done && !task.isBlank {
+                            if !task.isBlank {
                                 Button {
                                     Haptics.impact(.light)
                                     stashTarget = task
@@ -568,15 +568,7 @@ struct ListView: View {
                 // The empty space below the list is a reliable tap target (a Button, not a
                 // row gesture): dismiss an open draft, otherwise add a task.
                 Button {
-                    // With the Customize sheet up (background interaction on), a body
-                    // tap should close the sheet — never add a todo underneath it.
-                    if showCustomize {
-                        showCustomize = false
-                    } else if isEditing {
-                        dismissEditing()
-                    } else {
-                        addTask()
-                    }
+                    if isEditing { dismissEditing() } else { addTask() }
                 } label: {
                     Color.clear
                         .frame(minHeight: addAreaHeight(viewport: geo.size.height))
@@ -620,13 +612,7 @@ struct ListView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .contentShape(Rectangle())
         .onTapGesture {
-            if showCustomize {
-                showCustomize = false
-            } else if isEditing {
-                dismissEditing()
-            } else {
-                addTask()
-            }
+            if isEditing { dismissEditing() } else { addTask() }
         }
     }
 

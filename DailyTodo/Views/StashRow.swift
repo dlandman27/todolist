@@ -15,6 +15,8 @@ struct StashRow: View {
     /// Whether the edit card is shown — mirrors focus, toggled in a `withAnimation` so it
     /// fades on every focus change (matching `TaskRow`).
     @State private var cardVisible = false
+    /// Task detail sheet (rename + notes), opened from the focused row's info button.
+    @State private var showDetail = false
 
     private var isEditing: Bool { focus.wrappedValue == task.id }
     private var trimmed: String {
@@ -31,20 +33,49 @@ struct StashRow: View {
             .buttonStyle(.plain)
             .accessibilityLabel("Complete \(task.title)")
 
-            TextField("New stashed to-do", text: $task.title)
-                .focused(focus, equals: task.id)
-                .foregroundStyle(Color.textPrimary)
-                .submitLabel(.done)
-                .onChange(of: focus.wrappedValue) { old, new in
-                    if old == task.id && new != task.id { commit() }
-                    withAnimation(.appMotion) { cardVisible = (new == task.id) }
+            VStack(alignment: .leading, spacing: 2) {
+                TextField("New stashed to-do", text: $task.title)
+                    .focused(focus, equals: task.id)
+                    .foregroundStyle(Color.textPrimary)
+                    .submitLabel(.done)
+                    .onChange(of: focus.wrappedValue) { old, new in
+                        if old == task.id && new != task.id { commit() }
+                        withAnimation(.appMotion) { cardVisible = (new == task.id) }
+                    }
+                    .onSubmit {
+                        commit()
+                        focus.wrappedValue = nil
+                    }
+
+                // Same one-line note peek as the main list's rows.
+                if !task.notes.isEmpty {
+                    Text(task.notes)
+                        .font(.caption)
+                        .foregroundStyle(Color.textSecondary)
+                        .lineLimit(1)
+                        .allowsHitTesting(false)
                 }
-                .onSubmit {
-                    commit()
-                    focus.wrappedValue = nil
-                }
+            }
 
             Spacer(minLength: 8)
+
+            // Same details door as TaskRow: visible only while focused, but always
+            // in the layout so the text never rewraps when focus toggles it.
+            Button {
+                showDetail = true
+            } label: {
+                Image(systemName: "info.circle")
+                    .font(.title3)
+                    .foregroundStyle(Color.brand)
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .opacity(isEditing ? 1 : 0)
+            .disabled(!isEditing)
+            .animation(.appMotion, value: isEditing)
+            .accessibilityIdentifier("stashTaskDetails")
+            .accessibilityLabel("Task details")
+            .accessibilityHidden(!isEditing)
 
             Text(StashFormatting.returnLabel(for: task.stashReturnDate))
                 .font(.caption)
@@ -65,6 +96,9 @@ struct StashRow: View {
                 .opacity(cardVisible ? 1 : 0)
         }
         .onAppear { cardVisible = isEditing }
+        .sheet(isPresented: $showDetail) {
+            TaskDetailView(task: task)
+        }
         .listRowBackground(Color.clear)
     }
 

@@ -18,25 +18,64 @@ struct RepeatRuleEditorView: View {
     }
 
     @State private var name: String = ""
+    @State private var notes: String = ""
+    @State private var hasStartDate = false
+    @State private var startDate = Date()
+    @State private var hasEndDate = false
+    @State private var endDate = Date()
     @State private var mode: Mode = .weekly
     @State private var weekdays: Set<Int> = [2]      // default Monday
     @State private var monthDays: Set<Int> = [1]     // default 1st
 
     var body: some View {
         NavigationStack {
-            Form {
+            ZStack {
+                Color.appBackground.ignoresSafeArea()
+                Form {
                 Section("Name") {
                     TextField("e.g. Water plants", text: $name)
+                        .listRowBackground(Color.appSurface)
+                }
+                Section("Notes") {
+                    TextField("Added to every spawned task", text: $notes, axis: .vertical)
+                        .lineLimit(2...5)
+                        .listRowBackground(Color.appSurface)
                 }
                 Section("Repeats") {
-                    Picker("Frequency", selection: $mode) {
-                        ForEach(Mode.allCases) { Text($0.rawValue).tag($0) }
-                    }
-                    .pickerStyle(.segmented)
+                    Group {
+                        Picker("Frequency", selection: $mode) {
+                            ForEach(Mode.allCases) { Text($0.rawValue).tag($0) }
+                        }
+                        .pickerStyle(.segmented)
 
-                    switch mode {
-                    case .weekly:  weekdayPicker
-                    case .monthly: monthDayPicker
+                        switch mode {
+                        case .weekly:  weekdayPicker
+                        case .monthly: monthDayPicker
+                        }
+                    }
+                    .listRowBackground(Color.appSurface)
+                }
+                Section {
+                    Group {
+                        Toggle("Add Start Date", isOn: $hasStartDate.animation(.appMotion))
+                            .tint(Color.brand)
+                        if hasStartDate {
+                            DatePicker("Starts On", selection: $startDate,
+                                       in: Date()...,
+                                       displayedComponents: .date)
+                        }
+                        Toggle("Add End Date", isOn: $hasEndDate.animation(.appMotion))
+                            .tint(Color.brand)
+                        if hasEndDate {
+                            DatePicker("Ends On", selection: $endDate,
+                                       in: (hasStartDate ? max(Date(), startDate) : Date())...,
+                                       displayedComponents: .date)
+                        }
+                    }
+                    .listRowBackground(Color.appSurface)
+                } footer: {
+                    if hasStartDate || hasEndDate {
+                        Text(footerText)
                     }
                 }
                 if !isNew {
@@ -44,8 +83,11 @@ struct RepeatRuleEditorView: View {
                         Button(role: .destructive, action: deleteRule) {
                             Text("Delete repeat")
                         }
+                        .listRowBackground(Color.appSurface)
                     }
                 }
+                }
+                .scrollContentBackground(.hidden)
             }
             .navigationTitle(isNew ? "New Repeat" : "Edit Repeat")
             .navigationBarTitleDisplayMode(.inline)
@@ -61,6 +103,14 @@ struct RepeatRuleEditorView: View {
         }
     }
 
+    private var footerText: String {
+        switch (hasStartDate, hasEndDate) {
+        case (true, true): "Runs from the start date through the end date, then removes itself."
+        case (true, false): "Starts spawning on this day."
+        default: "Repeats through this day, then removes itself from the list."
+        }
+    }
+
     private var weekdayPicker: some View {
         HStack {
             ForEach(1...7, id: \.self) { d in
@@ -71,7 +121,7 @@ struct RepeatRuleEditorView: View {
                     Text(RepeatCadence.weekdayShortNames[d].prefix(1))
                         .font(.subheadline.weight(.semibold))
                         .frame(width: 34, height: 34)
-                        .background(Circle().fill(on ? Color.brand : Color.appSurface))
+                        .background(Circle().fill(on ? Color.brand : Color.appBackground))
                         .foregroundStyle(on ? .white : Color.textPrimary)
                 }
                 .buttonStyle(.plain)
@@ -90,7 +140,7 @@ struct RepeatRuleEditorView: View {
                     Text("\(d)")
                         .font(.footnote)
                         .frame(maxWidth: .infinity, minHeight: 30)
-                        .background(RoundedRectangle(cornerRadius: 6).fill(on ? Color.brand : Color.appSurface))
+                        .background(RoundedRectangle(cornerRadius: 6).fill(on ? Color.brand : Color.appBackground))
                         .foregroundStyle(on ? .white : Color.textPrimary)
                 }
                 .buttonStyle(.plain)
@@ -108,6 +158,11 @@ struct RepeatRuleEditorView: View {
 
     private func loadFromRule() {
         name = rule.name
+        notes = rule.notes
+        hasStartDate = rule.startDate != nil
+        startDate = rule.startDate ?? Date()
+        hasEndDate = rule.endDate != nil
+        endDate = rule.endDate ?? Date()
         switch rule.cadence {
         case .weekly(let d):  mode = .weekly; weekdays = d
         case .monthly(let d): mode = .monthly; monthDays = d
@@ -117,6 +172,9 @@ struct RepeatRuleEditorView: View {
 
     private func save() {
         rule.name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        rule.notes = notes.trimmingCharacters(in: .whitespacesAndNewlines)
+        rule.startDate = hasStartDate ? startDate : nil
+        rule.endDate = hasEndDate ? endDate : nil
         switch mode {
         case .weekly:  rule.cadence = .weekly(weekdays)
         case .monthly: rule.cadence = .monthly(monthDays)

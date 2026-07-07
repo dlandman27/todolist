@@ -13,10 +13,6 @@ private func rgb(_ hex: UInt32) -> UIColor {
     )
 }
 
-/// A color that resolves to `light`/`dark` based on the active interface style.
-private func dynamic(light: UInt32, dark: UInt32) -> UIColor {
-    UIColor { $0.userInterfaceStyle == .dark ? rgb(dark) : rgb(light) }
-}
 
 extension UIColor {
     // MARK: Brand (accent-derived — see ThemeStore)
@@ -41,10 +37,37 @@ extension UIColor {
             dark: trait.userInterfaceStyle == .dark
         ))
     }
-    static let appSurfaceColor = dynamic(light: 0xFFFFFF, dark: 0x261E20)
-    // MARK: Text
-    static let appTextPrimary = dynamic(light: 0x2A1E1F, dark: 0xF5ECEE)
-    static let appTextSecondary = dynamic(light: 0x93787B, dark: 0xB39DA0)
+    /// Elevated surface: pure white in light; in dark, a lifted near-neutral
+    /// leaned toward the accent (the old 261E20 was this recipe baked for Brick).
+    static var appSurfaceColor: UIColor {
+        accentLeaning(lightBase: 0xFFFFFF, lightAmount: 0,
+                      darkBase: 0x191A1C, darkAmount: 0.08)
+    }
+    // MARK: Text — same decomposition: the old warm values were neutral bases
+    // leaned toward Brick; now they lean toward whatever the accent is.
+    static var appTextPrimary: UIColor {
+        accentLeaning(lightBase: 0x1B1B1B, lightAmount: 0.09,
+                      darkBase: 0xFFFFFF, darkAmount: 0.10)
+    }
+    static var appTextSecondary: UIColor {
+        accentLeaning(lightBase: 0x878789, lightAmount: 0.23,
+                      darkBase: 0xB1B1B4, darkAmount: 0.19)
+    }
+
+    /// A dynamic color that blends the CURRENT accent into a neutral base —
+    /// resolved lazily, so it always reads the accent at render time.
+    private static func accentLeaning(
+        lightBase: UInt32, lightAmount: Double,
+        darkBase: UInt32, darkAmount: Double
+    ) -> UIColor {
+        UIColor { trait in
+            let accent = ThemeStore.hexValue(ThemeStore.accentHex)
+            let dark = trait.userInterfaceStyle == .dark
+            return rgb(ThemeStore.blend(accent,
+                                        into: dark ? darkBase : lightBase,
+                                        amount: dark ? darkAmount : lightAmount))
+        }
+    }
 }
 
 extension Color {
@@ -72,16 +95,16 @@ extension Color {
     // MARK: Surfaces
 
     /// App-wide background.
-    static let appBackground = Color(uiColor: .appBackgroundColor)
+    static var appBackground: Color { Color(uiColor: .appBackgroundColor) }
     /// Elevated surface for rows and cards.
-    static let appSurface = Color(uiColor: .appSurfaceColor)
+    static var appSurface: Color { Color(uiColor: .appSurfaceColor) }
 
     // MARK: Text
 
-    /// Primary text, a warm near-black (light) / near-white (dark).
-    static let textPrimary = Color(uiColor: .appTextPrimary)
-    /// Secondary text, a muted mauve-gray.
-    static let textSecondary = Color(uiColor: .appTextSecondary)
+    /// Primary text: near-black (light) / near-white (dark), leaning to the accent.
+    static var textPrimary: Color { Color(uiColor: .appTextPrimary) }
+    /// Secondary text: muted gray leaning to the accent.
+    static var textSecondary: Color { Color(uiColor: .appTextSecondary) }
 }
 
 extension Animation {

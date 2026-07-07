@@ -154,10 +154,12 @@ struct SettingsView: View {
                 .environment(theme)
                 .environment(live)
                 .presentationDetents([.height(380), .large])
-                .presentationBackgroundInteraction(.enabled(upThrough: .height(380)))
                 .presentationDragIndicator(.visible)
                 .presentationBackground(.regularMaterial)
         }
+        // Reading the accent here makes Settings repaint live while the
+        // Customize sheet (opened from this page) changes it.
+        .tint(theme.accent)
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar(.visible, for: .navigationBar)

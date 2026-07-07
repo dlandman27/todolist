@@ -36,12 +36,13 @@ enum TaskActions {
     /// `sortOrder` is one past the current maximum (matching the app's inline add) so
     /// the row lands last. Returns the inserted task.
     @discardableResult
-    static func add(title: String, repeatRuleID: UUID? = nil, in context: ModelContext) -> TaskItem {
+    static func add(title: String, notes: String = "", repeatRuleID: UUID? = nil, in context: ModelContext) -> TaskItem {
         let nextOrder = (context.allTasks().map(\.sortOrder).max() ?? -1) + 1
         let item = TaskItem(
             title: title.trimmingCharacters(in: .whitespacesAndNewlines),
             sortOrder: nextOrder,
-            repeatRuleID: repeatRuleID
+            repeatRuleID: repeatRuleID,
+            notes: notes
         )
         context.insert(item)
         try? context.save()
@@ -73,9 +74,11 @@ enum TaskActions {
     }
 
     /// Delete all completed tasks. Returns snapshots of what was removed (for undo).
+    /// Stashed tasks are protected (like Clear All) — a completed todo tucked into
+    /// the stash shouldn't be eaten by the midnight auto-clear.
     @discardableResult
     static func clearCompleted(in context: ModelContext) -> [TaskSnapshot] {
-        delete(context.allTasks().filter { $0.done }, in: context)
+        delete(context.allTasks().filter { $0.done && !$0.isStashed }, in: context)
     }
 
     /// Delete every task in Today (open + completed). Stashed tasks are protected —
