@@ -8,7 +8,7 @@ import AppIntents
 struct TodoLiveActivity: Widget {
     var body: some WidgetConfiguration {
         ActivityConfiguration(for: TodoActivityAttributes.self) { context in
-            LockScreenLiveView(state: context.state)
+            LockScreenLiveView(state: context.state, isStale: context.isStale)
                 .activityBackgroundTint(Color.appBackground)
                 .activitySystemActionForegroundColor(Color.brand)
         } dynamicIsland: { context in
@@ -55,6 +55,7 @@ struct TodoLiveActivity: Widget {
 
 private struct LockScreenLiveView: View {
     let state: TodoActivityAttributes.ContentState
+    let isStale: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -85,6 +86,8 @@ private struct LockScreenLiveView: View {
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 18)
+        // The system killed the activity (8h limit) — dim so old checkmarks don't read as current.
+        .opacity(isStale ? 0.55 : 1)
     }
 }
 

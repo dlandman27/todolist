@@ -29,7 +29,7 @@ enum LiveActivityBridge {
     static func updateRunningActivities() async {
         let state = contentState()
         for activity in Activity<TodoActivityAttributes>.activities {
-            await activity.update(ActivityContent(state: state, staleDate: nil))
+            await activity.update(ActivityContent(state: state, staleDate: staleDate()))
         }
     }
 }
