@@ -30,29 +30,36 @@ final class LiveActivityController {
         ActivityAuthorizationInfo().areActivitiesEnabled
     }
 
-    /// Start the activity if needed, or update the running one to reflect the current list.
+    /// Start, update, or restart the activity so it reflects the current list —
+    /// and so the system's 8-hour kill clock keeps getting reset while the user is active.
     func refresh() {
         guard !TaskStore.isUITesting else { return }
-        syncRunningState()
-        guard ActivityAuthorizationInfo().areActivitiesEnabled, isEnabled else { return }
 
-        let state = LiveActivityBridge.contentState()
+        let storedStart = defaults?.object(forKey: LiveActivityBridge.startedAtKey) as? Date
+        let snapshots = Activity<TodoActivityAttributes>.activities.map {
+            ActivitySnapshot(isLive: Self.isLive($0.activityState), startedAt: storedStart)
+        }
 
-        if let activity = Activity<TodoActivityAttributes>.activities.first {
-            Task { await activity.update(ActivityContent(state: state, staleDate: nil)) }
-            isRunning = true
-        } else {
-            do {
-                _ = try Activity.request(
-                    attributes: TodoActivityAttributes(),
-                    content: ActivityContent(state: state, staleDate: nil),
-                    pushType: nil
-                )
-                isRunning = true
-            } catch {
-                print("Live Activity start failed: \(error)")
-                isRunning = false
+        switch LiveActivityPlanner.action(
+            userEnabled: isEnabled,
+            systemEnabled: systemEnabled,
+            activities: snapshots,
+            now: Date()
+        ) {
+        case .none:
+            syncRunningState()
+        case .update:
+            let content = ActivityContent(
+                state: LiveActivityBridge.contentState(),
+                staleDate: LiveActivityBridge.staleDate()
+            )
+            if let live = Activity<TodoActivityAttributes>.activities
+                .first(where: { Self.isLive($0.activityState) }) {
+                Task { await live.update(content) }
             }
+            isRunning = true
+        case .start, .restart:
+            requestFresh()
         }
     }
 
@@ -65,6 +72,7 @@ final class LiveActivityController {
     /// Remove the list from the lock screen and remember the opt-out.
     func stop() {
         isEnabled = false
+        defaults?.removeObject(forKey: LiveActivityBridge.startedAtKey)
         for activity in Activity<TodoActivityAttributes>.activities {
             Task { await activity.end(nil, dismissalPolicy: .immediate) }
         }
@@ -79,7 +87,39 @@ final class LiveActivityController {
         isRunning ? stop() : start()
     }
 
+    /// End everything (live or zombie) and request a fresh activity, resetting the 8h clock.
+    private func requestFresh() {
+        let existing = Activity<TodoActivityAttributes>.activities
+        let startedAt = Date()
+        defaults?.set(startedAt, forKey: LiveActivityBridge.startedAtKey)
+        let content = ActivityContent(
+            state: LiveActivityBridge.contentState(),
+            staleDate: startedAt.addingTimeInterval(LiveActivityPlanner.systemLifetime)
+        )
+        Task {
+            for activity in existing {
+                await activity.end(nil, dismissalPolicy: .immediate)
+            }
+            do {
+                _ = try Activity.request(
+                    attributes: TodoActivityAttributes(),
+                    content: content,
+                    pushType: nil
+                )
+                isRunning = true
+            } catch {
+                print("Live Activity start failed: \(error)")
+                isRunning = false
+            }
+        }
+    }
+
+    private static func isLive(_ state: ActivityState) -> Bool {
+        state == .active || state == .stale
+    }
+
     private func syncRunningState() {
-        isRunning = !Activity<TodoActivityAttributes>.activities.isEmpty
+        isRunning = Activity<TodoActivityAttributes>.activities
+            .contains { Self.isLive($0.activityState) }
     }
 }

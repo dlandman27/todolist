@@ -6,6 +6,17 @@ import Foundation
 /// app or the widget extension (e.g. from an App Intent). Does NOT start a new activity —
 /// starting requires the app to be in the foreground and lives in `LiveActivityController`.
 enum LiveActivityBridge {
+    /// When the current activity was requested, persisted in the App Group so both
+    /// the app (which starts activities) and the extension (which updates them) agree.
+    static let startedAtKey = "liveActivityStartedAt"
+
+    /// The moment the system will kill the current activity — content is stale from then on.
+    static func staleDate() -> Date? {
+        guard let startedAt = UserDefaults(suiteName: AppGroup.identifier)?
+            .object(forKey: startedAtKey) as? Date else { return nil }
+        return startedAt.addingTimeInterval(LiveActivityPlanner.systemLifetime)
+    }
+
     static func contentState() -> TodoActivityAttributes.ContentState {
         let context = ModelContext(TaskStore.shared)
         // orderedTasks() = display order with blank drafts excluded, matching the widget.
