@@ -8,7 +8,7 @@ options:
 settings:
   base:
     MARKETING_VERSION: "1.5"
-    CURRENT_PROJECT_VERSION: "19"
+    CURRENT_PROJECT_VERSION: "20"
     SWIFT_VERSION: "5.0"
     CODE_SIGN_STYLE: Automatic            # Xcode manages provisioning (incl. the App Group)
     DEVELOPMENT_TEAM: "Z78633LQDS"        # signing team used for TestFlight distribution
