@@ -15,7 +15,11 @@ struct TaskRow: View {
     @State private var cardVisible = false
 
     var body: some View {
-        HStack(spacing: 12) {
+        // First-baseline alignment keeps the checkbox on the first line when a
+        // long title wraps, instead of floating at the row's vertical center.
+        // While the field is empty it reports a bogus baseline that inflates the
+        // row to two lines, so the empty draft aligns by center instead.
+        HStack(alignment: task.title.isEmpty ? .center : .firstTextBaseline, spacing: 12) {
             Button(action: toggle) {
                 Image(systemName: TaskStyle.checkboxSymbol(done: task.done))
                     .font(.title3)
@@ -28,7 +32,18 @@ struct TaskRow: View {
             .accessibilityLabel(task.done ? "Mark as not done" : "Mark as done")
             .accessibilityValue(task.done ? "done" : "open")
 
-            TextField("New to-do", text: $task.title)
+            // Vertical axis so long titles wrap instead of scrolling off-screen.
+            // No built-in prompt: a vertical-axis field renders its placeholder on
+            // an extra line while empty (the draft row showed two lines tall), so
+            // the placeholder is drawn manually as an overlay instead.
+            TextField("", text: $task.title, axis: .vertical)
+                .overlay(alignment: .leading) {
+                    if task.title.isEmpty {
+                        Text("New to-do")
+                            .foregroundStyle(Color.textSecondary.opacity(0.6))
+                            .allowsHitTesting(false)
+                    }
+                }
                 .focused(focus, equals: task.id)
                 .strikethrough(task.done, color: .textSecondary)
                 .foregroundStyle(task.done ? Color.textSecondary : Color.textPrimary)
@@ -49,17 +64,15 @@ struct TaskRow: View {
                     commit()
                     if hadText { onReturn() }
                 }
-
-            if task.done, let completedAt = task.completedAt {
-                HStack(spacing: 4) {
-                    Image(systemName: "checkmark")
-                        .font(.caption2.weight(.semibold))
-                        .foregroundStyle(Color.brand)
-                    Text(completedLabel(completedAt))
-                        .font(.caption)
-                        .foregroundStyle(Color.textSecondary)
+                // With a vertical axis the return key inserts a newline instead of
+                // firing onSubmit — titles are single-line, so treat it as submit.
+                .onChange(of: task.title) { _, new in
+                    guard new.contains("\n") else { return }
+                    task.title = new.replacingOccurrences(of: "\n", with: " ")
+                    let hadText = !trimmed.isEmpty
+                    commit()
+                    if hadText { onReturn() }
                 }
-            }
         }
         // Constant padding keeps the row height fixed in every state, so the only
         // thing that changes when editing is the card's opacity — and the card stays
@@ -98,15 +111,6 @@ struct TaskRow: View {
 
     private var trimmed: String {
         task.title.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-
-    /// Today shows the time it was checked off; earlier days show the date.
-    private func completedLabel(_ date: Date) -> String {
-        if Calendar.current.isDateInToday(date) {
-            return date.formatted(date: .omitted, time: .shortened)
-        } else {
-            return date.formatted(.dateTime.month(.abbreviated).day())
-        }
     }
 
     private func toggle() {
