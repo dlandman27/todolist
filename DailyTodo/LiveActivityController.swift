@@ -15,6 +15,10 @@ final class LiveActivityController {
 
     private(set) var isRunning = false
 
+    /// The end-then-request dance is async; without this guard, back-to-back refreshes
+    /// (e.g. onAppear + scenePhase at launch) both see "no live activity" and double-request.
+    private var isRequesting = false
+
     private init() {
         syncRunningState()
     }
@@ -89,6 +93,8 @@ final class LiveActivityController {
 
     /// End everything (live or zombie) and request a fresh activity, resetting the 8h clock.
     private func requestFresh() {
+        guard !isRequesting else { return }
+        isRequesting = true
         let existing = Activity<TodoActivityAttributes>.activities
         let startedAt = Date()
         defaults?.set(startedAt, forKey: LiveActivityBridge.startedAtKey)
@@ -97,6 +103,7 @@ final class LiveActivityController {
             staleDate: startedAt.addingTimeInterval(LiveActivityPlanner.systemLifetime)
         )
         Task {
+            defer { isRequesting = false }
             for activity in existing {
                 await activity.end(nil, dismissalPolicy: .immediate)
             }
