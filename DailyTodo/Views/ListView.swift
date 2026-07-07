@@ -21,6 +21,7 @@ struct ListView: View {
     @State private var stashTarget: TaskItem?
     @State private var showStash = false
     @State private var showSettings = false
+    @State private var showCustomize = false
     /// Where the fixed bar ends and where the big title currently sits, both in
     /// global coordinates — reported by geometry preferences. The title starts
     /// far offscreen-low so the inline title never flashes at launch.
@@ -45,6 +46,10 @@ struct ListView: View {
     @Query(sort: \TaskItem.createdAt, order: .forward) private var tasks: [TaskItem]
 
     private var sortMode: TaskSort { TaskSort(rawValue: sortRaw) ?? .manual }
+
+    /// Bulk actions (Stash All / Clear Completed / Clear All) are parked, not
+    /// deleted — everything they need is still wired up behind this flag.
+    private let showBulkActions = false
 
     /// True once the big title has scrolled under the control bar — the inline
     /// bar title fades in to take over. `nil` means the List recycled the title
@@ -94,7 +99,9 @@ struct ListView: View {
                     .contentShape(Rectangle())
                     // Tapping empty chrome (header, sides) only dismisses an active edit —
                     // it must NOT add a task. Adding is handled by the explicit areas below.
-                    .onTapGesture { dismissEditing() }
+                    .onTapGesture {
+                        if showCustomize { showCustomize = false } else { dismissEditing() }
+                    }
                 VStack(spacing: 0) {
                     titleHeader
                     if orderedTasks.isEmpty {
@@ -216,9 +223,22 @@ struct ListView: View {
             StashSheet()
                 .environment(live)
         }
+        // Customize rides in a short glass sheet so the list stays visible and
+        // recolors live behind it — the app itself is the preview.
+        .sheet(isPresented: $showCustomize) {
+            CustomizeView()
+                .environment(theme)
+                .environment(live)
+                .presentationDetents([.height(380), .large])
+                .presentationBackgroundInteraction(.enabled(upThrough: .height(380)))
+                .presentationDragIndicator(.visible)
+                .presentationBackground(.regularMaterial)
+        }
         // Reading theme.accent here makes ListView.body observe the accent, so the
         // whole tree repaints live on change; it also tints nav controls.
         .tint(theme.accent)
+        // Fade, don't snap, when a new accent is picked in Customize.
+        .animation(.easeInOut(duration: 0.35), value: theme.accentHex)
     }
 
     /// Reports the control bar's bottom edge in global coordinates.
@@ -351,30 +371,41 @@ struct ListView: View {
     /// future "Sort By" section without adding another header button.
     private var listOptionsButton: some View {
         Menu {
-            Button {
-                showStashAllPicker = true
-            } label: {
-                Label("Stash All Todos", systemImage: "archivebox")
+            // Bulk actions are hidden for now (not removed) while the menu slims
+            // down to Customize + Settings — flip this to true to bring them back.
+            if showBulkActions {
+                Button {
+                    showStashAllPicker = true
+                } label: {
+                    Label("Stash All Todos", systemImage: "archivebox")
+                }
+                .disabled(stashableTasks.isEmpty)
+
+                Section {
+                    Button {
+                        showClearCompletedConfirm = true
+                    } label: {
+                        Label("Clear Completed", systemImage: "checkmark.circle.badge.xmark")
+                    }
+                    .disabled(completedCount == 0)
+
+                    Button(role: .destructive) {
+                        showClearAllConfirm = true
+                    } label: {
+                        Label("Clear All", systemImage: "trash")
+                    }
+                    .disabled(orderedTasks.isEmpty)
+                }
             }
-            .disabled(stashableTasks.isEmpty)
 
             Section {
                 Button {
-                    showClearCompletedConfirm = true
+                    showCustomize = true
                 } label: {
-                    Label("Clear Completed", systemImage: "checkmark.circle.badge.xmark")
+                    Label("Customize", systemImage: "paintbrush")
                 }
-                .disabled(completedCount == 0)
+                .accessibilityIdentifier("customize")
 
-                Button(role: .destructive) {
-                    showClearAllConfirm = true
-                } label: {
-                    Label("Clear All", systemImage: "trash")
-                }
-                .disabled(orderedTasks.isEmpty)
-            }
-
-            Section {
                 Button {
                     showSettings = true
                 } label: {
@@ -529,7 +560,15 @@ struct ListView: View {
                 // The empty space below the list is a reliable tap target (a Button, not a
                 // row gesture): dismiss an open draft, otherwise add a task.
                 Button {
-                    if isEditing { dismissEditing() } else { addTask() }
+                    // With the Customize sheet up (background interaction on), a body
+                    // tap should close the sheet — never add a todo underneath it.
+                    if showCustomize {
+                        showCustomize = false
+                    } else if isEditing {
+                        dismissEditing()
+                    } else {
+                        addTask()
+                    }
                 } label: {
                     Color.clear
                         .frame(minHeight: addAreaHeight(viewport: geo.size.height))
@@ -573,7 +612,13 @@ struct ListView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .contentShape(Rectangle())
         .onTapGesture {
-            if isEditing { dismissEditing() } else { addTask() }
+            if showCustomize {
+                showCustomize = false
+            } else if isEditing {
+                dismissEditing()
+            } else {
+                addTask()
+            }
         }
     }
 

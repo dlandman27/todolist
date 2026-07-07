@@ -26,6 +26,12 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.dylanlandman.dailytodo
         CODE_SIGN_ENTITLEMENTS: DailyTodo/DailyTodo.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        # One alternate icon per accent preset (Brick is the default AppIcon).
+        ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: >-
+          AppIcon-Red AppIcon-Sunset AppIcon-Gold AppIcon-Lime AppIcon-Forest
+          AppIcon-Teal AppIcon-Cyan AppIcon-Sky AppIcon-Ocean AppIcon-Indigo
+          AppIcon-Grape AppIcon-Purple AppIcon-Magenta AppIcon-Pink AppIcon-Rose
+          AppIcon-Clay AppIcon-Slate
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
         ENABLE_TESTABILITY: YES
     info:

@@ -1,173 +1,168 @@
 import SwiftUI
 import PhotosUI
-
-/// Dedicated "make it yours" screen, pushed from Settings → Appearance → Customize.
-/// Hosts the accent and background; app icons land here next.
 struct CustomizeView: View {
     @Environment(ThemeModel.self) private var theme
     @Environment(LiveActivityController.self) private var live
     @State private var photoItem: PhotosPickerItem?
 
-    private let swatchColumns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 6)
-    private let gradientColumns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
-
     var body: some View {
-        ZStack {
-            Color.appBackground.ignoresSafeArea()
-            Form {
-                Section {
-                    previewTile
-                        .padding(12)
-                        .frame(maxWidth: .infinity)
-                        .background {
-                            ThemeBackground()
-                                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                        }
-                        .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
-                        .listRowBackground(Color.appSurface)
-                } header: {
-                    Text("Preview")
-                }
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                Text("Customize")
+                    .font(.headline)
+                    .fontDesign(.rounded)
+                    .foregroundStyle(Color.textPrimary)
+                    .frame(maxWidth: .infinity)
 
-                Section {
-                    LazyVGrid(columns: swatchColumns, spacing: 12) {
-                        ForEach(ThemeStore.presets, id: \.self) { hex in
-                            Circle()
-                                .fill(Color(hex: ThemeStore.hexValue(hex)))
-                                .frame(height: 34)
-                                .overlay {
-                                    if theme.accentHex == hex {
-                                        Circle().stroke(Color.textPrimary, lineWidth: 2).padding(-3)
+                VStack(alignment: .leading, spacing: 8) {
+                    caption("Accent")
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 12) {
+                            ForEach(ThemeStore.presets, id: \.self) { hex in
+                                Circle()
+                                    .fill(Color(hex: ThemeStore.hexValue(hex)))
+                                    .frame(width: 36, height: 36)
+                                    .overlay {
+                                        if theme.accentHex == hex {
+                                            Circle().stroke(Color.textPrimary, lineWidth: 2).padding(-3)
+                                        }
                                     }
-                                }
-                                .contentShape(Circle())
-                                .onTapGesture { setAccent(hex) }
-                                .accessibilityIdentifier("accent-\(hex)")
-                                .accessibilityLabel("Accent \(hex)")
+                                    .contentShape(Circle())
+                                    .onTapGesture { setAccent(hex) }
+                                    .accessibilityIdentifier("accent-\(hex)")
+                                    .accessibilityLabel("Accent \(hex)")
+                            }
                         }
+                        // Breathing room so the selection ring isn't clipped.
+                        .padding(4)
                     }
-                    .padding(.vertical, 4)
-                    .listRowBackground(Color.appSurface)
-                } header: {
-                    Text("Accent")
-                } footer: {
-                    Text("Sets the highlight color across the app, widget, and Live Activity.")
                 }
 
-                Section {
+                VStack(alignment: .leading, spacing: 10) {
+                    caption("Background")
                     Picker("Background", selection: backgroundKindBinding) {
                         ForEach(BackgroundKind.allCases) { kind in
                             Text(kind.label).tag(kind)
                         }
                     }
                     .pickerStyle(.segmented)
-                    .listRowBackground(Color.appSurface)
 
-                    switch theme.backgroundKind {
-                    case .none:
-                        EmptyView()
-                    case .solid:
-                        ColorPicker(selection: solidBinding, supportsOpacity: false) {
-                            Label("Color", systemImage: "paintpalette")
-                                .foregroundStyle(Color.textPrimary)
-                        }
-                        .listRowBackground(Color.appSurface)
-                    case .gradient:
-                        LazyVGrid(columns: gradientColumns, spacing: 12) {
-                            ForEach(ThemeStore.gradientPresets) { preset in
-                                RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                    .fill(preset.gradient)
-                                    .frame(height: 52)
-                                    .overlay {
-                                        if theme.gradientTopHex == preset.top && theme.gradientBottomHex == preset.bottom {
-                                            RoundedRectangle(cornerRadius: 8, style: .continuous)
-                                                .stroke(Color.textPrimary, lineWidth: 2)
+                    if theme.backgroundKind == .gradient {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 10) {
+                                ForEach(ThemeStore.gradientPresets) { preset in
+                                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                        .fill(preset.gradient)
+                                        .frame(width: 64, height: 40)
+                                        .overlay {
+                                            if theme.gradientTopHex == preset.top && theme.gradientBottomHex == preset.bottom {
+                                                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                                    .stroke(Color.textPrimary, lineWidth: 2)
+                                            }
                                         }
-                                    }
-                                    .contentShape(Rectangle())
-                                    .onTapGesture { theme.setGradient(top: preset.top, bottom: preset.bottom) }
-                                    .accessibilityLabel("Gradient \(preset.id)")
+                                        .contentShape(Rectangle())
+                                        .onTapGesture { theme.setGradient(top: preset.top, bottom: preset.bottom) }
+                                        .accessibilityLabel("Gradient \(preset.id)")
+                                }
                             }
-                        }
-                        .padding(.vertical, 4)
-                        .listRowBackground(Color.appSurface)
-
-                        ColorPicker(selection: gradientTopBinding, supportsOpacity: false) {
-                            Label("Top", systemImage: "arrow.up").foregroundStyle(Color.textPrimary)
-                        }
-                        .listRowBackground(Color.appSurface)
-                        ColorPicker(selection: gradientBottomBinding, supportsOpacity: false) {
-                            Label("Bottom", systemImage: "arrow.down").foregroundStyle(Color.textPrimary)
-                        }
-                        .listRowBackground(Color.appSurface)
-                    case .photo:
-                        PhotosPicker(selection: $photoItem, matching: .images) {
-                            Label(theme.backgroundImage == nil ? "Choose Photo" : "Change Photo",
-                                  systemImage: "photo")
-                                .foregroundStyle(Color.brand)
-                        }
-                        .listRowBackground(Color.appSurface)
-                        if theme.backgroundImage != nil {
-                            Button(role: .destructive) { theme.clearPhoto() } label: {
-                                Label("Remove Photo", systemImage: "trash")
-                                    .foregroundStyle(.red)
-                            }
-                            .listRowBackground(Color.appSurface)
+                            .padding(2)
                         }
                     }
 
                     if theme.backgroundKind != .none {
-                        Toggle(isOn: showOnWidgetBinding) {
-                            Label("Show on Widget", systemImage: "apps.iphone")
-                                .foregroundStyle(Color.textPrimary)
+                        // The labeled option rows live in a grouped card, styled
+                        // like Settings cells.
+                        VStack(spacing: 0) {
+                            switch theme.backgroundKind {
+                            case .none:
+                                EmptyView()
+                            case .solid:
+                                optionRow {
+                                    ColorPicker(selection: solidBinding, supportsOpacity: false) {
+                                        Text("Color").foregroundStyle(Color.textPrimary)
+                                    }
+                                }
+                            case .gradient:
+                                optionRow {
+                                    // Side by side, not stacked — height is scarce here.
+                                    HStack(spacing: 16) {
+                                        ColorPicker(selection: gradientTopBinding, supportsOpacity: false) {
+                                            Text("Top").foregroundStyle(Color.textPrimary)
+                                        }
+                                        ColorPicker(selection: gradientBottomBinding, supportsOpacity: false) {
+                                            Text("Bottom").foregroundStyle(Color.textPrimary)
+                                        }
+                                        Button {
+                                            theme.setGradient(top: theme.gradientBottomHex, bottom: theme.gradientTopHex)
+                                            Haptics.selection()
+                                        } label: {
+                                            Image(systemName: "arrow.up.arrow.down.circle")
+                                                .font(.title3)
+                                                .foregroundStyle(Color.brand)
+                                        }
+                                        .buttonStyle(.plain)
+                                        .accessibilityLabel("Swap top and bottom colors")
+                                    }
+                                }
+                            case .photo:
+                                optionRow {
+                                    HStack {
+                                        PhotosPicker(selection: $photoItem, matching: .images) {
+                                            Label(theme.backgroundImage == nil ? "Choose Photo" : "Change Photo",
+                                                  systemImage: "photo")
+                                                .foregroundStyle(Color.brand)
+                                        }
+                                        Spacer()
+                                        if theme.backgroundImage != nil {
+                                            Button(role: .destructive) { theme.clearPhoto() } label: {
+                                                Label("Remove", systemImage: "trash")
+                                                    .foregroundStyle(.red)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            Divider()
+                                .padding(.leading, 16)
+
+                            optionRow {
+                                Toggle(isOn: showOnWidgetBinding) {
+                                    Text("Show on Widget").foregroundStyle(Color.textPrimary)
+                                }
+                                .tint(Color.brand)
+                            }
                         }
-                        .tint(Color.brand)
-                        .listRowBackground(Color.appSurface)
-                    }
-                } header: {
-                    Text("Background")
-                } footer: {
-                    Text("Applies to the main list and stash. Turn on \u{201C}Show on Widget\u{201D} to mirror it on home-screen widgets. Photos stay on your device.")
-                }
-                .onChange(of: photoItem) { _, item in
-                    guard let item else { return }
-                    Task {
-                        if let data = try? await item.loadTransferable(type: Data.self) {
-                            theme.setPhoto(data)
-                        }
+                        .background(
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .fill(Color.appSurface)
+                        )
                     }
                 }
             }
-            .scrollContentBackground(.hidden)
+            .padding(20)
         }
-        .navigationTitle("Customize (Beta)")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar(.visible, for: .navigationBar)
-    }
-
-    /// A small mock list that recolors live as the accent changes.
-    private var previewTile: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("My Todo").font(.headline).foregroundStyle(Color.textPrimary)
-                Spacer()
-                Image(systemName: "plus.circle.fill").foregroundStyle(Color.brand)
+        .onChange(of: photoItem) { _, item in
+            guard let item else { return }
+            Task {
+                if let data = try? await item.loadTransferable(type: Data.self) {
+                    theme.setPhoto(data)
+                }
             }
-            previewRow("Buy groceries", done: false)
-            previewRow("Call dentist", done: true)
         }
-        .padding(.vertical, 6)
     }
 
-    private func previewRow(_ title: String, done: Bool) -> some View {
-        HStack(spacing: 10) {
-            Image(systemName: done ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(done ? Color.brand : Color.textSecondary)
-            Text(title)
-                .foregroundStyle(done ? Color.textSecondary : Color.textPrimary)
-                .strikethrough(done)
-            Spacer()
-        }
+    /// One grouped-card row: the same padding rhythm as a Settings cell.
+    private func optionRow<Content: View>(@ViewBuilder content: () -> Content) -> some View {
+        content()
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+    }
+
+    private func caption(_ text: String) -> some View {
+        Text(text)
+            .font(.footnote.weight(.semibold))
+            .foregroundStyle(Color.textSecondary)
     }
 
     /// Update the accent live (model), persist it, and push it to every surface.

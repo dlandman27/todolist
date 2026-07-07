@@ -85,16 +85,15 @@ final class TaskFlowUITests: XCTestCase {
     }
 
     func testAccentSwatchSelectable() {
-        // Settings lives inside the ellipsis menu now.
+        // Customize lives inside the ellipsis menu and opens as a sheet.
         app.buttons["listOptions"].tap()
-        let settings = app.buttons["settings"]
-        XCTAssertTrue(settings.waitForExistence(timeout: 5), "Settings should appear in the list options menu")
-        settings.tap()
-        app.buttons["customize"].tap()
+        let customize = app.buttons["customize"]
+        XCTAssertTrue(customize.waitForExistence(timeout: 5), "Customize should appear in the list options menu")
+        customize.tap()
         let ocean = app.descendants(matching: .any).matching(identifier: "accent-2D6FB0").firstMatch
         XCTAssertTrue(ocean.waitForExistence(timeout: 5), "preset accent swatch should exist on the Customize page")
         ocean.tap()
-        // No crash + Customize still up.
-        XCTAssertTrue(app.navigationBars["Customize"].waitForExistence(timeout: 3))
+        // No crash + Customize sheet still up.
+        XCTAssertTrue(app.staticTexts["Customize"].waitForExistence(timeout: 3))
     }
 }
